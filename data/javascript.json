@@ -283,10 +283,12 @@
     "id": 53,
     "section": "JS",
     "type": "drag_drop",
-    "q": "Match these simple expressions with their true or false result.",
+    "q": "Match these simple expressions with their correct boolean outcome.",
     "dragItems": [
-      "true",
-      "false"
+      "Evaluates to True (5 > 3)",
+      "Evaluates to False (2 === 5)",
+      "Evaluates to True (10 < 20)",
+      "Evaluates to False (7 != 7)"
     ],
     "dropZones": [
       "5 > 3",
@@ -294,13 +296,14 @@
       "10 < 20",
       "7 != 7"
     ],
+    
     "answer": {
-      "0": "true",
-      "1": "false",
-      "2": "true",
-      "3": "false"
+      "0": "Evaluates to True (5 > 3)",
+      "1": "Evaluates to False (2 === 5)",
+      "2": "Evaluates to True (10 < 20)",
+      "3": "Evaluates to False (7 != 7)"
     },
-    "explanation": "5 > 3 is true, 2 === 5 is false, 10 < 20 is true, 7 != 7 is false."
+    "explanation": "Each expression is uniquely matched with its respective outcome to prevent option shortage."
   },
   {
     "id": 54,
@@ -352,10 +355,12 @@
     "id": 58,
     "section": "JS",
     "type": "drag_drop",
-    "q": "Match each JavaScript value with whether it is Truthy or Falsy.",
+    "q": "Match each JavaScript value with its correct Truthy/Falsy type.",
     "dragItems": [
-      "Truthy",
-      "Falsy"
+      "String (Truthy)",
+      "Zero (Falsy)",
+      "Positive Number (Truthy)",
+      "Null (Falsy)"
     ],
     "dropZones": [
       "\"hello\"",
@@ -364,12 +369,12 @@
       "null"
     ],
     "answer": {
-      "0": "Truthy",
-      "1": "Falsy",
-      "2": "Truthy",
-      "3": "Falsy"
+      "0": "String (Truthy)",
+      "1": "Zero (Falsy)",
+      "2": "Positive Number (Truthy)",
+      "3": "Null (Falsy)"
     },
-    "explanation": "Non-empty strings and positive numbers are truthy; 0 and null are falsy."
+    "explanation": "\"hello\" is a non-empty string (Truthy), 0 is Falsy, 100 is a positive number (Truthy), and null is Falsy."
   },
   {
     "id": 59,
