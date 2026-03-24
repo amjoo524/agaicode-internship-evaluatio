@@ -1,402 +1,406 @@
 [
   {
-    "id": 31,
+    "id": 1,
     "section": "JS",
     "type": "quiz",
-    "q": "What is the output of: console.log(true && false);",
+    "q": "What is the output of: console.log(typeof typeof 1);",
     "options": {
-      "A": "true",
-      "B": "false",
-      "C": "undefined",
-      "D": "TypeError"
-    },
-    "answer": "B",
-    "explanation": "Logical AND (&&) returns true only if both sides are true. Since one is false, the result is false."
-  },
-  {
-    "id": 32,
-    "section": "JS",
-    "type": "quiz",
-    "q": "What is the output of: console.log(true || false);",
-    "options": {
-      "A": "true",
-      "B": "false",
-      "C": "null",
-      "D": "SYNTAXERROR"
-    },
-    "answer": "A",
-    "explanation": "Logical OR (||) returns true if at least one side is true."
-  },
-  {
-    "id": 33,
-    "section": "JS",
-    "type": "quiz",
-    "q": "What is the output of the following ternary operation?\n\nlet age = 20;\nlet type = age >= 18 ? \"Adult\" : \"Child\";\nconsole.log(type);",
-    "options": {
-      "A": "Child",
-      "B": "Adult",
-      "C": "true",
+      "A": "number",
+      "B": "string",
+      "C": "object",
       "D": "undefined"
     },
     "answer": "B",
-    "explanation": "Since age (20) is greater than or equal to 18, the condition is true, so it returns 'Adult'."
+    "explanation": "typeof 1 returns 'string' ('number'), and typeof 'string' returns 'string'."
   },
   {
-    "id": 34,
+    "id": 2,
     "section": "JS",
     "type": "quiz",
-    "q": "What does the logical NOT (!) operator do to `true`?",
+    "q": "Which of the following is NOT a primitive data type in JavaScript?",
     "options": {
-      "A": "Stays true",
-      "B": "Turns into false",
-      "C": "Turns into null",
-      "D": "Throws an error"
-    },
-    "answer": "B",
-    "explanation": "The logical NOT (!) operator inverts a boolean value, changing true to false."
-  },
-  {
-    "id": 35,
-    "section": "JS",
-    "type": "quiz",
-    "q": "Which of the following values is considered *falsy* in JavaScript?",
-    "options": {
-      "A": "\"hello\"",
-      "B": "42",
-      "C": "null",
-      "D": "true"
+      "A": "Symbol",
+      "B": "Boolean",
+      "C": "Object",
+      "D": "Undefined"
     },
     "answer": "C",
-    "explanation": "null is a falsy value in JavaScript, along with 0, \"\", false, undefined, and NaN."
+    "explanation": "Objects are reference types, whereas Symbol, Boolean, and Undefined are primitives."
   },
   {
-    "id": 36,
+    "id": 3,
     "section": "JS",
     "type": "quiz",
-    "q": "What will be printed by this if-else statement?\n\nlet score = 40;\nif (score >= 50) {\n  console.log(\"Pass\");\n} else {\n  console.log(\"Fail\");\n}",
+    "q": "What will be the output of: console.log(3 + 4 + '5');",
     "options": {
-      "A": "Pass",
-      "B": "Fail",
-      "C": "undefined",
+      "A": "345",
+      "B": "75",
+      "C": "12",
       "D": "Error"
     },
     "answer": "B",
-    "explanation": "Since 40 is not greater than or equal to 50, the code goes to the else block and prints 'Fail'."
+    "explanation": "3 + 4 evaluates to 7 first (number), then 7 + '5' performs string concatenation resulting in '75'."
   },
   {
-    "id": 37,
+    "id": 4,
     "section": "JS",
     "type": "quiz",
-    "q": "What is the result of: console.log(!false);",
+    "q": "What does the `isNaN()` function do?",
+    "options": {
+      "A": "Checks if a value is a number",
+      "B": "Checks if a value is Not-a-Number",
+      "C": "Converts a string to a number",
+      "D": "Checks for null values"
+    },
+    "answer": "B",
+    "explanation": "isNaN() evaluates whether a value is NaN after attempting type conversion."
+  },
+  {
+    "id": 5,
+    "section": "JS",
+    "type": "quiz",
+    "q": "What is the difference between `==` and `===`?",
+    "options": {
+      "A": "No difference",
+      "B": "=== checks both value and type, == does type coercion",
+      "C": "== checks type only, === checks value only",
+      "D": "=== is slower and deprecated"
+    },
+    "answer": "B",
+    "explanation": "Strict equality (===) requires matching types and values without coercion."
+  },
+  {
+    "id": 6,
+    "section": "JS",
+    "type": "quiz",
+    "q": "What will `console.log([] == ![])` output?",
     "options": {
       "A": "true",
       "B": "false",
-      "C": "null",
-      "D": "0"
-    },
-    "answer": "A",
-    "explanation": "The NOT operator (!) turns false into true."
-  },
-  {
-    "id": 38,
-    "section": "JS",
-    "type": "quiz",
-    "q": "In a ternary operator (condition ? trueVal : falseVal), what symbol separates the true and false options?",
-    "options": {
-      "A": "Semicolon (;)",
-      "B": "Colon (:)",
-      "C": "Comma (,)",
-      "D": "Question mark (?)"
-    },
-    "answer": "B",
-    "explanation": "The colon (:) is used to separate the true value from the false value in a ternary expression."
-  },
-  {
-    "id": 39,
-    "section": "JS",
-    "type": "quiz",
-    "q": "Which logical operator checks if BOTH conditions are true?",
-    "options": {
-      "A": "&&",
-      "B": "||",
-      "C": "!",
-      "D": "??"
-    },
-    "answer": "A",
-    "explanation": "The logical AND (&&) operator requires both operands to be true for the whole expression to be true."
-  },
-  {
-    "id": 40,
-    "section": "JS",
-    "type": "quiz",
-    "q": "What happens if the main `if` condition is false and there is no `else` block?",
-    "options": {
-      "A": "The program crashes",
-      "B": "It automatically runs the `else` block",
-      "C": "It skips the if block and moves on",
-      "D": "It throws a SyntaxError"
-    },
-    "answer": "C",
-    "explanation": "If an if condition is false and there is no else, the program simply skips the code inside the curly braces and continues."
-  },
-  {
-    "id": 41,
-    "section": "JS",
-    "type": "short_code",
-    "q": "Complete the ternary statement to assign 'Adult' if `age >= 18`, otherwise 'Minor'.",
-    "starterCode": "let age = 20;\nlet status = age >= 18 ? ",
-    "answer": "\"Adult\" : \"Minor\";",
-    "explanation": "The syntax for ternary is condition ? trueValue : falseValue."
-  },
-  {
-    "id": 42,
-    "section": "JS",
-    "type": "short_code",
-    "q": "Fill in the missing condition so that the if statement checks if `score` is greater than 50.",
-    "starterCode": "let score = 60;\nif (/* write condition here */) {\n  console.log(\"Passed\");\n}",
-    "answer": "score > 50",
-    "explanation": "The condition inside the parentheses should evaluate whether score is greater than 50."
-  },
-  {
-    "id": 43,
-    "section": "JS",
-    "type": "short_code",
-    "q": "Complete the logical expression using AND (&&) to check if both `isLoggedIn` and `isAdmin` are true.",
-    "starterCode": "let isLoggedIn = true;\nlet isAdmin = true;\nlet canAccess = isLoggedIn ",
-    "answer": "&& isAdmin;",
-    "explanation": "Use && to combine both boolean variables."
-  },
-  {
-    "id": 44,
-    "section": "JS",
-    "type": "short_code",
-    "q": "Complete the `else` block code to print 'Odd' if a number is not even.",
-    "starterCode": "let num = 3;\nif (num % 2 === 0) {\n  console.log('Even');\n} \n",
-    "answer": "else {\n  console.log('Odd');\n}",
-    "explanation": "An if-else structure uses the `else { ... }` syntax for the alternative block."
-  },
-  {
-    "id": 45,
-    "section": "JS",
-    "type": "short_code",
-    "q": "Use the logical NOT operator (!) to invert the value of `isOpen` inside the log statement.",
-    "starterCode": "let isOpen = false;\nconsole.log(",
-    "answer": "!isOpen);",
-    "explanation": "Putting ! in front of a boolean variable flips its value."
-  },
-  {
-    "id": 46,
-    "section": "JS",
-    "type": "short_code",
-    "q": "Complete the `else if` condition to check if `marks` is greater than or equal to 70.",
-    "starterCode": "let marks = 75;\nif (marks >= 90) {\n  console.log('A');\n} \n",
-    "answer": "else if (marks >= 70) {\n  console.log('B');\n}",
-    "explanation": "Use `else if (condition)` to check subsequent conditions in a ladder."
-  },
-  {
-    "id": 47,
-    "section": "JS",
-    "type": "short_code",
-    "q": "Complete the logical OR (||) expression to check if `day` is 'Saturday' or 'Sunday'.",
-    "starterCode": "let day = 'Saturday';\nlet isWeekend = (day === 'Saturday') ",
-    "answer": "|| day === 'Sunday';",
-    "explanation": "Logical OR (||) checks if either condition is true."
-  },
-  {
-    "id": 48,
-    "section": "JS",
-    "type": "short_code",
-    "q": "Fill in the question mark (?) for this simple ternary shorthand check.",
-    "starterCode": "let x = 10;\nlet check = x > 5 ",
-    "answer": "? \"Yes\" : \"No\";",
-    "explanation": "A ternary operator always starts with a question mark (?) right after the condition."
-  },
-  {
-    "id": 49,
-    "section": "JS",
-    "type": "short_code",
-    "q": "Write the condition for an if statement to check if `temperature` is less than 0.",
-    "starterCode": "let temperature = -5;\nif (/* write condition */) {\n  console.log('Freezing');\n}",
-    "answer": "temperature < 0",
-    "explanation": "Checking temperatures below zero uses the less than operator (<)."
-  },
-  {
-    "id": 50,
-    "section": "JS",
-    "type": "short_code",
-    "q": "Complete the code to print 'Welcome' if `hasTicket` is true.",
-    "starterCode": "let hasTicket = true;\nif (hasTicket) {\n",
-    "answer": "  console.log('Welcome');\n}",
-    "explanation": "Use console.log() inside the block to output text."
-  },
-  {
-    "id": 51,
-    "section": "JS",
-    "type": "drag_drop",
-    "q": "Match each logical or conditional symbol with its correct name.",
-    "dragItems": [
-      "Logical AND",
-      "Logical OR",
-      "Logical NOT",
-      "Ternary Condition"
-    ],
-    "dropZones": [
-      "&&",
-      "||",
-      "!",
-      "?"
-    ],
-    "answer": {
-      "0": "Logical AND",
-      "1": "Logical OR",
-      "2": "Logical NOT",
-      "3": "Ternary Condition"
-    },
-    "explanation": "&& is Logical AND, || is Logical OR, ! is Logical NOT, and ? is the Ternary marker."
-  },
-  {
-    "id": 52,
-    "section": "JS",
-    "type": "drag_drop",
-    "q": "Match each control flow keyword with its correct description.",
-    "dragItems": [
-      "Runs if main condition is true",
-      "Runs if previous conditions fail",
-      "Final fallback block",
-      "Shorthand inline condition"
-    ],
-    "dropZones": [
-      "if",
-      "else if",
-      "else",
-      "ternary (? :)"
-    ],
-    "answer": {
-      "0": "Runs if main condition is true",
-      "1": "Runs if previous conditions fail",
-      "2": "Final fallback block",
-      "3": "Shorthand inline condition"
-    },
-    "explanation": "Matching basic conditional keywords to their roles."
-  },
-  {
-    "id": 53,
-    "section": "JS",
-    "type": "drag_drop",
-    "q": "Match these simple expressions with their correct boolean outcome.",
-    "dragItems": [
-      "Evaluates to True (5 > 3)",
-      "Evaluates to False (2 === 5)",
-      "Evaluates to True (10 < 20)",
-      "Evaluates to False (7 != 7)"
-    ],
-    "dropZones": [
-      "5 > 3",
-      "2 === 5",
-      "10 < 20",
-      "7 != 7"
-    ],
-    
-    "answer": {
-      "0": "Evaluates to True (5 > 3)",
-      "1": "Evaluates to False (2 === 5)",
-      "2": "Evaluates to True (10 < 20)",
-      "3": "Evaluates to False (7 != 7)"
-    },
-    "explanation": "Each expression is uniquely matched with its respective outcome to prevent option shortage."
-  },
-  {
-    "id": 54,
-    "section": "JS",
-    "type": "quiz",
-    "q": "What is the output of the following code?\n\nlet num = 10;\nif (num > 15) {\n  console.log(\"A\");\n} else if (num > 5) {\n  console.log(\n  \"B\");\n} else {\n  console.log(\"C\");\n}",
-    "options": {
-      "A": "A",
-      "B": "B",
-      "C": "C",
+      "C": "TypeError",
       "D": "undefined"
     },
-    "answer": "B",
-    "explanation": "num (10) is not greater than 15, but it is greater than 5, so the else-if block runs and prints 'B'."
+    "answer": "A",
+    "explanation": "![] becomes false. Then [] == false converts array to 0, and false to 0, so 0 == 0 is true."
   },
   {
-    "id": 55,
+    "id": 7,
     "section": "JS",
     "type": "quiz",
-    "q": "What will be stored in `result`?\n\nlet val = 8;\nlet result = val > 5 ? \"Big\" : \"Small\";",
+    "q": "Which method adds one or more elements to the end of an array and returns the new length?",
     "options": {
-      "A": "Big",
-      "B": "Small",
-      "C": "true",
-      "D": "false"
+      "A": "pop()",
+      "B": "push()",
+      "C": "shift()",
+      "D": "unshift()"
+    },
+    "answer": "B",
+    "explanation": "push() appends items to the end of an array."
+  },
+  {
+    "id": 8,
+    "section": "JS",
+    "type": "quiz",
+    "q": "What is the primary use of the `Array.prototype.reduce()` method?",
+    "options": {
+      "A": "To filter out unwanted elements",
+      "B": "To transform array elements into a single accumulated value",
+      "C": "To loop through elements without returning anything",
+      "D": "To sort elements alphabetically"
+    },
+    "answer": "B",
+    "explanation": "reduce() reduces an array of values down to a single value using an accumulator function."
+  },
+  {
+    "id": 9,
+    "section": "JS",
+    "type": "quiz",
+    "q": "What does a closure give you access to?",
+    "options": {
+      "A": "Global variables only",
+      "B": "An outer function's scope from an inner function",
+      "C": "Block scope variables outside loops only",
+      "D": "Only DOM elements"
+    },
+    "answer": "B",
+    "explanation": "A closure allows an inner function to remember and access its outer function's variables even after the outer function has finished executing."
+  },
+  {
+    "id": 10,
+    "section": "JS",
+    "type": "quiz",
+    "q": "What is hoisting in JavaScript?",
+    "options": {
+      "A": "Moving declarations to the top of their scope during compilation",
+      "B": "Lifting errors to the console automatically",
+      "C": "Optimizing loop performance",
+      "D": "Deleting unused variables from memory"
     },
     "answer": "A",
-    "explanation": "Since 8 is greater than 5, the condition is true, returning the true part: 'Big'."
+    "explanation": "JavaScript engine hoists var and function declarations to the top of their execution context prior to code execution."
   },
   {
-    "id": 56,
+    "id": 11,
     "section": "JS",
     "type": "short_code",
-    "q": "Complete the ternary statement to return 'Even' or 'Odd' based on a number check.",
-    "starterCode": "let n = 4;\nlet res = (n % 2 === 0) ? 'Even' : ",
-    "answer": "'Odd';",
-    "explanation": "The false part of the ternary operator specifies what to return when the condition fails."
+    "q": "Write an arrow function syntax named `square` that takes a parameter `x` and returns its square.",
+    "starterCode": "const square = ",
+    "answer": "(x) => x * x;",
+    "explanation": "Arrow function syntax can omit return and braces for single-expression bodies."
   },
   {
-    "id": 57,
+    "id": 12,
     "section": "JS",
     "type": "short_code",
-    "q": "Use logical OR (||) to provide a fallback value 'DefaultUser' if `username` is empty/falsy.",
-    "starterCode": "let username = \"\";\nlet displayName = username ",
-    "answer": "|| 'DefaultUser';",
-    "explanation": "Logical OR short-circuits and provides the default fallback value if the first operand is falsy."
+    "q": "Use destructuring to extract `name` and `age` from an object called `user`.",
+    "starterCode": "const user = { name: 'Ali', age: 22 };\nconst ",
+    "answer": "{ name, age } = user;",
+    "explanation": "Object destructuring allows unpacking properties into distinct variables easily."
   },
   {
-    "id": 58,
+    "id": 13,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Write a template literal statement that outputs 'Hello, [name]!' using a variable `name = 'Sara'`.",
+    "starterCode": "let name = 'Sara';\nlet msg = ",
+    "answer": "`Hello, ${name}!`;",
+    "explanation": "Template literals use backticks and ${} for variable interpolation."
+  },
+  {
+    "id": 14,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Use the spread operator to combine two arrays `arr1` and `arr2` into a new array `combined`.",
+    "starterCode": "const arr1 = [1, 2];\nconst arr2 = [3, 4];\nconst combined = ",
+    "answer": "[...arr1, ...arr2];",
+    "explanation": "The spread operator (...) expands elements of an array into a new array context."
+  },
+  {
+    "id": 15,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Write a `filter` method call on an array `numbers` to keep only even numbers.",
+    "starterCode": "const numbers = [1, 2, 3, 4];\nconst evens = numbers.filter(n => ",
+    "answer": "n % 2 === 0);",
+    "explanation": "The filter callback must return a truthy condition to keep an element."
+  },
+  {
+    "id": 16,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Write a line of code to catch errors using a standard `try...catch` block structure.",
+    "starterCode": "try {\n  // risky code\n} ",
+    "answer": "catch (error) {\n  console.error(error);\n}",
+    "explanation": "catch block catches errors thrown within the preceding try block."
+  },
+  {
+    "id": 17,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Create a Promise that immediately resolves with the string 'Success'.",
+    "starterCode": "const myPromise = new Promise((resolve, reject) => {\n  ",
+    "answer": "resolve('Success');\n});",
+    "explanation": "The resolve function marks the promise as fulfilled with the provided value."
+  },
+  {
+    "id": 18,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Use `localStorage` to save a key 'token' with value 'abc123xyz'.",
+    "starterCode": "// save to local storage\n",
+    "answer": "localStorage.setItem('token', 'abc123xyz');",
+    "explanation": "localStorage.setItem takes a key string and a value string."
+  },
+  {
+    "id": 19,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Select an element with the id 'main-heading' using standard modern DOM selection.",
+    "starterCode": "const heading = ",
+    "answer": "document.getElementById('main-heading');",
+    "explanation": "document.getElementById efficiently targets an element by its unique id attribute."
+  },
+  {
+    "id": 20,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Write an asynchronous function declaration named `getData`.",
+    "starterCode": "",
+    "answer": "async function getData() {\n  // code\n}",
+    "explanation": "The async keyword transforms a function to implicitly return a Promise."
+  },
+  {
+    "id": 21,
     "section": "JS",
     "type": "drag_drop",
-    "q": "Match each JavaScript value with its correct Truthy/Falsy type.",
+    "q": "Match each array method with its core behavior.",
     "dragItems": [
-      "String (Truthy)",
-      "Zero (Falsy)",
-      "Positive Number (Truthy)",
-      "Null (Falsy)"
+      "Transforms each element and returns new array",
+      "Keeps elements matching condition",
+      "Finds first element matching condition",
+      "Checks if any element matches condition"
     ],
     "dropZones": [
-      "\"hello\"",
-      "0",
-      "100",
-      "null"
+      "map()",
+      "filter()",
+      "find()",
+      "some()"
     ],
     "answer": {
-      "0": "String (Truthy)",
-      "1": "Zero (Falsy)",
-      "2": "Positive Number (Truthy)",
-      "3": "Null (Falsy)"
+      "0": "Transforms each element and returns new array",
+      "1": "Keeps elements matching condition",
+      "2": "Finds first element matching condition",
+      "3": "Checks if any element matches condition"
     },
-    "explanation": "\"hello\" is a non-empty string (Truthy), 0 is Falsy, 100 is a positive number (Truthy), and null is Falsy."
+    "explanation": "Correctly matches functional array iteration utilities."
   },
   {
-    "id": 59,
+    "id": 22,
     "section": "JS",
-    "type": "short_code",
-    "q": "Write a basic if statement that checks if `isReady` is true and logs 'Ready!'.",
-    "starterCode": "let isReady = true;\nif (\n) {\n  console.log('Ready!');\n}",
-    "answer": "isReady",
-    "explanation": "Passing a boolean variable directly into an if condition checks if it is true."
+    "type": "drag_drop",
+    "q": "Match JavaScript storage or execution concepts with their traits.",
+    "dragItems": [
+      "Cleared when browser session/tab closes",
+      "Persists even after browser is closed",
+      "Stores simple key-value pairs temporarily in memory window",
+      "Asynchronous event handling mechanism loop layer"
+    ],
+    "dropZones": [
+      "SessionStorage",
+      "LocalStorage",
+      "Session/Memory",
+      "Event Loop"
+    ],
+    "answer": {
+      "0": "Cleared when browser session/tab closes",
+      "1": "Persists even after browser is closed",
+      "2": "Stores simple key-value pairs temporarily in memory window",
+      "3": "Asynchronous event handling mechanism loop layer"
+    },
+    "explanation": "Differentiating browser data storage mechanics."
   },
   {
-    "id": 60,
+    "id": 23,
+    "section": "JS",
+    "type": "drag_drop",
+    "q": "Match these HTTP status code categories with their description.",
+    "dragItems": [
+      "Successful request responses",
+      "Client error responses (e.g. Not Found)",
+      "Server error responses (e.g. Internal Error)",
+      "Redirection messages"
+    ],
+    "dropZones": [
+      "2xx Status",
+      "4xx Status",
+      "5xx Status",
+      "3xx Status"
+    ],
+    "answer": {
+      "0": "Successful request responses",
+      "1": "Client error responses (e.g. Not Found)",
+      "2": "Server error responses (e.g. Internal Error)",
+      "3": "Redirection messages"
+    },
+    "explanation": "HTTP status code ranges classification."
+  },
+  {
+    "id": 24,
     "section": "JS",
     "type": "quiz",
-    "q": "What is the output of: console.log(5 > 3 || 10 > 20);",
+    "q": "What does `Event Delegation` mean in JavaScript DOM manipulation?",
     "options": {
-      "A": "true",
-      "B": "false",
-      "C": "undefined",
-      "D": "TypeError"
+      "A": "Handling events at a parent container instead of individual children",
+      "B": "Deleting events when a user clicks away",
+      "C": "Delegating styles to CSS stylesheets automatically",
+      "D": "Running asynchronous web workers for clicks"
     },
     "answer": "A",
-    "explanation": "Since the first condition (5 > 3) is true, the logical OR (||) operator evaluates to true."
+    "explanation": "Event delegation leverages event bubbling to handle events on parent elements for multiple current or future children efficiently."
+  },
+  {
+    "id": 25,
+    "section": "JS",
+    "type": "quiz",
+    "q": "What is the output of the following code snippet?\n\nconst obj = { \n  name: 'Code',\n  getName() { return this.name; }\n};\nconst borrow = obj.getName;\nconsole.log(borrow());",
+    "options": {
+      "A": "Code",
+      "B": "undefined",
+      "C": "TypeError",
+      "D": "null"
+    },
+    "answer": "B",
+    "explanation": "When a method is detached from its object and called as a standalone function, `this` loses context and defaults to undefined in strict mode."
+  },
+  {
+    "id": 26,
+    "section": "JS",
+    "type": "quiz",
+    "q": "Which keyword is used to handle rejected Promises cleanly inside an async function?",
+    "options": {
+      "A": "catch",
+      "B": "try...catch",
+      "C": "reject",
+      "D": "finallyOnly"
+    },
+    "answer": "B",
+    "explanation": "Using a try...catch block around await expressions handles promise rejections gracefully."
+  },
+  {
+    "id": 27,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Write a destructuring assignment with a default value of 'Guest' for `username` from an object `{}`.",
+    "starterCode": "const { username = ",
+    "answer": "'Guest' } = {};",
+    "explanation": "Default values in destructuring are specified using the = operator."
+  },
+  {
+    "id": 28,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Write a `setTimeout` function that prints 'Done' after 2000 milliseconds.",
+    "starterCode": "",
+    "answer": "setTimeout(() => {\n  console.log('Done');\n}, 2000);",
+    "explanation": "setTimeout schedules execution of a callback after a specified delay."
+  },
+  {
+    "id": 29,
+    "section": "JS",
+    "type": "drag_drop",
+    "q": "Match each JavaScript keyword scope definition correctly.",
+    "dragItems": [
+      "Function-scoped and hoisted with undefined",
+      "Block-scoped and not initialized before declaration",
+      "Block-scoped constant value that cannot be reassigned",
+      "Creates global variables if assigned without declaration in non-strict mode"
+    ],
+    "dropZones": [
+      "var",
+      "let",
+      "const",
+      "Implicit Global"
+    ],
+    "answer": {
+      "0": "Function-scoped and hoisted with undefined",
+      "1": "Block-scoped and not initialized before declaration",
+      "2": "Block-scoped constant value that cannot be reassigned",
+      "3": "Creates global variables if assigned without declaration in non-strict mode"
+    },
+    "explanation": "Variable declaration differences in JS."
+  },
+  {
+    "id": 30,
+    "section": "JS",
+    "type": "quiz",
+    "q": "What is the purpose of `JSON.stringify()`?",
+    "options": {
+      "A": "To convert a JSON string into a JavaScript object",
+      "B": "To convert a JavaScript object or value into a JSON string format",
+      "C": "To parse HTML strings into DOM elements",
+      "D": "To minify JavaScript code files"
+    },
+    "answer": "B",
+    "explanation": "JSON.stringify serializes JS objects into JSON strings for storage or network transmission."
   }
 ]
