@@ -14,8 +14,8 @@ export default function Home() {
   const [selfRating, setSelfRating] = useState(50);
   const [currentQIndex, setCurrentQIndex] = useState(0);
   const [score, setScore] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [subjectiveAnswers, setSubjectiveAnswers] = useState({});
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});
+  const [subjectiveAnswers, setSubjectiveAnswers] = useState<Record<number, string>>({});
 
   // ── Anti-Cheat State ──────────────────────────────────────────────────────
   const [tabSwitchCount, setTabSwitchCount] = useState(0);
@@ -70,11 +70,11 @@ export default function Home() {
   };
 
   // ── Answer Handlers ───────────────────────────────────────────────────────
-  const handleSelectOption = (optionKey) => {
+  const handleSelectOption = (optionKey: string) => {
     setSelectedAnswers({ ...selectedAnswers, [currentQIndex]: optionKey });
   };
 
-  const handleSubjectiveAnswer = (text) => {
+  const handleSubjectiveAnswer = (text: string) => {
     setSubjectiveAnswers({ ...subjectiveAnswers, [currentQIndex]: text });
   };
 
