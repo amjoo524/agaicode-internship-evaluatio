@@ -1,0 +1,567 @@
+[
+  {
+    "id": 1,
+    "section": "HTML",
+    "q": "What does HTML stand for?",
+    "options": {
+      "A": "HyperText Machine Language",
+      "B": "Home Tool Markup Language",
+      "C": "HyperText Markup Language",
+      "D": "Hyperlink Text Markup Language"
+    },
+    "answer": "C",
+    "explanation": "HTML stands for HyperText Markup Language. It is the standard language used to create and structure content on the web."
+  },
+  {
+    "id": 2,
+    "section": "HTML",
+    "q": "Which tag is used for the largest heading in HTML?",
+    "options": {
+      "A": "<h6>",
+      "B": "<h1>",
+      "C": "<heading>",
+      "D": "<head>"
+    },
+    "answer": "B",
+    "explanation": "<h1> is the largest and most important heading tag. Headings go from h1 (biggest) to h6 (smallest). Use only one h1 per page."
+  },
+  {
+    "id": 3,
+    "section": "HTML",
+    "q": "Which tag is used to create a paragraph in HTML?",
+    "options": {
+      "A": "<para>",
+      "B": "<pg>",
+      "C": "<text>",
+      "D": "<p>"
+    },
+    "answer": "D",
+    "explanation": "<p> is the paragraph tag. It wraps a block of text and automatically adds spacing above and below the paragraph."
+  },
+  {
+    "id": 4,
+    "section": "HTML",
+    "q": "Which tag is used to add a line break in HTML?",
+    "options": {
+      "A": "<break>",
+      "B": "<br>",
+      "C": "<lb>",
+      "D": "<newline>"
+    },
+    "answer": "B",
+    "explanation": "<br> is a self-closing tag that forces the content after it onto a new line. It has no closing tag."
+  },
+  {
+    "id": 5,
+    "section": "HTML",
+    "q": "Which tag makes text bold in HTML?",
+    "options": {
+      "A": "<bold>",
+      "B": "<bld>",
+      "C": "<b>",
+      "D": "<strong> only"
+    },
+    "answer": "C",
+    "explanation": "<b> makes text visually bold. <strong> also makes text bold but adds extra meaning \u2014 it tells search engines the text is important."
+  },
+  {
+    "id": 6,
+    "section": "HTML",
+    "q": "Which tag is used to insert an image in HTML?",
+    "options": {
+      "A": "<image>",
+      "B": "<pic>",
+      "C": "<src>",
+      "D": "<img>"
+    },
+    "answer": "D",
+    "explanation": "<img> is used to display images. It requires the src attribute for the image path and the alt attribute for accessibility."
+  },
+  {
+    "id": 7,
+    "section": "HTML",
+    "q": "Which attribute is used to specify the URL in an anchor tag?",
+    "options": {
+      "A": "src",
+      "B": "href",
+      "C": "link",
+      "D": "url"
+    },
+    "answer": "B",
+    "explanation": "The href (Hypertext Reference) attribute inside the <a> tag defines the URL the link will go to when clicked."
+  },
+  {
+    "id": 8,
+    "section": "HTML",
+    "q": "What does target='_blank' do in an anchor tag?",
+    "options": {
+      "A": "Opens the link in the same tab",
+      "B": "Closes the current tab",
+      "C": "Opens the link in a new tab",
+      "D": "Downloads the linked file"
+    },
+    "answer": "C",
+    "explanation": "target='_blank' opens the link in a new browser tab. target='_self' (the default) opens it in the same tab."
+  },
+  {
+    "id": 9,
+    "section": "HTML",
+    "q": "Which tag draws a horizontal line in HTML?",
+    "options": {
+      "A": "<line>",
+      "B": "<hl>",
+      "C": "<hr>",
+      "D": "<hline>"
+    },
+    "answer": "C",
+    "explanation": "<hr> (Horizontal Rule) draws a horizontal line across the page. It is used to visually separate sections of content."
+  },
+  {
+    "id": 10,
+    "section": "HTML",
+    "q": "Which tag displays text as subscript (below baseline)?",
+    "options": {
+      "A": "<sub>",
+      "B": "<sup>",
+      "C": "<small>",
+      "D": "<low>"
+    },
+    "answer": "A",
+    "explanation": "<sub> displays text below the normal baseline and smaller. Example: H<sub>2</sub>O for water formula."
+  },
+  {
+    "id": 11,
+    "section": "HTML",
+    "q": "Which tag displays text as superscript (above baseline)?",
+    "options": {
+      "A": "<sub>",
+      "B": "<up>",
+      "C": "<sup>",
+      "D": "<high>"
+    },
+    "answer": "C",
+    "explanation": "<sup> displays text above the normal baseline and smaller. Example: A<sup>2</sup> for math powers."
+  },
+  {
+    "id": 12,
+    "section": "HTML",
+    "q": "Which tag preserves spaces and line breaks exactly as written?",
+    "options": {
+      "A": "<p>",
+      "B": "<text>",
+      "C": "<pre>",
+      "D": "<code>"
+    },
+    "answer": "C",
+    "explanation": "<pre> (Preformatted text) displays text exactly as written \u2014 preserving all spaces and line breaks. Great for showing code."
+  },
+  {
+    "id": 13,
+    "section": "HTML",
+    "q": "Which is the correct semantic tag for the main content area of a page?",
+    "options": {
+      "A": "<body>",
+      "B": "<content>",
+      "C": "<section>",
+      "D": "<main>"
+    },
+    "answer": "D",
+    "explanation": "<main> represents the primary content of a page. There should be only one <main> tag per page. It tells browsers and search engines where the core content is."
+  },
+  {
+    "id": 14,
+    "section": "HTML",
+    "q": "Which tag is a block-level container used to group elements?",
+    "options": {
+      "A": "<span>",
+      "B": "<group>",
+      "C": "<div>",
+      "D": "<inline>"
+    },
+    "answer": "C",
+    "explanation": "<div> is a block-level container. It takes the full width of its parent and starts on a new line. Used to group and organize HTML elements."
+  },
+  {
+    "id": 15,
+    "section": "HTML",
+    "q": "Which tag is an inline container used to style part of a text?",
+    "options": {
+      "A": "<div>",
+      "B": "<span>",
+      "C": "<p>",
+      "D": "<group>"
+    },
+    "answer": "B",
+    "explanation": "<span> is an inline element \u2014 it does not break the line and only takes as much width as its content. Used to style a specific word or phrase."
+  },
+  {
+    "id": 16,
+    "section": "HTML",
+    "q": "Which semantic tag represents the top section of a webpage?",
+    "options": {
+      "A": "<top>",
+      "B": "<head>",
+      "C": "<header>",
+      "D": "<navbar>"
+    },
+    "answer": "C",
+    "explanation": "<header> is a semantic tag for the top section of a page or section. It usually contains the logo, site name, and navigation. Note: <head> is different \u2014 it holds metadata."
+  },
+  {
+    "id": 17,
+    "section": "HTML",
+    "q": "Which semantic tag represents the bottom section of a webpage?",
+    "options": {
+      "A": "<bottom>",
+      "B": "<footer>",
+      "C": "<end>",
+      "D": "<section>"
+    },
+    "answer": "B",
+    "explanation": "<footer> is a semantic tag for the bottom section of a page. It usually contains copyright info, contact details, and social links."
+  },
+  {
+    "id": 18,
+    "section": "HTML",
+    "q": "Which tag is used for table header cells?",
+    "options": {
+      "A": "<td>",
+      "B": "<tr>",
+      "C": "<th>",
+      "D": "<table>"
+    },
+    "answer": "C",
+    "explanation": "<th> (Table Header) is used for header cells in a table. Text inside <th> is bold and centered by default. <td> is used for regular data cells."
+  },
+  {
+    "id": 19,
+    "section": "HTML",
+    "q": "What does the colspan attribute do in a table?",
+    "options": {
+      "A": "Adds a new row",
+      "B": "Changes the font size",
+      "C": "Merges multiple columns into one cell",
+      "D": "Adds padding to cells"
+    },
+    "answer": "C",
+    "explanation": "colspan='n' makes a table cell span across n columns \u2014 similar to merging cells in Excel. Example: colspan='2' makes one cell take the space of two columns."
+  },
+  {
+    "id": 20,
+    "section": "HTML",
+    "q": "Which tag is used to collect user input in HTML?",
+    "options": {
+      "A": "<data>",
+      "B": "<field>",
+      "C": "<input>",
+      "D": "<collect>"
+    },
+    "answer": "C",
+    "explanation": "<input> is used inside a <form> to collect data from the user. The type attribute changes its behavior \u2014 type='text', type='password', type='email' etc."
+  },
+  {
+    "id": 21,
+    "section": "CSS",
+    "q": "What does CSS stand for?",
+    "options": {
+      "A": "Computer Style Sheets",
+      "B": "Cascading Style Sheets",
+      "C": "Creative Style Sheets",
+      "D": "Colorful Style Sheets"
+    },
+    "answer": "B",
+    "explanation": "CSS stands for Cascading Style Sheets. It is used to style and visually design HTML pages \u2014 controlling colors, fonts, layouts, and more."
+  },
+  {
+    "id": 22,
+    "section": "CSS",
+    "q": "Which CSS property is used to change the text color?",
+    "options": {
+      "A": "text-color",
+      "B": "font-color",
+      "C": "color",
+      "D": "background-color"
+    },
+    "answer": "C",
+    "explanation": "The 'color' property in CSS changes the text color. Example: color: red; or color: #3B5BDB; You can use color names, hex codes, or rgb values."
+  },
+  {
+    "id": 23,
+    "section": "CSS",
+    "q": "Which CSS property changes the background color of an element?",
+    "options": {
+      "A": "bg-color",
+      "B": "background-color",
+      "C": "background",
+      "D": "color-background"
+    },
+    "answer": "B",
+    "explanation": "background-color sets the background color of an element. Example: background-color: #EEF2FF; It only affects the background, not the text."
+  },
+  {
+    "id": 24,
+    "section": "CSS",
+    "q": "Which CSS property changes the size of text?",
+    "options": {
+      "A": "text-size",
+      "B": "size",
+      "C": "font-size",
+      "D": "text-style"
+    },
+    "answer": "C",
+    "explanation": "font-size sets the size of text. Common units are px (pixels), em (relative to parent), and rem (relative to root). Example: font-size: 16px;"
+  },
+  {
+    "id": 25,
+    "section": "CSS",
+    "q": "Which CSS property is used to change the font of text?",
+    "options": {
+      "A": "font-name",
+      "B": "text-font",
+      "C": "font-type",
+      "D": "font-family"
+    },
+    "answer": "D",
+    "explanation": "font-family sets which font to use. Example: font-family: Arial, sans-serif; You can list multiple fonts as fallbacks in case the first one is not available."
+  },
+  {
+    "id": 26,
+    "section": "CSS",
+    "q": "Which CSS property makes text bold?",
+    "options": {
+      "A": "text-style",
+      "B": "font-bold",
+      "C": "text-weight",
+      "D": "font-weight"
+    },
+    "answer": "D",
+    "explanation": "font-weight controls the thickness of text. Use font-weight: bold or font-weight: 700 to make text bold. font-weight: normal (400) is the default."
+  },
+  {
+    "id": 27,
+    "section": "CSS",
+    "q": "Which CSS value makes text italic?",
+    "options": {
+      "A": "bold",
+      "B": "oblique",
+      "C": "underline",
+      "D": "italic"
+    },
+    "answer": "D",
+    "explanation": "font-style: italic makes text italic. Example: font-style: italic; Oblique is similar but uses a slanted version of the regular font instead of a true italic."
+  },
+  {
+    "id": 28,
+    "section": "CSS",
+    "q": "Which CSS property aligns text horizontally?",
+    "options": {
+      "A": "text-position",
+      "B": "align-text",
+      "C": "text-align",
+      "D": "align"
+    },
+    "answer": "C",
+    "explanation": "text-align controls horizontal alignment of text. Values: left, right, center, justify. Example: text-align: center; centers the text inside its container."
+  },
+  {
+    "id": 29,
+    "section": "CSS",
+    "q": "Which CSS property adds underline, line-through or removes decoration from text?",
+    "options": {
+      "A": "text-style",
+      "B": "underline",
+      "C": "text-decoration",
+      "D": "font-decoration"
+    },
+    "answer": "C",
+    "explanation": "text-decoration controls text decoration. Values: underline, line-through, none. Commonly used to remove underline from links: text-decoration: none;"
+  },
+  {
+    "id": 30,
+    "section": "CSS",
+    "q": "Which CSS property transforms text to uppercase or lowercase?",
+    "options": {
+      "A": "text-case",
+      "B": "font-case",
+      "C": "text-transform",
+      "D": "text-uppercase"
+    },
+    "answer": "C",
+    "explanation": "text-transform changes the capitalization of text. Values: uppercase (ALL CAPS), lowercase (all small), capitalize (First Letter Capital)."
+  },
+  {
+    "id": 31,
+    "section": "CSS",
+    "q": "Which CSS property adds space INSIDE an element (between content and border)?",
+    "options": {
+      "A": "margin",
+      "B": "padding",
+      "C": "spacing",
+      "D": "border-spacing"
+    },
+    "answer": "B",
+    "explanation": "padding adds space inside an element \u2014 between the content and the border. Think of it as space inside the box. Example: padding: 20px;"
+  },
+  {
+    "id": 32,
+    "section": "CSS",
+    "q": "Which CSS property adds space OUTSIDE an element (between elements)?",
+    "options": {
+      "A": "padding",
+      "B": "space",
+      "C": "gap",
+      "D": "margin"
+    },
+    "answer": "D",
+    "explanation": "margin adds space outside an element \u2014 between it and other elements. Think of it as space outside the box. Example: margin: 10px auto; (auto centers the element)."
+  },
+  {
+    "id": 33,
+    "section": "CSS",
+    "q": "Which CSS property adds a border around an element?",
+    "options": {
+      "A": "outline",
+      "B": "border",
+      "C": "frame",
+      "D": "box"
+    },
+    "answer": "B",
+    "explanation": "border adds a line around an element. Example: border: 1px solid black; \u2014 this means 1 pixel thick, solid line style, black color. You can also set individual sides."
+  },
+  {
+    "id": 34,
+    "section": "CSS",
+    "q": "Which CSS display value enables flexbox layout?",
+    "options": {
+      "A": "block",
+      "B": "inline",
+      "C": "grid",
+      "D": "flex"
+    },
+    "answer": "D",
+    "explanation": "display: flex turns an element into a flex container. Its children automatically line up in a row. Use it to easily create side-by-side layouts."
+  },
+  {
+    "id": 35,
+    "section": "CSS",
+    "q": "Which CSS property aligns flex items along the horizontal (main) axis?",
+    "options": {
+      "A": "align-items",
+      "B": "flex-align",
+      "C": "justify-content",
+      "D": "align-content"
+    },
+    "answer": "C",
+    "explanation": "justify-content aligns flex items horizontally (left to right). Values: flex-start, center, flex-end, space-between, space-around. Example: justify-content: center;"
+  },
+  {
+    "id": 36,
+    "section": "CSS",
+    "q": "Which CSS property aligns flex items along the vertical (cross) axis?",
+    "options": {
+      "A": "justify-content",
+      "B": "align-items",
+      "C": "flex-direction",
+      "D": "vertical-align"
+    },
+    "answer": "B",
+    "explanation": "align-items aligns flex items vertically (top to bottom). Values: flex-start, center, flex-end, stretch. Example: align-items: center; centers items vertically."
+  },
+  {
+    "id": 37,
+    "section": "CSS",
+    "q": "Which CSS property adds space between flex items?",
+    "options": {
+      "A": "spacing",
+      "B": "margin-gap",
+      "C": "gap",
+      "D": "flex-space"
+    },
+    "answer": "C",
+    "explanation": "gap adds space between flex (or grid) items. Example: gap: 20px; is cleaner than adding margin to every child element individually."
+  },
+  {
+    "id": 38,
+    "section": "CSS",
+    "q": "How do you select an element with class 'card' in CSS?",
+    "options": {
+      "A": "card",
+      "B": "#card",
+      "C": ".card",
+      "D": "*card"
+    },
+    "answer": "C",
+    "explanation": "Class selectors use a dot (.) before the class name. Example: .card { background: white; } Multiple elements can share the same class."
+  },
+  {
+    "id": 39,
+    "section": "CSS",
+    "q": "How do you select an element with id 'main' in CSS?",
+    "options": {
+      "A": "main",
+      "B": ".main",
+      "C": "*main",
+      "D": "#main"
+    },
+    "answer": "D",
+    "explanation": "ID selectors use a hash (#) before the id name. Example: #main { color: blue; } Only one element on the page should have a specific id."
+  },
+  {
+    "id": 40,
+    "section": "CSS",
+    "q": "Which CSS property makes the corners of an element rounded?",
+    "options": {
+      "A": "corner-radius",
+      "B": "border-circle",
+      "C": "border-radius",
+      "D": "round-border"
+    },
+    "answer": "C",
+    "explanation": "border-radius rounds the corners of an element. Example: border-radius: 8px; Use border-radius: 50% on a square element to make it a perfect circle."
+  },
+  {
+    "id": 41,
+    "section": "HTML",
+    "type": "subjective",
+    "q": "Write the correct HTML code to create a clickable image that opens https://google.com in a new tab.",
+    "options": {},
+    "answer": "",
+    "explanation": "<a href=\"https://google.com\" target=\"_blank\"><img src=\"image.jpg\" alt=\"Google\"></a> \u2014 img tag is wrapped inside an anchor tag. target=_blank opens in new tab."
+  },
+  {
+    "id": 42,
+    "section": "HTML",
+    "type": "subjective",
+    "q": "What is the difference between <div> and <span>? Give one example of each.",
+    "options": {},
+    "answer": "",
+    "explanation": "div is a block element (takes full width, starts on new line). span is an inline element (stays on same line, takes only content width). div is for sections, span is for styling part of text."
+  },
+  {
+    "id": 43,
+    "section": "HTML",
+    "type": "subjective",
+    "q": "Write HTML code for a table with caption \"Class List\", 2 columns (Name, Roll No), and 2 rows of data.",
+    "options": {},
+    "answer": "",
+    "explanation": "<table><caption>Class List</caption><thead><tr><th>Name</th><th>Roll No</th></tr></thead><tbody><tr><td>Amjad</td><td>1664</td></tr><tr><td>Saqlain</td><td>1890</td></tr></tbody></table>"
+  },
+  {
+    "id": 44,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Write CSS code to display 3 div elements side by side with a gap of 16px between them, and center them horizontally.",
+    "options": {},
+    "answer": "",
+    "explanation": ".container { display: flex; justify-content: center; gap: 16px; } This makes children appear side by side. justify-content centers them horizontally."
+  },
+  {
+    "id": 45,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Write CSS code for a card div with: white background, 20px padding, rounded corners, a light shadow, and a 1px border.",
+    "options": {},
+    "answer": "",
+    "explanation": ".card { background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); border: 1px solid #DEE2E6; }"
+  }
+]
