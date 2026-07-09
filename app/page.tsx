@@ -1,21 +1,26 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 
-import quizQuestions from '@/data/questions.json';
 import StartScreen from '../components/StartScreen';
 import QuizScreen from '../components/QuizScreen';
 import ResultScreen from '../components/ResultScreen';
 
-const MAX_WARNINGS = 3; // 3 warnings ke baad auto-submit
+const MAX_WARNINGS = 2; // Stricter: 2 warnings ke baad auto-submit
 
 export default function Home() {
   const [step, setStep] = useState('start');
   const [studentName, setStudentName] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [selfRating, setSelfRating] = useState(50);
   const [currentQIndex, setCurrentQIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});
   const [subjectiveAnswers, setSubjectiveAnswers] = useState<Record<number, string>>({});
+  const [quizQuestions, setQuizQuestions] = useState<any[]>([]);
+  const [activeQuizQuestions, setActiveQuizQuestions] = useState<any[]>([]);
+  const [questionLimit, setQuestionLimit] = useState<number | 'ALL'>(20);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   // ── Anti-Cheat State ──────────────────────────────────────────────────────
   const [tabSwitchCount, setTabSwitchCount] = useState(0);
@@ -23,41 +28,36 @@ export default function Home() {
   const [warningMessage, setWarningMessage] = useState('');
   const [isExamLocked, setIsExamLocked] = useState(false);
 
-  const quizData = Array.isArray(quizQuestions) ? quizQuestions : [];
-
-  // ── Anti-Cheat: Tab Switch Detector ──────────────────────────────────────
-  const handleBlur = useCallback(() => {
-    if (step !== 'quiz') return;
-
-    const newCount = tabSwitchCount + 1;
-    setTabSwitchCount(newCount);
-
-    if (newCount >= MAX_WARNINGS) {
-      setWarningMessage(
-        `FINAL WARNING! You have switched tabs ${newCount} times. Your exam is now being auto-submitted.`
-      );
-      setShowWarning(true);
-      setIsExamLocked(true);
-      // Auto submit after 3 seconds
-      setTimeout(() => {
-        handleAutoSubmit();
-      }, 3000);
-    } else {
-      setWarningMessage(
-        `⚠️ Tab switch detected! Warning ${newCount} of ${MAX_WARNINGS}. Switching tabs again may result in auto-submission.`
-      );
-      setShowWarning(true);
-      setTimeout(() => setShowWarning(false), 4000);
+  const shuffleArray = (array: any[]) => {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
     }
-  }, [step, tabSwitchCount]);
+    return arr;
+  };
+
+  const quizData = activeQuizQuestions;
+  const examDuration = quizData.length * 90; // Exactly 1.5 minutes (90s) per question
 
   useEffect(() => {
-    window.addEventListener('blur', handleBlur);
-    return () => window.removeEventListener('blur', handleBlur);
-  }, [handleBlur]);
+    fetch('/api/questions')
+      .then((res) => {
+        if (!res.ok) throw new Error('Could not establish connection to the Academy API.');
+        return res.json();
+      })
+      .then((data) => {
+        setQuizQuestions(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message || 'An unexpected error occurred.');
+        setLoading(false);
+      });
+  }, []);
 
   // ── Auto Submit ───────────────────────────────────────────────────────────
-  const handleAutoSubmit = () => {
+  const handleAutoSubmit = useCallback(() => {
     let finalScore = 0;
     quizData.forEach((q, index) => {
       if (q.type !== 'subjective' && selectedAnswers[index] === q.answer) {
@@ -67,7 +67,80 @@ export default function Home() {
     setScore(finalScore);
     setStep('result');
     setShowWarning(false);
-  };
+  }, [quizData, selectedAnswers]);
+
+  // ── Anti-Cheat: Heavy Cheat Detector ─────────────────────────────────────
+  const handleCheatAttempt = useCallback((reason: string) => {
+    if (step !== 'quiz') return;
+
+    setTabSwitchCount((prev) => {
+      const nextCount = prev + 1;
+      if (nextCount >= MAX_WARNINGS) {
+        setWarningMessage(
+          `🚨 FINAL WARNING! Cheat attempt detected: ${reason}. Auto-submitting in 5 seconds...`
+        );
+        setShowWarning(true);
+        setIsExamLocked(true);
+        setTimeout(() => {
+          handleAutoSubmit();
+        }, 5000);
+      } else {
+        setWarningMessage(
+          `⚠️ Cheat attempt detected! Warning ${nextCount} of ${MAX_WARNINGS}: ${reason}.`
+        );
+        setShowWarning(true);
+        setTimeout(() => setShowWarning(false), 5000);
+      }
+      return nextCount;
+    });
+  }, [step, handleAutoSubmit]);
+
+  useEffect(() => {
+    if (step !== 'quiz') return;
+
+    const handleBlur = () => handleCheatAttempt("Tab switched or browser lost focus");
+    const handleVisibility = () => {
+      if (document.hidden) handleCheatAttempt("Tab switched or browser minimized");
+    };
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+      handleCheatAttempt("Right-click context menu disabled");
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'F12') {
+        e.preventDefault();
+        handleCheatAttempt("F12 Developer Tools blocked");
+      }
+      if (e.ctrlKey && (e.key === 'c' || e.key === 'C')) {
+        e.preventDefault();
+        handleCheatAttempt("Copy shortcut blocked");
+      }
+      if (e.ctrlKey && (e.key === 'v' || e.key === 'V')) {
+        e.preventDefault();
+        handleCheatAttempt("Paste shortcut blocked");
+      }
+      if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+        e.preventDefault();
+        handleCheatAttempt("View Source blocked");
+      }
+      if (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'I')) {
+        e.preventDefault();
+        handleCheatAttempt("Inspect Element blocked");
+      }
+    };
+
+    window.addEventListener('blur', handleBlur);
+    document.addEventListener('visibilitychange', handleVisibility);
+    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('blur', handleBlur);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [step, handleCheatAttempt]);
 
   // ── Answer Handlers ───────────────────────────────────────────────────────
   const handleSelectOption = (optionKey: string) => {
@@ -113,6 +186,36 @@ export default function Home() {
     setStep('result');
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl shadow-gray-100/70 p-10 border border-gray-100 text-center animate-fadeIn">
+          <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+          <h2 className="text-xl font-bold text-gray-800 mb-2">Connecting to Academy API...</h2>
+          <p className="text-gray-500 text-sm">Fetching latest assessment questions...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl shadow-gray-100/70 p-10 border border-gray-100 text-center animate-fadeIn">
+          <div className="text-5xl mb-4">⚠️</div>
+          <h2 className="text-xl font-bold text-red-600 mb-2">API Connection Failed</h2>
+          <p className="text-gray-600 text-sm mb-6">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-2.5 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition-all cursor-pointer shadow-md hover:shadow-indigo-100"
+          >
+            Retry Connection
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50/50 flex items-center justify-center p-4">
 
@@ -147,9 +250,22 @@ export default function Home() {
           <StartScreen
             studentName={studentName}
             setStudentName={setStudentName}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            questionLimit={questionLimit}
+            setQuestionLimit={setQuestionLimit}
             selfRating={selfRating}
             setSelfRating={setSelfRating}
             onStart={() => {
+              const categoryQuestions = selectedCategory === 'ALL'
+                ? quizQuestions
+                : quizQuestions.filter((q) => q.section === selectedCategory);
+              
+              const shuffled = shuffleArray(categoryQuestions);
+              const limitNum = questionLimit === 'ALL' ? shuffled.length : Number(questionLimit);
+              const subset = shuffled.slice(0, Math.min(limitNum, shuffled.length));
+
+              setActiveQuizQuestions(subset);
               setTabSwitchCount(0);
               setIsExamLocked(false);
               setShowWarning(false);
@@ -175,6 +291,7 @@ export default function Home() {
             isLocked={isExamLocked}
             tabSwitchCount={tabSwitchCount}
             maxWarnings={MAX_WARNINGS}
+            examDuration={examDuration}
           />
         )}
 
@@ -188,6 +305,7 @@ export default function Home() {
             selectedAnswers={selectedAnswers}
             subjectiveAnswers={subjectiveAnswers}
             tabSwitchCount={tabSwitchCount}
+            selectedCategory={selectedCategory}
           />
         )}
 

@@ -7,6 +7,7 @@ export default function ResultScreen({
   selectedAnswers,
   subjectiveAnswers,
   tabSwitchCount,
+  selectedCategory,
 }) {
   const mcqQuestions = questions.filter((q) => q.type !== 'subjective');
   const subjectiveQs = questions.filter((q) => q.type === 'subjective');
@@ -40,7 +41,7 @@ export default function ResultScreen({
       {/* ── Score Card ────────────────────────────────────────────────────── */}
       <div className="bg-gray-50 rounded-2xl p-6 max-w-md mx-auto border border-gray-200/60 shadow-sm mb-6">
         <p className="text-xs font-bold text-gray-400 uppercase tracking-widest text-center mb-1">
-          MCQ Score (Section A)
+          MCQ Score ({selectedCategory === 'ALL' ? 'Full Stack' : selectedCategory} Section A)
         </p>
         <div className="text-5xl font-black text-gray-900 text-center mb-4">
           {score}{' '}

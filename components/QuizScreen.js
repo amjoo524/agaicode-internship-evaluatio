@@ -1,7 +1,36 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 
-const EXAM_DURATION = 45 * 60;
+const playAlarmSound = () => {
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    const playBeep = (time, frequency, duration) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(frequency, time);
+      
+      gain.gain.setValueAtTime(0.12, time);
+      gain.gain.exponentialRampToValueAtTime(0.01, time + duration - 0.02);
+      
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      
+      osc.start(time);
+      osc.stop(time + duration);
+    };
+
+    const now = audioCtx.currentTime;
+    playBeep(now, 880, 0.12);
+    playBeep(now + 0.15, 660, 0.12);
+    playBeep(now + 0.3, 880, 0.12);
+    playBeep(now + 0.45, 660, 0.12);
+  } catch (e) {
+    console.error("Audio Context not supported or blocked:", e);
+  }
+};
 
 const FUNNY_WARNINGS = [
   { emoji: '🕵️', title: 'Caught You!', msg: " Google pe answers nahi milenge, humne check kar liya pehle se! 😂" },
@@ -10,6 +39,17 @@ const FUNNY_WARNINGS = [
   { emoji: '😤', title: 'Caught Red-Handed!', msg: "Tab switch karte waqt pakde gaye! Sharam karo thodi... ya nahi? 😏" },
   { emoji: '🤦', title: 'Beta...',  msg: "Tab switch karke answer dhundhna? Hum 2024 mein hain, cheating detect hoti hai! 😅" },
 ];
+
+const getSectionBadgeStyle = (section) => {
+  switch (section) {
+    case 'HTML': return 'text-orange-600 bg-orange-50 border border-orange-100';
+    case 'CSS': return 'text-blue-600 bg-blue-50 border border-blue-100';
+    case 'JS': return 'text-amber-700 bg-amber-50 border border-amber-100';
+    case 'React': return 'text-cyan-600 bg-cyan-50 border border-cyan-100';
+    case 'Next.js': return 'text-slate-800 bg-slate-100 border border-slate-200';
+    default: return 'text-indigo-600 bg-indigo-50 border border-indigo-100';
+  }
+};
 
 export default function QuizScreen({
   currentQuestion,
@@ -24,17 +64,72 @@ export default function QuizScreen({
   isLocked,
   tabSwitchCount,
   maxWarnings,
+  examDuration,
 }) {
   const [revealed, setRevealed] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(EXAM_DURATION);
+  const [timeLeft, setTimeLeft] = useState(examDuration);
   const [showCheatModal, setShowCheatModal] = useState(false);
   const [currentWarning, setCurrentWarning] = useState(null);
   const timerRef = useRef(null);
 
+  useEffect(() => {
+    setTimeLeft(examDuration);
+  }, [examDuration]);
+
   const progressPercentage = (currentIndex / totalQuestions) * 100;
   const isSubjective = currentQuestion?.type === 'subjective';
+  const isDragAndDrop = currentQuestion?.type === 'drag-and-drop';
   const isLastQuestion = currentIndex === totalQuestions - 1;
   const isTimeLow = timeLeft <= 5 * 60;
+
+  const renderCodeWithBlank = () => {
+    if (!currentQuestion || !currentQuestion.code) return null;
+    const parts = currentQuestion.code.split('[BLANK]');
+    return (
+      <div className="inline-flex flex-wrap items-center leading-loose">
+        {parts.map((part, index) => {
+          const isLast = index === parts.length - 1;
+          return (
+            <span key={index} className="inline-flex items-center flex-wrap">
+              <span>{part}</span>
+              {!isLast && (
+                <div
+                  onDragOver={(e) => !revealed && !isLocked && e.preventDefault()}
+                  onDrop={(e) => {
+                    if (revealed || isLocked) return;
+                    e.preventDefault();
+                    const option = e.dataTransfer.getData('text/plain');
+                    if (option) {
+                      onSelectOption(option);
+                      setRevealed(true);
+                    }
+                  }}
+                  onClick={() => {
+                    if (revealed || isLocked) return;
+                    if (selectedAnswer) {
+                      onSelectOption('');
+                      setRevealed(false);
+                    }
+                  }}
+                  className={`inline-flex items-center justify-center min-w-[100px] h-[28px] px-2.5 mx-1.5 rounded-md font-bold text-xs transition-all border-2
+                    ${!selectedAnswer 
+                      ? 'bg-slate-800/80 border-dashed border-slate-500 text-slate-400 select-none' 
+                      : revealed
+                        ? selectedAnswer === currentQuestion.answer
+                          ? 'bg-green-600 border-green-500 text-white shadow-sm shadow-green-900/30'
+                          : 'bg-red-600 border-red-500 text-white shadow-sm shadow-red-900/30'
+                        : 'bg-indigo-600 border-indigo-500 text-white shadow-sm shadow-indigo-900/30 cursor-pointer hover:bg-indigo-500'
+                    }`}
+                >
+                  {selectedAnswer ? selectedAnswer : 'Drop here'}
+                </div>
+              )}
+            </span>
+          );
+        })}
+      </div>
+    );
+  };
 
   // ── Reset on question change ───────────────────────────────────────────────
   useEffect(() => {
@@ -62,6 +157,7 @@ export default function QuizScreen({
       const idx = Math.min(tabSwitchCount - 1, FUNNY_WARNINGS.length - 1);
       setCurrentWarning(FUNNY_WARNINGS[idx]);
       setShowCheatModal(true);
+      playAlarmSound();
     }
   }, [tabSwitchCount]);
 
@@ -195,10 +291,7 @@ export default function QuizScreen({
       {/* ── SECTION HEADER ────────────────────────────────────────────────── */}
       <div className="flex justify-between items-center border-b border-gray-100 pb-4 mb-5">
         <div className="flex items-center gap-2">
-          <span className={`text-xs font-bold px-3 py-1.5 rounded-md uppercase tracking-wider
-            ${currentQuestion.section === 'CSS'
-              ? 'text-purple-600 bg-purple-50'
-              : 'text-indigo-600 bg-indigo-50'}`}>
+          <span className={`text-xs font-bold px-3 py-1.5 rounded-md uppercase tracking-wider ${getSectionBadgeStyle(currentQuestion.section)}`}>
             {currentQuestion.section}
           </span>
           {isSubjective && (
@@ -218,8 +311,84 @@ export default function QuizScreen({
         {currentQuestion.q}
       </h2>
 
+      {/* ── DRAG AND DROP CODE EDITOR ── */}
+      {isDragAndDrop && (
+        <div className="space-y-6">
+          <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-inner">
+            {/* Editor Header */}
+            <div className="flex items-center justify-between px-4 py-2.5 bg-slate-950 border-b border-slate-850 select-none">
+              <div className="flex items-center gap-1.5">
+                <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div className="w-3 h-3 rounded-full bg-green-500"></div>
+              </div>
+              <span className="text-xs font-mono text-slate-500 font-bold">
+                {currentQuestion.section === 'HTML' ? 'index.html' : currentQuestion.section === 'CSS' ? 'styles.css' : 'index.js'}
+              </span>
+              <div className="w-12"></div>
+            </div>
+            {/* Code Content */}
+            <div className="p-6 font-mono text-sm leading-relaxed text-slate-300 overflow-x-auto whitespace-pre">
+              {renderCodeWithBlank()}
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <p className="text-xs text-gray-400 font-semibold select-none">
+              🤝 Drag an option into the blank area above or simply click it:
+            </p>
+            <div className="flex flex-wrap gap-3">
+              {currentQuestion.options.map((option) => {
+                const isPlaced = selectedAnswer === option;
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    draggable={!revealed && !isLocked}
+                    onDragStart={(e) => {
+                      if (revealed || isLocked) return;
+                      e.dataTransfer.setData('text/plain', option);
+                    }}
+                    onClick={() => {
+                      if (revealed || isLocked) return;
+                      onSelectOption(option);
+                      setRevealed(true);
+                    }}
+                    disabled={revealed || isLocked}
+                    className={`px-4 py-2.5 rounded-lg font-mono text-xs font-bold border transition-all select-none
+                      ${isPlaced
+                        ? 'bg-indigo-50 border-indigo-300 text-indigo-700 shadow-inner'
+                        : revealed
+                          ? 'bg-gray-50 border-gray-200 text-gray-400 cursor-not-allowed'
+                          : 'bg-white hover:bg-gray-50 border-gray-200 hover:border-gray-300 text-gray-700 shadow-sm cursor-grab active:cursor-grabbing hover:-translate-y-0.5'
+                      }`}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
+            </div>
+
+            {revealed && (
+              <div className={`mt-5 p-4 rounded-xl border text-sm leading-relaxed
+                ${selectedAnswer === currentQuestion.answer
+                  ? 'bg-green-50 border-green-200 text-green-800'
+                  : 'bg-red-50 border-red-200 text-red-800'}`}>
+                <p className="font-bold mb-1">
+                  {selectedAnswer === currentQuestion.answer ? '✓ Correct!' : '✗ Wrong!'}
+                  {selectedAnswer !== currentQuestion.answer && (
+                    <span className="font-normal"> Correct: <b>{currentQuestion.answer}</b></span>
+                  )}
+                </p>
+                <p className="text-gray-600 mt-1">💡 {currentQuestion.explanation}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* ── MCQ OPTIONS ───────────────────────────────────────────────────── */}
-      {!isSubjective && (
+      {!isSubjective && !isDragAndDrop && (
         <>
           <div className="space-y-3">
             {Object.entries(currentQuestion.options).map(([key, value]) => (
