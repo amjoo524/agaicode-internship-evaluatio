@@ -64,23 +64,30 @@ export default function QuizScreen({
   isLocked,
   tabSwitchCount,
   maxWarnings,
-  examDuration,
 }) {
   const [revealed, setRevealed] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(examDuration);
+  
+  // 🎯 Dynamic Time Calculation: 1 min 50 secs (110 seconds) per question
+  const SECONDS_PER_QUESTION = 110; 
+  const calculatedTotalTime = (totalQuestions || 1) * SECONDS_PER_QUESTION;
+
+  const [timeLeft, setTimeLeft] = useState(calculatedTotalTime);
   const [showCheatModal, setShowCheatModal] = useState(false);
   const [currentWarning, setCurrentWarning] = useState(null);
   const timerRef = useRef(null);
 
+  // Re-calculate timer if totalQuestions count changes
   useEffect(() => {
-    setTimeLeft(examDuration);
-  }, [examDuration]);
+    if (totalQuestions) {
+      setTimeLeft(totalQuestions * SECONDS_PER_QUESTION);
+    }
+  }, [totalQuestions]);
 
   const progressPercentage = (currentIndex / totalQuestions) * 100;
   const isSubjective = currentQuestion?.type === 'subjective';
   const isDragAndDrop = currentQuestion?.type === 'drag-and-drop';
   const isLastQuestion = currentIndex === totalQuestions - 1;
-  const isTimeLow = timeLeft <= 5 * 60;
+  const isTimeLow = timeLeft <= 5 * 60; // Low time warning if <= 5 minutes remaining
 
   const renderCodeWithBlank = () => {
     if (!currentQuestion || !currentQuestion.code) return null;
@@ -161,10 +168,13 @@ export default function QuizScreen({
     }
   }, [tabSwitchCount]);
 
+  // Updated formatTime to support Hours if total time exceeds 60 minutes
   const formatTime = (seconds) => {
-    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
     const s = (seconds % 60).toString().padStart(2, '0');
-    return `${m}:${s}`;
+    
+    return h > 0 ? `${h}:${m}:${s}` : `${m}:${s}`;
   };
 
   // ── Option styles ──────────────────────────────────────────────────────────
@@ -257,7 +267,7 @@ export default function QuizScreen({
           {currentIndex + 1} / {totalQuestions}
         </span>
 
-        {/* ⏱️ BIG TIMER */}
+        {/* ⏱️ DYNAMIC TIMER */}
         <div className={`flex items-center gap-2 px-5 py-2 rounded-full font-black border-2
           transition-all duration-300
           ${isTimeLow

@@ -38,229 +38,9 @@
     "answer": "D",
     "explanation": "<p> is the paragraph tag. It wraps a block of text and automatically adds spacing above and below the paragraph."
   },
+
   {
-    "id": 4,
-    "section": "HTML",
-    "q": "Which tag is used to add a line break in HTML?",
-    "options": {
-      "A": "<break>",
-      "B": "<br>",
-      "C": "<lb>",
-      "D": "<newline>"
-    },
-    "answer": "B",
-    "explanation": "<br> is a self-closing tag that forces the content after it onto a new line. It has no closing tag."
-  },
-  {
-    "id": 5,
-    "section": "HTML",
-    "q": "Which tag makes text bold in HTML?",
-    "options": {
-      "A": "<bold>",
-      "B": "<bld>",
-      "C": "<b>",
-      "D": "<strong> only"
-    },
-    "answer": "C",
-    "explanation": "<b> makes text visually bold. <strong> also makes text bold but adds extra meaning \u2014 it tells search engines the text is important."
-  },
-  {
-    "id": 6,
-    "section": "HTML",
-    "q": "Which tag is used to insert an image in HTML?",
-    "options": {
-      "A": "<image>",
-      "B": "<pic>",
-      "C": "<src>",
-      "D": "<img>"
-    },
-    "answer": "D",
-    "explanation": "<img> is used to display images. It requires the src attribute for the image path and the alt attribute for accessibility."
-  },
-  {
-    "id": 7,
-    "section": "HTML",
-    "q": "Which attribute is used to specify the URL in an anchor tag?",
-    "options": {
-      "A": "src",
-      "B": "href",
-      "C": "link",
-      "D": "url"
-    },
-    "answer": "B",
-    "explanation": "The href (Hypertext Reference) attribute inside the <a> tag defines the URL the link will go to when clicked."
-  },
-  {
-    "id": 8,
-    "section": "HTML",
-    "q": "What does target='_blank' do in an anchor tag?",
-    "options": {
-      "A": "Opens the link in the same tab",
-      "B": "Closes the current tab",
-      "C": "Opens the link in a new tab",
-      "D": "Downloads the linked file"
-    },
-    "answer": "C",
-    "explanation": "target='_blank' opens the link in a new browser tab. target='_self' (the default) opens it in the same tab."
-  },
-  {
-    "id": 9,
-    "section": "HTML",
-    "q": "Which tag draws a horizontal line in HTML?",
-    "options": {
-      "A": "<line>",
-      "B": "<hl>",
-      "C": "<hr>",
-      "D": "<hline>"
-    },
-    "answer": "C",
-    "explanation": "<hr> (Horizontal Rule) draws a horizontal line across the page. It is used to visually separate sections of content."
-  },
-  {
-    "id": 10,
-    "section": "HTML",
-    "q": "Which tag displays text as subscript (below baseline)?",
-    "options": {
-      "A": "<sub>",
-      "B": "<sup>",
-      "C": "<small>",
-      "D": "<low>"
-    },
-    "answer": "A",
-    "explanation": "<sub> displays text below the normal baseline and smaller. Example: H<sub>2</sub>O for water formula."
-  },
-  {
-    "id": 11,
-    "section": "HTML",
-    "q": "Which tag displays text as superscript (above baseline)?",
-    "options": {
-      "A": "<sub>",
-      "B": "<up>",
-      "C": "<sup>",
-      "D": "<high>"
-    },
-    "answer": "C",
-    "explanation": "<sup> displays text above the normal baseline and smaller. Example: A<sup>2</sup> for math powers."
-  },
-  {
-    "id": 12,
-    "section": "HTML",
-    "q": "Which tag preserves spaces and line breaks exactly as written?",
-    "options": {
-      "A": "<p>",
-      "B": "<text>",
-      "C": "<pre>",
-      "D": "<code>"
-    },
-    "answer": "C",
-    "explanation": "<pre> (Preformatted text) displays text exactly as written \u2014 preserving all spaces and line breaks. Great for showing code."
-  },
-  {
-    "id": 13,
-    "section": "HTML",
-    "q": "Which is the correct semantic tag for the main content area of a page?",
-    "options": {
-      "A": "<body>",
-      "B": "<content>",
-      "C": "<section>",
-      "D": "<main>"
-    },
-    "answer": "D",
-    "explanation": "<main> represents the primary content of a page. There should be only one <main> tag per page. It tells browsers and search engines where the core content is."
-  },
-  {
-    "id": 14,
-    "section": "HTML",
-    "q": "Which tag is a block-level container used to group elements?",
-    "options": {
-      "A": "<span>",
-      "B": "<group>",
-      "C": "<div>",
-      "D": "<inline>"
-    },
-    "answer": "C",
-    "explanation": "<div> is a block-level container. It takes the full width of its parent and starts on a new line. Used to group and organize HTML elements."
-  },
-  {
-    "id": 15,
-    "section": "HTML",
-    "q": "Which tag is an inline container used to style part of a text?",
-    "options": {
-      "A": "<div>",
-      "B": "<span>",
-      "C": "<p>",
-      "D": "<group>"
-    },
-    "answer": "B",
-    "explanation": "<span> is an inline element \u2014 it does not break the line and only takes as much width as its content. Used to style a specific word or phrase."
-  },
-  {
-    "id": 16,
-    "section": "HTML",
-    "q": "Which semantic tag represents the top section of a webpage?",
-    "options": {
-      "A": "<top>",
-      "B": "<head>",
-      "C": "<header>",
-      "D": "<navbar>"
-    },
-    "answer": "C",
-    "explanation": "<header> is a semantic tag for the top section of a page or section. It usually contains the logo, site name, and navigation. Note: <head> is different \u2014 it holds metadata."
-  },
-  {
-    "id": 17,
-    "section": "HTML",
-    "q": "Which semantic tag represents the bottom section of a webpage?",
-    "options": {
-      "A": "<bottom>",
-      "B": "<footer>",
-      "C": "<end>",
-      "D": "<section>"
-    },
-    "answer": "B",
-    "explanation": "<footer> is a semantic tag for the bottom section of a page. It usually contains copyright info, contact details, and social links."
-  },
-  {
-    "id": 18,
-    "section": "HTML",
-    "q": "Which tag is used for table header cells?",
-    "options": {
-      "A": "<td>",
-      "B": "<tr>",
-      "C": "<th>",
-      "D": "<table>"
-    },
-    "answer": "C",
-    "explanation": "<th> (Table Header) is used for header cells in a table. Text inside <th> is bold and centered by default. <td> is used for regular data cells."
-  },
-  {
-    "id": 19,
-    "section": "HTML",
-    "q": "What does the colspan attribute do in a table?",
-    "options": {
-      "A": "Adds a new row",
-      "B": "Changes the font size",
-      "C": "Merges multiple columns into one cell",
-      "D": "Adds padding to cells"
-    },
-    "answer": "C",
-    "explanation": "colspan='n' makes a table cell span across n columns \u2014 similar to merging cells in Excel. Example: colspan='2' makes one cell take the space of two columns."
-  },
-  {
-    "id": 20,
-    "section": "HTML",
-    "q": "Which tag is used to collect user input in HTML?",
-    "options": {
-      "A": "<data>",
-      "B": "<field>",
-      "C": "<input>",
-      "D": "<collect>"
-    },
-    "answer": "C",
-    "explanation": "<input> is used inside a <form> to collect data from the user. The type attribute changes its behavior \u2014 type='text', type='password', type='email' etc."
-  },
-  {
-    "id": 21,
+    "id": 24,
     "section": "CSS",
     "q": "What does CSS stand for?",
     "options": {
@@ -270,10 +50,36 @@
       "D": "Colorful Style Sheets"
     },
     "answer": "B",
-    "explanation": "CSS stands for Cascading Style Sheets. It is used to style and visually design HTML pages \u2014 controlling colors, fonts, layouts, and more."
+    "explanation": "CSS stands for Cascading Style Sheets. It is used to describe the style of an HTML document."
   },
   {
-    "id": 22,
+    "id": 25,
+    "section": "CSS",
+    "q": "Which HTML tag is used to define an internal style sheet?",
+    "options": {
+      "A": "<script>",
+      "B": "<css>",
+      "C": "<style>",
+      "D": "<link>"
+    },
+    "answer": "C",
+    "explanation": "Internal styles are defined within the <style> element in HTML."
+  },
+  {
+    "id": 26,
+    "section": "CSS",
+    "q": "Which HTML attribute is used to define inline styles?",
+    "options": {
+      "A": "class",
+      "B": "style",
+      "C": "styles",
+      "D": "font"
+    },
+    "answer": "B",
+    "explanation": "The style attribute is used to apply inline styles directly to an HTML element."
+  },
+  {
+    "id": 27,
     "section": "CSS",
     "q": "Which CSS property is used to change the text color?",
     "options": {
@@ -283,10 +89,10 @@
       "D": "background-color"
     },
     "answer": "C",
-    "explanation": "The 'color' property in CSS changes the text color. Example: color: red; or color: #3B5BDB; You can use color names, hex codes, or rgb values."
+    "explanation": "The 'color' property in CSS changes the foreground text color."
   },
   {
-    "id": 23,
+    "id": 28,
     "section": "CSS",
     "q": "Which CSS property changes the background color of an element?",
     "options": {
@@ -296,10 +102,10 @@
       "D": "color-background"
     },
     "answer": "B",
-    "explanation": "background-color sets the background color of an element. Example: background-color: #EEF2FF; It only affects the background, not the text."
+    "explanation": "background-color sets the background color of an element."
   },
   {
-    "id": 24,
+    "id": 29,
     "section": "CSS",
     "q": "Which CSS property changes the size of text?",
     "options": {
@@ -309,10 +115,10 @@
       "D": "text-style"
     },
     "answer": "C",
-    "explanation": "font-size sets the size of text. Common units are px (pixels), em (relative to parent), and rem (relative to root). Example: font-size: 16px;"
+    "explanation": "font-size sets the size of text using units like px, em, or rem."
   },
   {
-    "id": 25,
+    "id": 30,
     "section": "CSS",
     "q": "Which CSS property is used to change the font of text?",
     "options": {
@@ -322,10 +128,10 @@
       "D": "font-family"
     },
     "answer": "D",
-    "explanation": "font-family sets which font to use. Example: font-family: Arial, sans-serif; You can list multiple fonts as fallbacks in case the first one is not available."
+    "explanation": "font-family sets which font or list of fallback fonts to use."
   },
   {
-    "id": 26,
+    "id": 31,
     "section": "CSS",
     "q": "Which CSS property makes text bold?",
     "options": {
@@ -335,23 +141,10 @@
       "D": "font-weight"
     },
     "answer": "D",
-    "explanation": "font-weight controls the thickness of text. Use font-weight: bold or font-weight: 700 to make text bold. font-weight: normal (400) is the default."
+    "explanation": "font-weight controls the thickness of text (e.g., bold or numeric values 100-900)."
   },
   {
-    "id": 27,
-    "section": "CSS",
-    "q": "Which CSS value makes text italic?",
-    "options": {
-      "A": "bold",
-      "B": "oblique",
-      "C": "underline",
-      "D": "italic"
-    },
-    "answer": "D",
-    "explanation": "font-style: italic makes text italic. Example: font-style: italic; Oblique is similar but uses a slanted version of the regular font instead of a true italic."
-  },
-  {
-    "id": 28,
+    "id": 32,
     "section": "CSS",
     "q": "Which CSS property aligns text horizontally?",
     "options": {
@@ -361,12 +154,12 @@
       "D": "align"
     },
     "answer": "C",
-    "explanation": "text-align controls horizontal alignment of text. Values: left, right, center, justify. Example: text-align: center; centers the text inside its container."
+    "explanation": "text-align controls horizontal alignment: left, right, or center."
   },
   {
-    "id": 29,
+    "id": 33,
     "section": "CSS",
-    "q": "Which CSS property adds underline, line-through or removes decoration from text?",
+    "q": "Which CSS property adds underline, line-through, or removes decoration from text?",
     "options": {
       "A": "text-style",
       "B": "underline",
@@ -374,10 +167,10 @@
       "D": "font-decoration"
     },
     "answer": "C",
-    "explanation": "text-decoration controls text decoration. Values: underline, line-through, none. Commonly used to remove underline from links: text-decoration: none;"
+    "explanation": "text-decoration accepts values like underline, line-through, or none."
   },
   {
-    "id": 30,
+    "id": 34,
     "section": "CSS",
     "q": "Which CSS property transforms text to uppercase or lowercase?",
     "options": {
@@ -387,10 +180,10 @@
       "D": "text-uppercase"
     },
     "answer": "C",
-    "explanation": "text-transform changes the capitalization of text. Values: uppercase (ALL CAPS), lowercase (all small), capitalize (First Letter Capital)."
+    "explanation": "text-transform changes capitalization: uppercase, lowercase, or capitalize."
   },
   {
-    "id": 31,
+    "id": 35,
     "section": "CSS",
     "q": "Which CSS property adds space INSIDE an element (between content and border)?",
     "options": {
@@ -400,10 +193,10 @@
       "D": "border-spacing"
     },
     "answer": "B",
-    "explanation": "padding adds space inside an element \u2014 between the content and the border. Think of it as space inside the box. Example: padding: 20px;"
+    "explanation": "padding controls inner spacing inside the element's border."
   },
   {
-    "id": 32,
+    "id": 36,
     "section": "CSS",
     "q": "Which CSS property adds space OUTSIDE an element (between elements)?",
     "options": {
@@ -413,10 +206,10 @@
       "D": "margin"
     },
     "answer": "D",
-    "explanation": "margin adds space outside an element \u2014 between it and other elements. Think of it as space outside the box. Example: margin: 10px auto; (auto centers the element)."
+    "explanation": "margin controls outer spacing around an element."
   },
   {
-    "id": 33,
+    "id": 37,
     "section": "CSS",
     "q": "Which CSS property adds a border around an element?",
     "options": {
@@ -426,10 +219,23 @@
       "D": "box"
     },
     "answer": "B",
-    "explanation": "border adds a line around an element. Example: border: 1px solid black; \u2014 this means 1 pixel thick, solid line style, black color. You can also set individual sides."
+    "explanation": "border sets the border width, style, and color in shorthand or individual properties."
   },
   {
-    "id": 34,
+    "id": 38,
+    "section": "CSS",
+    "q": "Which CSS position value keeps an element fixed relative to the browser window, even during scroll?",
+    "options": {
+      "A": "static",
+      "B": "relative",
+      "C": "absolute",
+      "D": "fixed"
+    },
+    "answer": "D",
+    "explanation": "position: fixed removes the element from normal flow and positions it relative to the viewport/browser."
+  },
+  {
+    "id": 39,
     "section": "CSS",
     "q": "Which CSS display value enables flexbox layout?",
     "options": {
@@ -439,12 +245,12 @@
       "D": "flex"
     },
     "answer": "D",
-    "explanation": "display: flex turns an element into a flex container. Its children automatically line up in a row. Use it to easily create side-by-side layouts."
+    "explanation": "display: flex turns an element into a flex container."
   },
   {
-    "id": 35,
+    "id": 40,
     "section": "CSS",
-    "q": "Which CSS property aligns flex items along the horizontal (main) axis?",
+    "q": "Which CSS property aligns flex items along the main axis?",
     "options": {
       "A": "align-items",
       "B": "flex-align",
@@ -452,12 +258,12 @@
       "D": "align-content"
     },
     "answer": "C",
-    "explanation": "justify-content aligns flex items horizontally (left to right). Values: flex-start, center, flex-end, space-between, space-around. Example: justify-content: center;"
+    "explanation": "justify-content aligns items along the main axis (flex-start, center, space-between, etc.)."
   },
   {
-    "id": 36,
+    "id": 41,
     "section": "CSS",
-    "q": "Which CSS property aligns flex items along the vertical (cross) axis?",
+    "q": "Which CSS property aligns flex items along the cross axis?",
     "options": {
       "A": "justify-content",
       "B": "align-items",
@@ -465,23 +271,10 @@
       "D": "vertical-align"
     },
     "answer": "B",
-    "explanation": "align-items aligns flex items vertically (top to bottom). Values: flex-start, center, flex-end, stretch. Example: align-items: center; centers items vertically."
+    "explanation": "align-items aligns items along the cross axis."
   },
   {
-    "id": 37,
-    "section": "CSS",
-    "q": "Which CSS property adds space between flex items?",
-    "options": {
-      "A": "spacing",
-      "B": "margin-gap",
-      "C": "gap",
-      "D": "flex-space"
-    },
-    "answer": "C",
-    "explanation": "gap adds space between flex (or grid) items. Example: gap: 20px; is cleaner than adding margin to every child element individually."
-  },
-  {
-    "id": 38,
+    "id": 42,
     "section": "CSS",
     "q": "How do you select an element with class 'card' in CSS?",
     "options": {
@@ -491,10 +284,10 @@
       "D": "*card"
     },
     "answer": "C",
-    "explanation": "Class selectors use a dot (.) before the class name. Example: .card { background: white; } Multiple elements can share the same class."
+    "explanation": "Class selectors use a dot (.) prefix."
   },
   {
-    "id": 39,
+    "id": 43,
     "section": "CSS",
     "q": "How do you select an element with id 'main' in CSS?",
     "options": {
@@ -504,10 +297,10 @@
       "D": "#main"
     },
     "answer": "D",
-    "explanation": "ID selectors use a hash (#) before the id name. Example: #main { color: blue; } Only one element on the page should have a specific id."
+    "explanation": "ID selectors use a hash (#) prefix."
   },
   {
-    "id": 40,
+    "id": 44,
     "section": "CSS",
     "q": "Which CSS property makes the corners of an element rounded?",
     "options": {
@@ -517,55 +310,347 @@
       "D": "round-border"
     },
     "answer": "C",
-    "explanation": "border-radius rounds the corners of an element. Example: border-radius: 8px; Use border-radius: 50% on a square element to make it a perfect circle."
-  },
-  {
-    "id": 41,
-    "section": "HTML",
-    "type": "subjective",
-    "q": "Write the correct HTML code to create a clickable image that opens https://google.com in a new tab.",
-    "options": {},
-    "answer": "",
-    "explanation": "<a href=\"https://google.com\" target=\"_blank\"><img src=\"image.jpg\" alt=\"Google\"></a> \u2014 img tag is wrapped inside an anchor tag. target=_blank opens in new tab."
-  },
-  {
-    "id": 42,
-    "section": "HTML",
-    "type": "subjective",
-    "q": "What is the difference between <div> and <span>? Give one example of each.",
-    "options": {},
-    "answer": "",
-    "explanation": "div is a block element (takes full width, starts on new line). span is an inline element (stays on same line, takes only content width). div is for sections, span is for styling part of text."
-  },
-  {
-    "id": 43,
-    "section": "HTML",
-    "type": "subjective",
-    "q": "Write HTML code for a table with caption \"Class List\", 2 columns (Name, Roll No), and 2 rows of data.",
-    "options": {},
-    "answer": "",
-    "explanation": "<table><caption>Class List</caption><thead><tr><th>Name</th><th>Roll No</th></tr></thead><tbody><tr><td>Amjad</td><td>1664</td></tr><tr><td>Saqlain</td><td>1890</td></tr></tbody></table>"
-  },
-  {
-    "id": 44,
-    "section": "CSS",
-    "type": "subjective",
-    "q": "Write CSS code to display 3 div elements side by side with a gap of 16px between them, and center them horizontally.",
-    "options": {},
-    "answer": "",
-    "explanation": ".container { display: flex; justify-content: center; gap: 16px; } This makes children appear side by side. justify-content centers them horizontally."
+    "explanation": "border-radius rounds the outer border corners of an element."
   },
   {
     "id": 45,
     "section": "CSS",
-    "type": "subjective",
-    "q": "Write CSS code for a card div with: white background, 20px padding, rounded corners, a light shadow, and a 1px border.",
-    "options": {},
-    "answer": "",
-    "explanation": ".card { background-color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); border: 1px solid #DEE2E6; }"
+    "q": "Which unit in CSS is relative to the font-size of the root element?",
+    "options": {
+      "A": "em",
+      "B": "rem",
+      "C": "px",
+      "D": "%"
+    },
+    "answer": "B",
+    "explanation": "rem (Root Em) is relative to the font size of the root (<html>) element."
   },
   {
     "id": 46,
+    "section": "CSS",
+    "q": "What is the default value of the CSS 'position' property?",
+    "options": {
+      "A": "relative",
+      "B": "absolute",
+      "C": "static",
+      "D": "fixed"
+    },
+    "answer": "C",
+    "explanation": "The default positioning for HTML elements is static."
+  },
+  {
+    "id": 47,
+    "section": "CSS",
+    "q": "Which property is used to stack elements along the z-axis?",
+    "options": {
+      "A": "z-index",
+      "B": "stack-order",
+      "C": "layer",
+      "D": "depth"
+    },
+    "answer": "A",
+    "explanation": "z-index controls stacking order of positioned elements."
+  },
+  {
+    "id": 48,
+    "section": "CSS",
+    "q": "Which CSS property hides an element while still reserving its space in layout?",
+    "options": {
+      "A": "display: none;",
+      "B": "visibility: hidden;",
+      "C": "opacity: 0;",
+      "D": "hidden: true;"
+    },
+    "answer": "B",
+    "explanation": "visibility: hidden hides the element but keeps its layout space."
+  },
+  {
+    "id": 49,
+    "section": "CSS",
+    "q": "Which CSS property completely removes an element from document flow?",
+    "options": {
+      "A": "visibility: hidden;",
+      "B": "display: none;",
+      "C": "opacity: 0;",
+      "D": "clear: both;"
+    },
+    "answer": "B",
+    "explanation": "display: none removes element without preserving layout space."
+  },
+  {
+    "id": 50,
+    "section": "CSS",
+    "q": "What is the default flex-direction in a flex container?",
+    "options": {
+      "A": "column",
+      "B": "row",
+      "C": "row-reverse",
+      "D": "column-reverse"
+    },
+    "answer": "B",
+    "explanation": "Default flex-direction is 'row'."
+  },
+  {
+    "id": 51,
+    "section": "CSS",
+    "q": "Which CSS property defines space between rows and columns in Flexbox?",
+    "options": {
+      "A": "margin",
+      "B": "padding",
+      "C": "gap",
+      "D": "space"
+    },
+    "answer": "C",
+    "explanation": "gap property specifies spacing between flex items."
+  },
+  {
+    "id": 52,
+    "section": "CSS",
+    "q": "Which selector selects ALL elements on a webpage?",
+    "options": {
+      "A": ".all",
+      "B": "*",
+      "C": "all",
+      "D": "#all"
+    },
+    "answer": "B",
+    "explanation": "* is the universal selector in CSS."
+  },
+  {
+    "id": 53,
+    "section": "CSS",
+    "q": "Which CSS property changes mouse pointer when hovering over an element?",
+    "options": {
+      "A": "pointer",
+      "B": "mouse-icon",
+      "C": "cursor",
+      "D": "hover-effect"
+    },
+    "answer": "C",
+    "explanation": "cursor property specifies the mouse cursor type (e.g., pointer)."
+  },
+  {
+    "id": 54,
+    "section": "CSS",
+    "q": "How do you apply a style to an element when a user hovers over it with the mouse?",
+    "options": {
+      "A": "element:active",
+      "B": "element:focus",
+      "C": "element:hover",
+      "D": "element:visited"
+    },
+    "answer": "C",
+    "explanation": ":hover pseudo-class applies styles when mouse hovers over an element."
+  },
+  {
+    "id": 55,
+    "section": "CSS",
+    "q": "Which box-sizing value includes padding and border in element total width?",
+    "options": {
+      "A": "content-box",
+      "B": "border-box",
+      "C": "padding-box",
+      "D": "flex-box"
+    },
+    "answer": "B",
+    "explanation": "border-box includes padding & border inside total element width."
+  },
+  {
+    "id": 56,
+    "section": "CSS",
+    "q": "Which property specifies letter spacing in text?",
+    "options": {
+      "A": "word-spacing",
+      "B": "line-height",
+      "C": "letter-spacing",
+      "D": "text-spacing"
+    },
+    "answer": "C",
+    "explanation": "letter-spacing increases or decreases space between characters."
+  },
+  {
+    "id": 57,
+    "section": "CSS",
+    "q": "Which CSS property controls line height in a text block?",
+    "options": {
+      "A": "line-height",
+      "B": "text-height",
+      "C": "font-height",
+      "D": "spacing-height"
+    },
+    "answer": "A",
+    "explanation": "line-height sets distance between lines of text."
+  },
+  {
+    "id": 58,
+    "section": "CSS",
+    "q": "Which CSS selector styles elements when clicked or pressed?",
+    "options": {
+      "A": ":hover",
+      "B": ":active",
+      "C": ":focus",
+      "D": ":visited"
+    },
+    "answer": "B",
+    "explanation": ":active selector styles elements while active/pressed."
+  },
+  {
+    "id": 59,
+    "section": "CSS",
+    "q": "Which property sets transparency level of an element?",
+    "options": {
+      "A": "filter",
+      "B": "visibility",
+      "C": "opacity",
+      "D": "transparent"
+    },
+    "answer": "C",
+    "explanation": "opacity sets transparency value from 0 (invisible) to 1 (opaque)."
+  },
+  {
+    "id": 60,
+    "section": "CSS",
+    "q": "How to make flex items wrap to next line if space runs out?",
+    "options": {
+      "A": "flex-wrap: wrap;",
+      "B": "flex-flow: enable;",
+      "C": "wrap: yes;",
+      "D": "flex-line: break;"
+    },
+    "answer": "A",
+    "explanation": "flex-wrap: wrap enables flex items to wrap onto multiple lines."
+  },
+  {
+    "id": 61,
+    "section": "CSS",
+    "q": "Which CSS pseudo-class targets the first child element of a parent?",
+    "options": {
+      "A": ":first-line",
+      "B": ":first-child",
+      "C": ":first-element",
+      "D": ":first-of-all"
+    },
+    "answer": "B",
+    "explanation": ":first-child targets the very first child element."
+  },
+  {
+    "id": 62,
+    "section": "CSS",
+    "q": "Which CSS property is used to set a background image?",
+    "options": {
+      "A": "background-src",
+      "B": "background-image",
+      "C": "bg-picture",
+      "D": "image-background"
+    },
+    "answer": "B",
+    "explanation": "background-image: url('file.jpg') sets a background image on an element."
+  },
+  {
+    "id": 63,
+    "section": "CSS",
+    "q": "Which CSS property sets list item marker style for unordered lists?",
+    "options": {
+      "A": "list-style-type",
+      "B": "marker-style",
+      "C": "bullet-type",
+      "D": "list-type"
+    },
+    "answer": "A",
+    "explanation": "list-style-type sets bullet style like disc, circle, square, or none."
+  },
+  {
+    "id": 64,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Write CSS code to center one div perfectly inside another div using Flexbox.",
+    "options": {},
+    "answer": "",
+    "explanation": ".parent { display: flex; justify-content: center; align-items: center; }"
+  },
+  {
+    "id": 65,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Write CSS code for a card div with: white background, 20px padding, rounded corners, and a 1px solid border.",
+    "options": {},
+    "answer": "",
+    "explanation": ".card { background-color: white; padding: 20px; border-radius: 12px; border: 1px solid #DEE2E6; }"
+  },
+  {
+    "id": 66,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Design a Primary Button using HTML & CSS. Requirements: background-color (#0d6efd), white text color, padding (10px 20px), no border, border-radius (5px), and cursor (pointer). Add a :hover effect to change background-color to #0b5ed7.",
+    "options": {},
+    "answer": "",
+    "explanation": "<button class=\"btn\">Click Me</button>\n.btn { background-color: #0d6efd; color: #ffffff; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }\n.btn:hover { background-color: #0b5ed7; }"
+  },
+  {
+    "id": 67,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Create a Profile Card Box. Requirements: width (300px), padding (15px), 2px solid border, text-align (center), and margin (auto for centering).",
+    "options": {},
+    "answer": "",
+    "explanation": "<div class=\"profile-card\"><h3>User Profile</h3><p>Web Developer</p></div>\n.profile-card { width: 300px; padding: 15px; border: 2px solid #000; text-align: center; margin: 0 auto; }"
+  },
+  {
+    "id": 68,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Design a Login Form structure. Requirements: <form> container with Email, Password inputs, and Submit button. Use CSS Flexbox with display: flex, flex-direction: column, and gap (10px).",
+    "options": {},
+    "answer": "",
+    "explanation": "<form class=\"login-form\"><input type=\"email\" placeholder=\"Email\"><input type=\"password\" placeholder=\"Password\"><button type=\"submit\">Login</button></form>\n.login-form { display: flex; flex-direction: column; gap: 10px; width: 250px; }"
+  },
+  {
+    "id": 69,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Design a Notification Box with a Badge. Requirements: Parent box with position: relative, Badge with position: absolute (top: 0, right: 0), red background, and white text.",
+    "options": {},
+    "answer": "",
+    "explanation": "<div class=\"box\">Notifications <span class=\"badge\">5</span></div>\n.box { position: relative; width: 150px; padding: 20px; background: #f0f0f0; }\n.badge { position: absolute; top: 0; right: 0; background: red; color: white; padding: 2px 6px; border-radius: 50%; }"
+  },
+  {
+    "id": 70,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Design a Navigation Bar layout using Flexbox. Requirements: background-color (#333), white text, display: flex, justify-content (space-between), and padding (15px).",
+    "options": {},
+    "answer": "",
+    "explanation": "<nav class=\"navbar\"><div class=\"logo\">MySite</div><div class=\"links\">Home About</div></nav>\n.navbar { display: flex; justify-content: space-between; background-color: #333; color: #fff; padding: 15px; }"
+  },
+  {
+    "id": 71,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Create a CSS Hover Box Effect. Requirements: Base state border 1px solid #ccc, and on :hover change border-color to #0d6efd and background-color to #e7f1ff.",
+    "options": {},
+    "answer": "",
+    "explanation": ".box { border: 1px solid #ccc; padding: 10px; }\n.box:hover { border-color: #0d6efd; background-color: #e7f1ff; }"
+  },
+  {
+    "id": 72,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Design a Search Bar Box using Flexbox. Requirements: Flex container holding an input field and button, input flex-grow: 1, and border-radius on main container.",
+    "options": {},
+    "answer": "",
+    "explanation": "<div class=\"search-box\"><input type=\"text\" placeholder=\"Search...\"><button>Search</button></div>\n.search-box { display: flex; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; }\n.search-box input { flex-grow: 1; border: none; padding: 10px; }\n.search-box button { border: none; background: #0d6efd; color: white; padding: 10px 15px; }"
+  },
+  {
+    "id": 73,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Write CSS code to center a fixed element horizontally at the top of the viewport. Requirements: position: fixed, top: 0, left: 50%, and transform not allowed — use margin / width calculation instead.",
+    "options": {},
+    "answer": "",
+    "explanation": ".top-bar { position: fixed; top: 0; left: 0; width: 100%; text-align: center; }"
+  },
+  {
+    "id": 74,
     "section": "JS",
     "q": "What is the correct way to write a JavaScript array?",
     "options": {
@@ -578,7 +663,7 @@
     "explanation": "JavaScript arrays are written with square brackets [] and elements are separated by commas."
   },
   {
-    "id": 47,
+    "id": 75,
     "section": "JS",
     "q": "Which array method removes the last element from an array and returns that element?",
     "options": {
@@ -591,7 +676,7 @@
     "explanation": "pop() removes the last element of an array and returns it. shift() removes the first element, unshift() adds to the beginning, and push() adds to the end."
   },
   {
-    "id": 48,
+    "id": 76,
     "section": "JS",
     "q": "Which of the following is NOT a JavaScript data type?",
     "options": {
@@ -604,7 +689,7 @@
     "explanation": "JavaScript has Number type which covers both integers and floating-point numbers. There is no separate Float data type in standard JavaScript types."
   },
   {
-    "id": 49,
+    "id": 77,
     "section": "JS",
     "q": "What is the output of console.log(typeof null)?",
     "options": {
@@ -617,7 +702,7 @@
     "explanation": "In JavaScript, typeof null is \"object\". This is a well-known bug in the initial implementation of JavaScript that has been preserved for backward compatibility."
   },
   {
-    "id": 50,
+    "id": 78,
     "section": "JS",
     "q": "Which operator is used to compare both value and type in JavaScript?",
     "options": {
@@ -630,7 +715,7 @@
     "explanation": "=== is the strict equality operator. It returns true only if both the value and the type of the two operands are the same."
   },
   {
-    "id": 51,
+    "id": 79,
     "section": "JS",
     "q": "What is the output of console.log(2 + \"2\")?",
     "options": {
@@ -643,7 +728,7 @@
     "explanation": "When a number is added to a string, JavaScript converts the number to a string and concatenates them, resulting in \"22\"."
   },
   {
-    "id": 52,
+    "id": 80,
     "section": "JS",
     "q": "Which of the following is used to declare a block-scoped variable that can be reassigned?",
     "options": {
@@ -656,7 +741,7 @@
     "explanation": "let declares a block-scoped local variable, optionally initializing it to a value. It can be reassigned, unlike const which is read-only. var is function-scoped."
   },
   {
-    "id": 53,
+    "id": 81,
     "section": "JS",
     "q": "How do you write a conditional statement for executing some code if \"i\" is NOT equal to 5?",
     "options": {
@@ -669,7 +754,7 @@
     "explanation": "In JavaScript, != or !== is used to check inequality. The syntax is wrapped in parentheses, so if (i != 5) is correct."
   },
   {
-    "id": 54,
+    "id": 82,
     "section": "JS",
     "q": "Which method converts a JSON string into a JavaScript object?",
     "options": {
@@ -682,7 +767,7 @@
     "explanation": "JSON.parse() converts a JSON-formatted string into a corresponding JavaScript object/value. JSON.stringify() does the opposite (object to string)."
   },
   {
-    "id": 55,
+    "id": 83,
     "section": "JS",
     "q": "What is the primary purpose of a Promise in JavaScript?",
     "options": {
@@ -695,7 +780,7 @@
     "explanation": "Promises are used to handle asynchronous operations in JavaScript, representing a value that may be available now, in the future, or never."
   },
   {
-    "id": 56,
+    "id": 84,
     "section": "JS",
     "q": "What is the output of console.log(0.1 + 0.2 === 0.3)?",
     "options": {
@@ -708,7 +793,7 @@
     "explanation": "Due to binary floating-point representation of decimals, 0.1 + 0.2 results in 0.30000000000000004, which is not strictly equal to 0.3."
   },
   {
-    "id": 57,
+    "id": 85,
     "section": "JS",
     "q": "What does NaN stand for in JavaScript?",
     "options": {
@@ -721,7 +806,7 @@
     "explanation": "NaN stands for \"Not a Number\". It represents a computational error or undefined mathematical operation in JavaScript."
   },
   {
-    "id": 58,
+    "id": 86,
     "section": "JS",
     "q": "Which keyword is used to refer to the current object in JavaScript?",
     "options": {
@@ -734,7 +819,7 @@
     "explanation": "The this keyword refers to the object that the function is a method of, or the context in which it's being executed."
   },
   {
-    "id": 59,
+    "id": 87,
     "section": "JS",
     "q": "How do you write an arrow function that returns the square of a number?",
     "options": {
@@ -747,7 +832,7 @@
     "explanation": "An arrow function with a single parameter does not need parentheses. If it is a single expression, the return keyword and curly braces can be omitted (implicit return). Thus x => x * x is correct."
   },
   {
-    "id": 60,
+    "id": 88,
     "section": "JS",
     "type": "subjective",
     "q": "What is the difference between null and undefined in JavaScript?",
@@ -756,7 +841,7 @@
     "explanation": "undefined means a variable has been declared but has not yet been assigned a value. null is an assignment value that represents the intentional absence of any object value."
   },
   {
-    "id": 61,
+    "id": 89,
     "section": "JS",
     "type": "subjective",
     "q": "Explain closure in JavaScript with a short code example.",
@@ -765,7 +850,7 @@
     "explanation": "A closure is the combination of a function bundled together with references to its surrounding state (the lexical environment). In other words, a closure gives an inner function access to the outer function's scope. Example: function outer() { let x = 10; return function inner() { console.log(x); } }"
   },
   {
-    "id": 62,
+    "id": 90,
     "section": "React",
     "q": "What is React?",
     "options": {
@@ -778,7 +863,7 @@
     "explanation": "React is an open-source front-end JavaScript library developed by Facebook for building user interfaces or UI components."
   },
   {
-    "id": 63,
+    "id": 91,
     "section": "React",
     "q": "What is JSX?",
     "options": {
@@ -791,7 +876,7 @@
     "explanation": "JSX stands for JavaScript XML. It allows us to write HTML-like elements inside JavaScript files, which React compiles to standard JavaScript."
   },
   {
-    "id": 64,
+    "id": 92,
     "section": "React",
     "q": "Which hook is used to add state to a functional component?",
     "options": {
@@ -804,7 +889,7 @@
     "explanation": "useState is the basic hook used to declare state variables in functional React components."
   },
   {
-    "id": 65,
+    "id": 93,
     "section": "React",
     "q": "What does useEffect do in a React component?",
     "options": {
@@ -817,7 +902,7 @@
     "explanation": "useEffect lets you perform side effects in function components. It serves a similar purpose as lifecycle methods in class components (componentDidMount, componentDidUpdate, etc.)."
   },
   {
-    "id": 66,
+    "id": 94,
     "section": "React",
     "q": "What is the purpose of the 'key' prop in React lists?",
     "options": {
@@ -830,7 +915,7 @@
     "explanation": "Keys help React identify which items are added, updated, or deleted. They should be given to elements inside an array to give them a stable identity."
   },
   {
-    "id": 67,
+    "id": 95,
     "section": "React",
     "q": "What is a custom hook in React?",
     "options": {
@@ -843,7 +928,7 @@
     "explanation": "A custom Hook is a JavaScript function whose name starts with \"use\" and that can call other Hooks. It allows you to extract component logic into reusable functions."
   },
   {
-    "id": 68,
+    "id": 96,
     "section": "React",
     "q": "How do you pass data from a parent component to a child component?",
     "options": {
@@ -856,7 +941,7 @@
     "explanation": "Props (short for properties) are inputs passed into React components. Parents pass props down to children to share data."
   },
   {
-    "id": 69,
+    "id": 97,
     "section": "React",
     "q": "What is the virtual DOM?",
     "options": {
@@ -869,7 +954,7 @@
     "explanation": "The virtual DOM (VDOM) is a programming concept where an ideal, or \"virtual\", representation of a UI is kept in memory and synced with the \"real\" DOM by a library such as ReactDOM. This process is called reconciliation."
   },
   {
-    "id": 70,
+    "id": 98,
     "section": "React",
     "q": "What does useMemo do?",
     "options": {
@@ -882,7 +967,7 @@
     "explanation": "useMemo returns a memoized value. It recalculates the value only when one of its dependencies has changed, avoiding expensive calculations on every render."
   },
   {
-    "id": 71,
+    "id": 99,
     "section": "React",
     "q": "In React, what is the default behavior when a parent component state changes?",
     "options": {
@@ -895,7 +980,7 @@
     "explanation": "By default, when a parent component's state changes, React recursively re-renders all of its child components, regardless of whether their props changed."
   },
   {
-    "id": 72,
+    "id": 100,
     "section": "React",
     "q": "Which hook is used to access a DOM element directly in React?",
     "options": {
@@ -908,7 +993,7 @@
     "explanation": "useRef returns a mutable ref object whose .current property can be initialized to point to a DOM node, allowing direct DOM access."
   },
   {
-    "id": 73,
+    "id": 101,
     "section": "React",
     "q": "What is the rule of hooks in React?",
     "options": {
@@ -921,7 +1006,7 @@
     "explanation": "Hooks must be called at the top level of React functional components (or other custom hooks). They must not be called inside loops, conditions, or nested functions to ensure consistent hook call ordering."
   },
   {
-    "id": 74,
+    "id": 102,
     "section": "React",
     "q": "Which Hook is used to consume values from a React Context?",
     "options": {
@@ -934,7 +1019,7 @@
     "explanation": "useContext accepts a context object and returns the current context value for that context, allowing easy consumption of global state."
   },
   {
-    "id": 75,
+    "id": 103,
     "section": "React",
     "type": "subjective",
     "q": "What is the difference between controlled and uncontrolled components in React?",
@@ -943,7 +1028,7 @@
     "explanation": "In a controlled component, form data is handled by a React component state (using value and onChange). In an uncontrolled component, form data is handled by the DOM itself (using refs to pull values)."
   },
   {
-    "id": 76,
+    "id": 104,
     "section": "React",
     "type": "subjective",
     "q": "What is React Context, and when should you use it?",
@@ -952,7 +1037,7 @@
     "explanation": "React Context is a way to pass data down the component tree without having to pass props down manually at every level (prop drilling). It is ideal for global state like themes, user authentication, or language preferences."
   },
   {
-    "id": 77,
+    "id": 105,
     "section": "Next.js",
     "q": "What is Next.js?",
     "options": {
@@ -965,7 +1050,7 @@
     "explanation": "Next.js is a React framework created by Vercel that offers building blocks like routing, rendering methods (SSR, SSG, ISR), optimization features, and API routes."
   },
   {
-    "id": 78,
+    "id": 106,
     "section": "Next.js",
     "q": "What is the difference between Server Components and Client Components in Next.js App Router?",
     "options": {
@@ -978,7 +1063,7 @@
     "explanation": "In Next.js App Router, components are Server Components by default. They execute on the server, producing static HTML, saving client-side JavaScript bundle size. Client Components use 'use client' and run on the client for interactivity."
   },
   {
-    "id": 79,
+    "id": 107,
     "section": "Next.js",
     "q": "Which file is used to define a route page in the App Router?",
     "options": {
@@ -991,7 +1076,7 @@
     "explanation": "In the App Router, files named page.js, page.jsx, or page.tsx are used to define the UI for a specific route."
   },
   {
-    "id": 80,
+    "id": 108,
     "section": "Next.js",
     "q": "How do you mark a component as a Client Component in Next.js?",
     "options": {
@@ -1004,7 +1089,7 @@
     "explanation": "The 'use client' directive is a convention to declare a boundary between Server and Client Component modules. It is placed at the top of a file, before imports."
   },
   {
-    "id": 81,
+    "id": 109,
     "section": "Next.js",
     "q": "What is SSR (Server-Side Rendering) in Next.js?",
     "options": {
@@ -1017,7 +1102,7 @@
     "explanation": "Server-Side Rendering (SSR) means rendering components on the server for every incoming request. The server responds with dynamic HTML, which is then hydrated in the browser."
   },
   {
-    "id": 82,
+    "id": 110,
     "section": "Next.js",
     "q": "What is the role of layout.js in Next.js?",
     "options": {
@@ -1030,7 +1115,7 @@
     "explanation": "A layout is UI shared between multiple routes. Layouts preserve state, remain interactive, and do not re-render during navigation."
   },
   {
-    "id": 83,
+    "id": 111,
     "section": "Next.js",
     "q": "Which component is used in Next.js for optimized client-side navigation?",
     "options": {
@@ -1043,7 +1128,7 @@
     "explanation": "<Link> is a React component that extends the HTML <a> element to provide prefetching and client-side navigation between routes."
   },
   {
-    "id": 84,
+    "id": 112,
     "section": "Next.js",
     "q": "How do you create dynamic routes in the Next.js App Router?",
     "options": {
@@ -1056,7 +1141,7 @@
     "explanation": "Dynamic segments can be created by wrapping a folder's name in square brackets: [folderName]. For example, [id] or [slug]."
   },
   {
-    "id": 85,
+    "id": 113,
     "section": "Next.js",
     "q": "What is the purpose of the next/image component?",
     "options": {
@@ -1069,7 +1154,7 @@
     "explanation": "The Next.js Image component extends the HTML <img> element with features for automatic image optimization (correct sizing, preventing layout shifts, modern formats, and lazy loading)."
   },
   {
-    "id": 86,
+    "id": 114,
     "section": "Next.js",
     "q": "Which Next.js feature allows you to update static pages in the background without rebuilding the entire site?",
     "options": {
@@ -1082,7 +1167,7 @@
     "explanation": "Incremental Static Regeneration (ISR) enables you to use static generation on a per-page basis, without needing to rebuild the entire site. Pages can be regenerated in the background as traffic comes in."
   },
   {
-    "id": 87,
+    "id": 115,
     "section": "Next.js",
     "q": "How do you fetch data on the server in Next.js App Router?",
     "options": {
@@ -1095,7 +1180,7 @@
     "explanation": "Since Next.js App Router uses React Server Components, you can fetch data directly in Server Components by making them async functions and using await fetch()."
   },
   {
-    "id": 88,
+    "id": 116,
     "section": "Next.js",
     "q": "What does the file route.js (or route.ts) do in Next.js?",
     "options": {
@@ -1108,7 +1193,7 @@
     "explanation": "Route Handlers allow you to create custom request handlers for a given route using the Web Request and Response APIs. They are defined in route.js files."
   },
   {
-    "id": 89,
+    "id": 117,
     "section": "Next.js",
     "q": "What is the default port for Next.js when running next dev?",
     "options": {
@@ -1121,7 +1206,7 @@
     "explanation": "Next.js uses port 3000 by default when running in development mode."
   },
   {
-    "id": 90,
+    "id": 118,
     "section": "Next.js",
     "type": "subjective",
     "q": "What is the difference between next dev and next build?",
@@ -1130,7 +1215,7 @@
     "explanation": "next dev starts Next.js in development mode with hot-code reloading, error reporting, and fast refresh. next build compiles and builds the application for production, optimizing code and generating static pages."
   },
   {
-    "id": 91,
+    "id": 119,
     "section": "Next.js",
     "type": "subjective",
     "q": "What is hydration in the context of React and Next.js?",
@@ -1139,7 +1224,7 @@
     "explanation": "Hydration is the process of attaching event listeners and React state to the server-rendered static HTML that was sent to the browser. This makes the static page fully interactive."
   },
   {
-    "id": 92,
+    "id": 120,
     "section": "HTML",
     "type": "drag-and-drop",
     "q": "Complete the anchor tag to make the link open in a new tab.",
@@ -1149,7 +1234,7 @@
     "explanation": "The target=\"_blank\" attribute opens the linked document in a new window or tab."
   },
   {
-    "id": 93,
+    "id": 121,
     "section": "HTML",
     "type": "drag-and-drop",
     "q": "Complete the image tag to specify the image source file path.",
@@ -1159,7 +1244,7 @@
     "explanation": "The src (source) attribute specifies the path to the image to be displayed."
   },
   {
-    "id": 94,
+    "id": 122,
     "section": "CSS",
     "type": "drag-and-drop",
     "q": "Complete the CSS rule to align flex items horizontally in the center.",
@@ -1169,7 +1254,7 @@
     "explanation": "justify-content is used to align flex items along the main axis (horizontally by default)."
   },
   {
-    "id": 95,
+    "id": 123,
     "section": "CSS",
     "type": "drag-and-drop",
     "q": "Complete the CSS rule to make the border corners rounded by 8 pixels.",
@@ -1179,7 +1264,7 @@
     "explanation": "The border-radius CSS property rounds the corners of an element's outer border edge."
   },
   {
-    "id": 96,
+    "id": 124,
     "section": "JS",
     "type": "drag-and-drop",
     "q": "Complete the code to import a default export from a module named 'utils'.",
@@ -1189,7 +1274,7 @@
     "explanation": "The 'import' statement is used to import read-only live bindings which are exported by another module."
   },
   {
-    "id": 97,
+    "id": 125,
     "section": "JS",
     "type": "drag-and-drop",
     "q": "Complete the promise chain to convert the fetch response to a JavaScript object.",
@@ -1199,7 +1284,7 @@
     "explanation": "The Response.json() method of the Fetch API takes a Response stream and reads it to completion, returning a promise that resolves with the result of parsing the body text as JSON."
   },
   {
-    "id": 98,
+    "id": 126,
     "section": "React",
     "type": "drag-and-drop",
     "q": "Complete the hook to run a side-effect only once when the component mounts.",
@@ -1209,7 +1294,7 @@
     "explanation": "An empty dependency array [] tells React to execute the effect function only once when the component mounts."
   },
   {
-    "id": 99,
+    "id": 127,
     "section": "React",
     "type": "drag-and-drop",
     "q": "Complete the code to create a mutable reference to hold a DOM node.",
@@ -1219,7 +1304,7 @@
     "explanation": "useRef returns a mutable ref object whose .current property is initialized to the passed argument (null). It persists across renders."
   },
   {
-    "id": 100,
+    "id": 128,
     "section": "Next.js",
     "type": "drag-and-drop",
     "q": "Add the correct directive to mark a file as a Client Component in Next.js.",
@@ -1229,7 +1314,7 @@
     "explanation": "The 'use client' directive is placed at the top of a file to declare a boundary between Server and Client Component modules."
   },
   {
-    "id": 101,
+    "id": 129,
     "section": "Next.js",
     "type": "drag-and-drop",
     "q": "Identify the file name inside the app router to define a route layout.",
