@@ -4,50 +4,42 @@ import { useState, useEffect, useRef } from 'react';
 const playAlarmSound = () => {
   try {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    
     const playBeep = (time, frequency, duration) => {
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-      
       osc.type = 'sawtooth';
       osc.frequency.setValueAtTime(frequency, time);
-      
       gain.gain.setValueAtTime(0.12, time);
       gain.gain.exponentialRampToValueAtTime(0.01, time + duration - 0.02);
-      
       osc.connect(gain);
       gain.connect(audioCtx.destination);
-      
       osc.start(time);
       osc.stop(time + duration);
     };
-
     const now = audioCtx.currentTime;
     playBeep(now, 880, 0.12);
     playBeep(now + 0.15, 660, 0.12);
     playBeep(now + 0.3, 880, 0.12);
     playBeep(now + 0.45, 660, 0.12);
   } catch (e) {
-    console.error("Audio Context not supported or blocked:", e);
+    console.error("Audio Context error:", e);
   }
 };
 
-const FUNNY_WARNINGS = [
-  { emoji: '🕵️', title: 'Caught You!', msg: " Google pe answers nahi milenge, humne check kar liya pehle se! 😂" },
-  { emoji: '👀', title: 'Aye Aye Aye!', msg: "Tab switch? Seriously? Teacher dekh raha hai... aur hum bhi! 🫵" },
-  { emoji: '🚨', title: 'ALARM ALARM!', msg: "Arey yaar! Answers bahar se nahi aate, dimaag se aate hain. Apna dimaag use karo! 🧠" },
-  { emoji: '😤', title: 'Caught Red-Handed!', msg: "Tab switch karte waqt pakde gaye! Sharam karo thodi... ya nahi? 😏" },
-  { emoji: '🤦', title: 'Beta...',  msg: "Tab switch karke answer dhundhna? Hum 2024 mein hain, cheating detect hoti hai! 😅" },
+const WARNING_MESSAGES = [
+  "⚠️ Warning 1: Tab switch detect ho gaya hai! Dhyan se exam do.",
+  "🚨 Warning 2: Bar bar tab mat badlo, teacher monitor kar rahe hain!",
+  "❌ Final Warning: Agli baar tab switch kiya toh test auto-submit ho jayega!"
 ];
 
 const getSectionBadgeStyle = (section) => {
   switch (section) {
-    case 'HTML': return 'text-orange-600 bg-orange-50 border border-orange-100';
-    case 'CSS': return 'text-blue-600 bg-blue-50 border border-blue-100';
-    case 'JS': return 'text-amber-700 bg-amber-50 border border-amber-100';
-    case 'React': return 'text-cyan-600 bg-cyan-50 border border-cyan-100';
-    case 'Next.js': return 'text-slate-800 bg-slate-100 border border-slate-200';
-    default: return 'text-indigo-600 bg-indigo-50 border border-indigo-100';
+    case 'HTML': return 'text-orange-400 bg-orange-500/10 border border-orange-500/30';
+    case 'CSS': return 'text-blue-400 bg-blue-500/10 border border-blue-500/30';
+    case 'JS': return 'text-amber-400 bg-amber-500/10 border border-amber-500/30';
+    case 'React': return 'text-cyan-400 bg-cyan-500/10 border border-cyan-500/30';
+    case 'Next.js': return 'text-slate-300 bg-slate-800 border border-slate-700';
+    default: return 'text-indigo-400 bg-indigo-500/10 border border-indigo-500/30';
   }
 };
 
@@ -65,18 +57,13 @@ export default function QuizScreen({
   tabSwitchCount,
   maxWarnings,
 }) {
-  const [revealed, setRevealed] = useState(false);
-  
-  // 🎯 Dynamic Time Calculation: 1 min 50 secs (110 seconds) per question
   const SECONDS_PER_QUESTION = 110; 
   const calculatedTotalTime = (totalQuestions || 1) * SECONDS_PER_QUESTION;
 
   const [timeLeft, setTimeLeft] = useState(calculatedTotalTime);
-  const [showCheatModal, setShowCheatModal] = useState(false);
-  const [currentWarning, setCurrentWarning] = useState(null);
+  const [latestWarningText, setLatestWarningText] = useState('');
   const timerRef = useRef(null);
 
-  // Re-calculate timer if totalQuestions count changes
   useEffect(() => {
     if (totalQuestions) {
       setTimeLeft(totalQuestions * SECONDS_PER_QUESTION);
@@ -87,7 +74,7 @@ export default function QuizScreen({
   const isSubjective = currentQuestion?.type === 'subjective';
   const isDragAndDrop = currentQuestion?.type === 'drag-and-drop';
   const isLastQuestion = currentIndex === totalQuestions - 1;
-  const isTimeLow = timeLeft <= 5 * 60; // Low time warning if <= 5 minutes remaining
+  const isTimeLow = timeLeft <= 300; 
 
   const renderCodeWithBlank = () => {
     if (!currentQuestion || !currentQuestion.code) return null;
@@ -98,37 +85,31 @@ export default function QuizScreen({
           const isLast = index === parts.length - 1;
           return (
             <span key={index} className="inline-flex items-center flex-wrap">
-              <span>{part}</span>
+              <span className="text-slate-300">{part}</span>
               {!isLast && (
                 <div
-                  onDragOver={(e) => !revealed && !isLocked && e.preventDefault()}
+                  onDragOver={(e) => !isLocked && e.preventDefault()}
                   onDrop={(e) => {
-                    if (revealed || isLocked) return;
+                    if (isLocked) return;
                     e.preventDefault();
                     const option = e.dataTransfer.getData('text/plain');
                     if (option) {
                       onSelectOption(option);
-                      setRevealed(true);
                     }
                   }}
                   onClick={() => {
-                    if (revealed || isLocked) return;
+                    if (isLocked) return;
                     if (selectedAnswer) {
                       onSelectOption('');
-                      setRevealed(false);
                     }
                   }}
-                  className={`inline-flex items-center justify-center min-w-[100px] h-[28px] px-2.5 mx-1.5 rounded-md font-bold text-xs transition-all border-2
+                  className={`inline-flex items-center justify-center min-w-[110px] h-[32px] px-3 mx-2 rounded-lg font-bold text-xs transition-all border-2 cursor-pointer
                     ${!selectedAnswer 
-                      ? 'bg-slate-800/80 border-dashed border-slate-500 text-slate-400 select-none' 
-                      : revealed
-                        ? selectedAnswer === currentQuestion.answer
-                          ? 'bg-green-600 border-green-500 text-white shadow-sm shadow-green-900/30'
-                          : 'bg-red-600 border-red-500 text-white shadow-sm shadow-red-900/30'
-                        : 'bg-indigo-600 border-indigo-500 text-white shadow-sm shadow-indigo-900/30 cursor-pointer hover:bg-indigo-500'
+                      ? 'bg-slate-900 border-dashed border-indigo-500/50 text-indigo-400 select-none animate-pulse' 
+                      : 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-900/40 hover:bg-indigo-500'
                     }`}
                 >
-                  {selectedAnswer ? selectedAnswer : 'Drop here'}
+                  {selectedAnswer ? selectedAnswer : 'Drop / Click 🎯'}
                 </div>
               )}
             </span>
@@ -138,12 +119,6 @@ export default function QuizScreen({
     );
   };
 
-  // ── Reset on question change ───────────────────────────────────────────────
-  useEffect(() => {
-    setRevealed(false);
-  }, [currentIndex]);
-
-  // ── Timer ──────────────────────────────────────────────────────────────────
   useEffect(() => {
     timerRef.current = setInterval(() => {
       setTimeLeft((prev) => {
@@ -158,322 +133,229 @@ export default function QuizScreen({
     return () => clearInterval(timerRef.current);
   }, []);
 
-  // ── Show cheat modal when tabSwitchCount increases ─────────────────────────
   useEffect(() => {
     if (tabSwitchCount > 0) {
-      const idx = Math.min(tabSwitchCount - 1, FUNNY_WARNINGS.length - 1);
-      setCurrentWarning(FUNNY_WARNINGS[idx]);
-      setShowCheatModal(true);
+      const idx = Math.min(tabSwitchCount - 1, WARNING_MESSAGES.length - 1);
+      setLatestWarningText(WARNING_MESSAGES[idx]);
       playAlarmSound();
     }
   }, [tabSwitchCount]);
 
-  // Updated formatTime to support Hours if total time exceeds 60 minutes
   const formatTime = (seconds) => {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
     const s = (seconds % 60).toString().padStart(2, '0');
-    
     return h > 0 ? `${h}:${m}:${s}` : `${m}:${s}`;
   };
 
-  // ── Option styles ──────────────────────────────────────────────────────────
   const getOptionStyle = (key) => {
-    if (!revealed) {
-      return selectedAnswer === key
-        ? 'border-indigo-600 bg-indigo-50/60 font-semibold text-indigo-900 ring-2 ring-indigo-600/20'
-        : 'border-gray-200 hover:bg-gray-50 text-gray-700 hover:border-gray-300';
-    }
-    if (key === currentQuestion.answer) return 'border-green-500 bg-green-50 text-green-900 font-semibold';
-    if (key === selectedAnswer) return 'border-red-400 bg-red-50 text-red-900 font-semibold';
-    return 'border-gray-200 text-gray-400';
+    return selectedAnswer === key
+      ? 'border-indigo-500 bg-indigo-500/15 font-semibold text-white ring-2 ring-indigo-500/30 shadow-md'
+      : 'border-slate-800 bg-slate-900/50 hover:bg-slate-900 text-slate-300 hover:border-slate-700';
   };
 
   const getLetterStyle = (key) => {
-    if (!revealed) {
-      return selectedAnswer === key
-        ? 'bg-indigo-600 text-white border-indigo-600'
-        : 'border-gray-300 text-gray-500 bg-white';
-    }
-    if (key === currentQuestion.answer) return 'bg-green-500 text-white border-green-500';
-    if (key === selectedAnswer) return 'bg-red-400 text-white border-red-400';
-    return 'border-gray-200 text-gray-400 bg-white';
+    return selectedAnswer === key
+      ? 'bg-indigo-600 text-white border-indigo-500'
+      : 'border-slate-700 text-slate-400 bg-slate-800/60';
   };
 
   const handleSelect = (key) => {
-    if (revealed || isLocked) return;
+    if (isLocked) return;
     onSelectOption(key);
-    setRevealed(true);
   };
 
   return (
-    <div className="animate-fadeIn relative">
+    <div className="min-h-screen w-full bg-[#020617] text-slate-200 p-3 lg:p-6 flex flex-col justify-center items-center overflow-hidden">
+      <div className="w-full max-w-[1100px] h-[92vh] max-h-[780px] bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 lg:p-7 shadow-2xl relative backdrop-blur-xl flex flex-col justify-between">
 
-      {/* ── BLUR OVERLAY + CHEAT MODAL ─────────────────────────────────────── */}
-      {showCheatModal && currentWarning && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center"
-          style={{ backdropFilter: 'blur(6px)', backgroundColor: 'rgba(0,0,0,0.35)', borderRadius: '1rem' }}>
-          <div className="bg-white rounded-2xl shadow-2xl p-8 mx-4 max-w-sm w-full text-center
-            border-2 border-red-200 animate-bounce-once">
+        {/* ── TOP SECTION (Fixed Content) ─────────────────────────────────── */}
+        <div className="flex-shrink-0">
+          {/* Warning Banner */}
+          {tabSwitchCount > 0 && (
+            <div className="mb-3 p-3 bg-rose-500/10 border border-rose-500/40 rounded-xl flex items-center justify-between animate-fadeIn">
+              <div className="flex items-center gap-3">
+                <span className="text-xl">🚨</span>
+                <p className="text-rose-400 text-xs lg:text-sm font-bold">
+                  {latestWarningText} <span className="text-slate-400 font-normal">({tabSwitchCount}/{maxWarnings} warnings)</span>
+                </p>
+              </div>
+              <div className="flex gap-1">
+                {Array.from({ length: maxWarnings }).map((_, i) => (
+                  <div key={i} className={`w-2.5 h-2.5 rounded-full ${i < tabSwitchCount ? 'bg-rose-500' : 'bg-slate-800'}`} />
+                ))}
+              </div>
+            </div>
+          )}
 
-            {/* Emoji */}
-            <div className="text-6xl mb-3">{currentWarning.emoji}</div>
+          {/* Top Bar */}
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+              Question {currentIndex + 1} <span className="text-slate-600">/</span> {totalQuestions}
+            </span>
 
-            {/* Title */}
-            <h2 className="text-2xl font-black text-red-600 mb-2">{currentWarning.title}</h2>
+            {/* Big Timer */}
+            <div className={`flex items-center gap-2.5 px-5 py-1.5 rounded-xl font-black border tracking-wider
+              transition-all duration-300 text-2xl
+              ${isTimeLow
+                ? 'bg-rose-500/10 border-rose-500/50 text-rose-400 animate-pulse shadow-lg shadow-rose-950'
+                : 'bg-indigo-500/10 border-indigo-500/30 text-indigo-400 shadow-md shadow-indigo-950'
+              }`}>
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 7v5l3 3" />
+              </svg>
+              <span>{formatTime(timeLeft)}</span>
+            </div>
 
-            {/* Funny message */}
-            <p className="text-gray-700 text-sm leading-relaxed mb-4 font-medium">
-              {currentWarning.msg}
-            </p>
+            <span className="text-xs text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-xl">
+              🛡️ Secure Session
+            </span>
+          </div>
 
-            {/* Warning count */}
-            <div className="flex justify-center gap-1.5 mb-5">
-              {Array.from({ length: maxWarnings }).map((_, i) => (
-                <div key={i}
-                  className={`w-3 h-3 rounded-full ${i < tabSwitchCount ? 'bg-red-500' : 'bg-gray-200'}`}
-                />
+          {/* Progress Bar */}
+          <div className="w-full bg-slate-800/80 h-1.5 rounded-full mb-3 overflow-hidden p-0.5">
+            <div
+              className="bg-indigo-500 h-full rounded-full transition-all duration-500 shadow-sm shadow-indigo-500"
+              style={{ width: `${progressPercentage}%` }}
+            />
+          </div>
+
+          {/* Section Header */}
+          <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5 mb-3">
+            <div className="flex items-center gap-2">
+              <span className={`text-xs font-bold px-3 py-1 rounded-lg uppercase tracking-wider ${getSectionBadgeStyle(currentQuestion.section)}`}>
+                {currentQuestion.section}
+              </span>
+              {isSubjective && (
+                <span className="text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-lg uppercase tracking-wider">
+                  Section B
+                </span>
+              )}
+            </div>
+            <span className="text-xs font-semibold text-slate-500">
+              Progress: {Math.round(progressPercentage)}%
+            </span>
+          </div>
+
+          {/* Question Text */}
+          <h2 className="text-base lg:text-lg font-bold mb-3 text-white leading-snug">
+            {currentQuestion.q}
+          </h2>
+        </div>
+
+        {/* ── MIDDLE SECTION (Options / Code / Textarea) ──────────────────── */}
+        <div className="flex-1 overflow-y-auto my-1 pr-1 custom-scrollbar">
+          {/* Drag and Drop */}
+          {isDragAndDrop && (
+            <div className="space-y-3">
+              <div className="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+                <div className="flex items-center justify-between px-3 py-2 bg-slate-900 border-b border-slate-800/80 select-none">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></div>
+                  </div>
+                  <span className="text-xs font-mono text-slate-400 font-semibold tracking-wider">
+                    {currentQuestion.section === 'HTML' ? 'index.html' : currentQuestion.section === 'CSS' ? 'styles.css' : 'index.js'}
+                  </span>
+                  <div className="w-10"></div>
+                </div>
+                <div className="p-3 font-mono text-xs leading-relaxed text-slate-300 overflow-x-auto whitespace-pre">
+                  {renderCodeWithBlank()}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-xs text-slate-400 font-medium select-none flex items-center gap-1.5">
+                  💡 Drag an option into the blank space or click to select instantly:
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {currentQuestion.options.map((option) => {
+                    const isPlaced = selectedAnswer === option;
+                    return (
+                      <button
+                        key={option}
+                        type="button"
+                        draggable={!isLocked}
+                        onDragStart={(e) => {
+                          if (isLocked) return;
+                          e.dataTransfer.setData('text/plain', option);
+                        }}
+                        onClick={() => handleSelect(option)}
+                        disabled={isLocked}
+                        className={`px-3 py-2 rounded-lg font-mono text-xs font-bold border transition-all select-none
+                          ${isPlaced
+                            ? 'bg-indigo-600 border-indigo-500 text-white shadow-md'
+                            : 'bg-slate-900/80 hover:bg-slate-800 border-slate-700/80 text-slate-200 shadow-md cursor-grab active:cursor-grabbing hover:-translate-y-0.5'
+                          }`}
+                      >
+                        {option}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* MCQ Options */}
+          {!isSubjective && !isDragAndDrop && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+              {Object.entries(currentQuestion.options).map(([key, value]) => (
+                <button key={key} onClick={() => handleSelect(key)}
+                  disabled={isLocked}
+                  className={`w-full text-left px-4 py-2.5 border rounded-xl transition-all duration-200
+                    flex items-center gap-3 ${getOptionStyle(key)}`}>
+                  <span className={`w-7 h-7 rounded-lg flex items-center justify-center
+                    text-xs font-bold border transition-all flex-shrink-0 shadow-sm ${getLetterStyle(key)}`}>
+                    {key}
+                  </span>
+                  <span className="text-xs lg:text-sm font-medium">{value}</span>
+                </button>
               ))}
             </div>
+          )}
 
-            <p className="text-xs text-gray-400 mb-5">
-              Warning {tabSwitchCount} of {maxWarnings} — {maxWarnings - tabSwitchCount} remaining
-            </p>
-
-            {/* Dismiss button */}
-            {!isLocked && (
-              <button
-                onClick={() => setShowCheatModal(false)}
-                className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl
-                  hover:bg-indigo-700 transition-all text-sm">
-                Okay okay, samajh gaya! 🙈
-              </button>
-            )}
-
-            {isLocked && (
-              <div className="py-3 bg-red-600 text-white font-bold rounded-xl text-sm">
-                🚫 Exam auto-submitting...
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ── TOP BAR ───────────────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between mb-3">
-
-        {/* Question counter */}
-        <span className="text-xs font-semibold text-gray-400">
-          {currentIndex + 1} / {totalQuestions}
-        </span>
-
-        {/* ⏱️ DYNAMIC TIMER */}
-        <div className={`flex items-center gap-2 px-5 py-2 rounded-full font-black border-2
-          transition-all duration-300
-          ${isTimeLow
-            ? 'bg-red-50 border-red-400 text-red-600 animate-pulse scale-105'
-            : 'bg-indigo-50 border-indigo-200 text-indigo-700'
-          }`}
-          style={{ fontSize: '22px', letterSpacing: '0.05em' }}>
-          <span style={{ fontSize: '20px' }}>{isTimeLow ? '🔴' : '⏱️'}</span>
-          <span>{formatTime(timeLeft)}</span>
-        </div>
-
-        {/* Warning dots */}
-        {tabSwitchCount > 0 ? (
-          <span className="text-xs font-bold text-red-500 bg-red-50 border border-red-200
-            px-2.5 py-1.5 rounded-full">
-            ⚠️ {tabSwitchCount}/{maxWarnings}
-          </span>
-        ) : (
-          <span className="text-xs text-green-500 font-semibold">✓ Clean</span>
-        )}
-      </div>
-
-      {/* ── PROGRESS BAR ──────────────────────────────────────────────────── */}
-      <div className="w-full bg-gray-100 h-2.5 rounded-full mb-5 overflow-hidden">
-        <div
-          className="bg-indigo-600 h-full rounded-full transition-all duration-500"
-          style={{ width: `${progressPercentage}%` }}
-        />
-      </div>
-
-      {/* ── SECTION HEADER ────────────────────────────────────────────────── */}
-      <div className="flex justify-between items-center border-b border-gray-100 pb-4 mb-5">
-        <div className="flex items-center gap-2">
-          <span className={`text-xs font-bold px-3 py-1.5 rounded-md uppercase tracking-wider ${getSectionBadgeStyle(currentQuestion.section)}`}>
-            {currentQuestion.section}
-          </span>
+          {/* Subjective Textarea */}
           {isSubjective && (
-            <span className="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-1
-              rounded-md uppercase tracking-wider">
-              Section B
-            </span>
-          )}
-        </div>
-        <span className="text-sm font-semibold text-gray-400">
-          Q {currentIndex + 1} of {totalQuestions}
-        </span>
-      </div>
-
-      {/* ── QUESTION TEXT ─────────────────────────────────────────────────── */}
-      <h2 className="text-xl font-bold mb-6 text-gray-900 leading-snug">
-        {currentQuestion.q}
-      </h2>
-
-      {/* ── DRAG AND DROP CODE EDITOR ── */}
-      {isDragAndDrop && (
-        <div className="space-y-6">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-inner">
-            {/* Editor Header */}
-            <div className="flex items-center justify-between px-4 py-2.5 bg-slate-950 border-b border-slate-850 select-none">
-              <div className="flex items-center gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                <div className="w-3 h-3 rounded-full bg-green-500"></div>
-              </div>
-              <span className="text-xs font-mono text-slate-500 font-bold">
-                {currentQuestion.section === 'HTML' ? 'index.html' : currentQuestion.section === 'CSS' ? 'styles.css' : 'index.js'}
-              </span>
-              <div className="w-12"></div>
-            </div>
-            {/* Code Content */}
-            <div className="p-6 font-mono text-sm leading-relaxed text-slate-300 overflow-x-auto whitespace-pre">
-              {renderCodeWithBlank()}
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <p className="text-xs text-gray-400 font-semibold select-none">
-              🤝 Drag an option into the blank area above or simply click it:
-            </p>
-            <div className="flex flex-wrap gap-3">
-              {currentQuestion.options.map((option) => {
-                const isPlaced = selectedAnswer === option;
-                return (
-                  <button
-                    key={option}
-                    type="button"
-                    draggable={!revealed && !isLocked}
-                    onDragStart={(e) => {
-                      if (revealed || isLocked) return;
-                      e.dataTransfer.setData('text/plain', option);
-                    }}
-                    onClick={() => {
-                      if (revealed || isLocked) return;
-                      onSelectOption(option);
-                      setRevealed(true);
-                    }}
-                    disabled={revealed || isLocked}
-                    className={`px-4 py-2.5 rounded-lg font-mono text-xs font-bold border transition-all select-none
-                      ${isPlaced
-                        ? 'bg-indigo-50 border-indigo-300 text-indigo-700 shadow-inner'
-                        : revealed
-                          ? 'bg-gray-50 border-gray-200 text-gray-400 cursor-not-allowed'
-                          : 'bg-white hover:bg-gray-50 border-gray-200 hover:border-gray-300 text-gray-700 shadow-sm cursor-grab active:cursor-grabbing hover:-translate-y-0.5'
-                      }`}
-                  >
-                    {option}
-                  </button>
-                );
-              })}
-            </div>
-
-            {revealed && (
-              <div className={`mt-5 p-4 rounded-xl border text-sm leading-relaxed
-                ${selectedAnswer === currentQuestion.answer
-                  ? 'bg-green-50 border-green-200 text-green-800'
-                  : 'bg-red-50 border-red-200 text-red-800'}`}>
-                <p className="font-bold mb-1">
-                  {selectedAnswer === currentQuestion.answer ? '✓ Correct!' : '✗ Wrong!'}
-                  {selectedAnswer !== currentQuestion.answer && (
-                    <span className="font-normal"> Correct: <b>{currentQuestion.answer}</b></span>
-                  )}
-                </p>
-                <p className="text-gray-600 mt-1">💡 {currentQuestion.explanation}</p>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ── MCQ OPTIONS ───────────────────────────────────────────────────── */}
-      {!isSubjective && !isDragAndDrop && (
-        <>
-          <div className="space-y-3">
-            {Object.entries(currentQuestion.options).map(([key, value]) => (
-              <button key={key} onClick={() => handleSelect(key)}
-                disabled={revealed || isLocked}
-                className={`w-full text-left px-5 py-4 border rounded-xl transition-all
-                  flex items-center gap-4 ${getOptionStyle(key)}`}>
-                <span className={`w-7 h-7 rounded-full flex items-center justify-center
-                  text-xs font-bold border transition-all flex-shrink-0 ${getLetterStyle(key)}`}>
-                  {key}
-                </span>
-                <span>{value}</span>
-              </button>
-            ))}
-          </div>
-
-          {revealed && (
-            <div className={`mt-5 p-4 rounded-xl border text-sm leading-relaxed
-              ${selectedAnswer === currentQuestion.answer
-                ? 'bg-green-50 border-green-200 text-green-800'
-                : 'bg-red-50 border-red-200 text-red-800'}`}>
-              <p className="font-bold mb-1">
-                {selectedAnswer === currentQuestion.answer ? '✓ Correct!' : '✗ Wrong!'}
-                {selectedAnswer !== currentQuestion.answer && (
-                  <span className="font-normal"> Correct: <b>{currentQuestion.answer}</b></span>
-                )}
+            <div className="space-y-2">
+              <p className="text-xs text-slate-400 font-medium">
+                ✏️ Provide your detailed written response below:
               </p>
-              <p className="text-gray-600 mt-1">💡 {currentQuestion.explanation}</p>
+              <textarea
+                value={subjectiveAnswer}
+                onChange={(e) => onSubjectiveAnswer(e.target.value)}
+                disabled={isLocked}
+                placeholder="Write your structured solution here..."
+                rows={3}
+                className="w-full px-4 py-2.5 border border-slate-800 rounded-xl text-xs
+                  text-slate-200 font-mono leading-relaxed resize-none outline-none
+                  focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500
+                  bg-slate-950 placeholder-slate-600 shadow-inner"
+              />
             </div>
           )}
-        </>
-      )}
-
-      {/* ── SUBJECTIVE TEXTAREA ───────────────────────────────────────────── */}
-      {isSubjective && (
-        <div className="space-y-3">
-          <p className="text-xs text-gray-400 font-medium">
-            ✏️ Write your answer below — you can write code or explanation.
-          </p>
-          <textarea
-            value={subjectiveAnswer}
-            onChange={(e) => onSubjectiveAnswer(e.target.value)}
-            disabled={isLocked}
-            placeholder={`Write your answer here...\n\nExample:\n<tag> content </tag>`}
-            rows={8}
-            className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm
-              text-gray-800 font-mono leading-relaxed resize-none outline-none
-              focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400
-              bg-gray-50 placeholder-gray-300"
-          />
-          <div className="flex justify-between text-xs text-gray-400">
-            <span>Use proper HTML/CSS syntax</span>
-            <span>{subjectiveAnswer?.length || 0} chars</span>
-          </div>
         </div>
-      )}
 
-      {/* ── NEXT BUTTON ───────────────────────────────────────────────────── */}
-      {(isSubjective || revealed) && !isLocked && (
-        <button onClick={onNext}
-          className="w-full mt-6 bg-indigo-600 text-white font-bold py-4 rounded-xl
-            hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100">
-          {isLastQuestion ? '✓ Finish & Submit Test' : 'Next Question →'}
-        </button>
-      )}
-
-      {/* ── LOCKED ────────────────────────────────────────────────────────── */}
-      {isLocked && (
-        <div className="mt-6 p-4 bg-red-50 border border-red-300 rounded-xl text-center">
-          <p className="text-red-700 font-bold text-sm">
-            🚫 Exam locked. Auto-submitting...
-          </p>
+        {/* ── BOTTOM SECTION (Fixed Next Button / Footer) ─────────────────── */}
+        <div className="flex-shrink-0 pt-3 border-t border-slate-800/60 mt-2">
+          {!isLocked ? (
+            <button onClick={onNext}
+              className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl
+                transition-all shadow-lg shadow-indigo-950 flex items-center justify-center gap-2 text-sm sm:text-base">
+              {isLastQuestion ? '✓ Finish & Submit Assessment' : 'Next Question →'}
+            </button>
+          ) : (
+            <div className="p-2.5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-center">
+              <p className="text-rose-400 font-bold text-xs">
+                🚫 Assessment session locked due to safety breaches. Auto-submitting evaluation...
+              </p>
+            </div>
+          )}
         </div>
-      )}
 
+      </div>
     </div>
   );
 }

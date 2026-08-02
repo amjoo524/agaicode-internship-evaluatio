@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
 import Header from '../components/Header';
@@ -10,15 +10,13 @@ import ResultScreen from '../components/ResultScreen';
 import LockScreen from '../components/LockScreen';
 import TeacherDashboard from '../components/TeacherDashboard';
 
-const MAX_WARNINGS = 2; // Auto-submit after 2 tab switch warnings
+const MAX_WARNINGS = 2;
 
 export default function Home() {
-  // ── Auth & Profile State ──────────────────────────────────────────────────
   const [user, setUser] = useState<any>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [authLoading, setAuthLoading] = useState(true);
 
-  // ── Quiz & Lock State ──────────────────────────────────────────────────────
   const [step, setStep] = useState<'start' | 'quiz' | 'result'>('start');
   const [studentName, setStudentName] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
@@ -33,18 +31,20 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // ── 24-Hour Lock State ────────────────────────────────────────────────────
   const [lastSubmittedAt, setLastSubmittedAt] = useState<string | null>(null);
   const [isAttemptLocked, setIsAttemptLocked] = useState(false);
   const [checkingLock, setCheckingLock] = useState(false);
+  const submissionSavedRef = useRef(false);
 
-  // ── Anti-Cheat State ──────────────────────────────────────────────────────
+  const resetSubmissionRef = () => {
+    submissionSavedRef.current = false;
+  };
+
   const [tabSwitchCount, setTabSwitchCount] = useState(0);
   const [showWarning, setShowWarning] = useState(false);
   const [warningMessage, setWarningMessage] = useState('');
   const [isExamLocked, setIsExamLocked] = useState(false);
 
-  // ── Fetch Profile & 24h Lock Status ──────────────────────────────────────
   const checkUserStatus = useCallback(async (currentUser: any) => {
     if (!currentUser) {
       setUserProfile(null);
@@ -54,7 +54,6 @@ export default function Home() {
 
     setCheckingLock(true);
     try {
-      // 1. Fetch Profile
       const { data: prof, error: profErr } = await supabase
         .from('profiles')
         .select('*')
@@ -64,7 +63,6 @@ export default function Home() {
       let profileData = prof;
 
       if (profErr || !prof) {
-        // Fallback profile from user metadata if table entry not retrieved yet
         profileData = {
           id: currentUser.id,
           email: currentUser.email,
@@ -73,9 +71,8 @@ export default function Home() {
         };
       }
 
-      // Permanent Admin Role override for admin email
-      const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'sahkoo524@gmail.com';
-      if (currentUser.email === adminEmail || profileData?.email === adminEmail) {
+      const adminEmail = (process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'sahkoo524@gmail.com').toLowerCase();
+      if (currentUser.email?.toLowerCase() === adminEmail || profileData?.email?.toLowerCase() === adminEmail) {
         profileData = {
           ...profileData,
           role: 'teacher',
@@ -86,7 +83,6 @@ export default function Home() {
       setUserProfile(profileData);
       setStudentName(profileData.full_name || '');
 
-      // 2. If student, check 24-hour attempt lock
       if (profileData.role === 'student') {
         const { data: submissions, error: subErr } = await supabase
           .from('test_submissions')
@@ -98,7 +94,6 @@ export default function Home() {
         if (!subErr && submissions && submissions.length > 0) {
           const lastTime = submissions[0].submitted_at;
           setLastSubmittedAt(lastTime);
-
           const lockDuration = 24 * 60 * 60 * 1000;
           const timePassed = Date.now() - new Date(lastTime).getTime();
 
@@ -107,9 +102,11 @@ export default function Home() {
           } else {
             setIsAttemptLocked(false);
           }
-        } else {
+        } else if (!subErr) {
           setLastSubmittedAt(null);
           setIsAttemptLocked(false);
+        } else {
+          console.error('Failed to check submissions:', subErr);
         }
       }
     } catch (err) {
@@ -120,7 +117,6 @@ export default function Home() {
     }
   }, []);
 
-  // ── Supabase Auth Listener ────────────────────────────────────────────────
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       const currentUser = session?.user || null;
@@ -139,7 +135,6 @@ export default function Home() {
     return () => subscription.unsubscribe();
   }, [checkUserStatus]);
 
-  // ── Fetch Questions ───────────────────────────────────────────────────────
   useEffect(() => {
     fetch('/api/questions')
       .then((res) => {
@@ -168,10 +163,11 @@ export default function Home() {
   const quizData = activeQuizQuestions;
   const examDuration = quizData.length * 90;
 
-  // ── Save Test Submission to Supabase ──────────────────────────────────────
   const saveSubmissionToSupabase = useCallback(
     async (finalScore: number, questionsCount: number) => {
       if (!user) return;
+      if (submissionSavedRef.current) return;
+      submissionSavedRef.current = true;
 
       const nowISO = new Date().toISOString();
       const payload = {
@@ -180,7 +176,7 @@ export default function Home() {
         total_questions: questionsCount,
         submitted_at: nowISO,
         student_name: studentName || userProfile?.full_name || user.email,
-        selected_category: selectedCategory,
+        category: selectedCategory,
         self_rating: selfRating,
         tab_switch_count: tabSwitchCount,
       };
@@ -188,14 +184,14 @@ export default function Home() {
       try {
         const { error } = await supabase.from('test_submissions').insert([payload]);
         if (error) {
-          console.warn('Retrying insert with default columns:', error.message);
-          // Fallback to primary columns if schema differs
           await supabase.from('test_submissions').insert([
             {
               user_id: user.id,
               score: finalScore,
               total_questions: questionsCount,
               submitted_at: nowISO,
+              student_name: studentName || userProfile?.full_name || user.email,
+              category: selectedCategory,
             },
           ]);
         }
@@ -208,7 +204,11 @@ export default function Home() {
     [user, studentName, userProfile, selectedCategory, selfRating, tabSwitchCount]
   );
 
-  // ── Auto Submit Handler ───────────────────────────────────────────────────
+  const handleFinalSubmit = useCallback(() => {
+    saveSubmissionToSupabase(score, quizData.length);
+    setStep('start');
+  }, [saveSubmissionToSupabase, score, quizData]);
+
   const handleAutoSubmit = useCallback(() => {
     let finalScore = 0;
     quizData.forEach((q, index) => {
@@ -222,7 +222,6 @@ export default function Home() {
     setShowWarning(false);
   }, [quizData, selectedAnswers, saveSubmissionToSupabase]);
 
-  // ── Anti-Cheat: Heavy Cheat Detector ─────────────────────────────────────
   const handleCheatAttempt = useCallback(
     (reason: string) => {
       if (step !== 'quiz') return;
@@ -298,7 +297,6 @@ export default function Home() {
     };
   }, [step, handleCheatAttempt]);
 
-  // ── Answer Handlers ───────────────────────────────────────────────────────
   const handleSelectOption = (optionKey: string) => {
     setSelectedAnswers({ ...selectedAnswers, [currentQIndex]: optionKey });
   };
@@ -346,10 +344,10 @@ export default function Home() {
     await supabase.auth.signOut();
     setUser(null);
     setUserProfile(null);
+    resetSubmissionRef();
     setStep('start');
   };
 
-  // ── Initial Loading States ────────────────────────────────────────────────
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-gray-50/50 flex items-center justify-center p-4">
@@ -392,53 +390,34 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center font-sans">
-      {/* ── Top Header Bar ── */}
+    <div className="min-h-screen bg-[#020617] text-slate-100 flex flex-col font-sans w-full">
       {user && <Header userProfile={userProfile} onSignOut={handleSignOut} />}
 
-      <main className="w-full flex-1 flex flex-col items-center justify-center p-4 max-w-6xl">
-        {/* ── Anti-Cheat Warning Banner ── */}
+      <main className="w-full flex-1 flex flex-col">
+        
         {showWarning && (
-          <div
-            className={`fixed top-0 left-0 right-0 z-50 px-6 py-4 text-white font-bold text-center text-sm shadow-lg ${
-              isExamLocked ? 'bg-red-600' : 'bg-orange-500'
-            }`}
-          >
+          <div className={`fixed top-0 left-0 right-0 z-50 px-6 py-4 text-white font-bold text-center text-sm shadow-lg ${isExamLocked ? 'bg-red-600' : 'bg-orange-500'}`}>
             {warningMessage}
             {!isExamLocked && (
-              <button
-                onClick={() => setShowWarning(false)}
-                className="ml-4 underline text-white/80 font-normal text-xs"
-              >
+              <button onClick={() => setShowWarning(false)} className="ml-4 underline text-white/80 font-normal text-xs">
                 Dismiss
               </button>
             )}
           </div>
         )}
 
-        {/* ── Tab Switch Counter Badge ── */}
         {step === 'quiz' && tabSwitchCount > 0 && (
           <div className="fixed top-4 right-4 z-40 bg-red-100 border border-red-300 text-red-700 text-xs font-bold px-3 py-1.5 rounded-full">
             ⚠️ Warnings: {tabSwitchCount} / {MAX_WARNINGS}
           </div>
         )}
 
-        {/* ── Main View Container ── */}
         {userProfile?.role === 'teacher' ? (
-          /* View 2: Teacher Dashboard */
           <TeacherDashboard userProfile={userProfile} />
         ) : isAttemptLocked && step === 'start' ? (
-          /* View 3: 24-Hour Attempt Lock Screen for Student */
-          <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl shadow-gray-100/70 p-6 md:p-10 border border-gray-100">
-            <LockScreen
-              lastSubmittedAt={lastSubmittedAt}
-              userProfile={userProfile}
-              onRefreshCheck={() => checkUserStatus(user)}
-            />
-          </div>
+          <LockScreen lastSubmittedAt={lastSubmittedAt} userProfile={userProfile} checkingLock={checkingLock} onRefreshCheck={() => checkUserStatus(user)} />
         ) : (
-          /* View 4: Student Evaluation Quiz Flow */
-          <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl shadow-gray-100/70 p-6 md:p-10 border border-gray-100">
+          <>
             {step === 'start' && (
               <StartScreen
                 studentName={studentName}
@@ -450,16 +429,11 @@ export default function Home() {
                 selfRating={selfRating}
                 setSelfRating={setSelfRating}
                 onStart={() => {
-                  const categoryQuestions =
-                    selectedCategory === 'ALL'
-                      ? quizQuestions
-                      : quizQuestions.filter((q) => q.section === selectedCategory);
-
+                  if (isAttemptLocked) return;
+                  const categoryQuestions = selectedCategory === 'ALL' ? quizQuestions : quizQuestions.filter((q) => q.section === selectedCategory);
                   const shuffled = shuffleArray(categoryQuestions);
-                  const limitNum =
-                    questionLimit === 'ALL' ? shuffled.length : Number(questionLimit);
+                  const limitNum = questionLimit === 'ALL' ? shuffled.length : Number(questionLimit);
                   const subset = shuffled.slice(0, Math.min(limitNum, shuffled.length));
-
                   setActiveQuizQuestions(subset);
                   setTabSwitchCount(0);
                   setIsExamLocked(false);
@@ -467,6 +441,8 @@ export default function Home() {
                   setSelectedAnswers({});
                   setSubjectiveAnswers({});
                   setCurrentQIndex(0);
+                  setScore(0);
+                  resetSubmissionRef();
                   setStep('quiz');
                 }}
               />
@@ -501,9 +477,10 @@ export default function Home() {
                 subjectiveAnswers={subjectiveAnswers}
                 tabSwitchCount={tabSwitchCount}
                 selectedCategory={selectedCategory}
+                onSubmitFinal={handleFinalSubmit}
               />
             )}
-          </div>
+          </>
         )}
       </main>
     </div>
