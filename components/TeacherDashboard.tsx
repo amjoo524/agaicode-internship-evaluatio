@@ -1,18 +1,37 @@
+'use client';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import { Download, RefreshCw, Plus, Search, ShieldAlert, Award, Users, CheckCircle2 } from 'lucide-react';
+import { Download, RefreshCw, Plus, Search, ShieldAlert, Award, Users, CheckCircle2, X, Trophy, BarChart3 } from 'lucide-react';
 
-export default function TeacherDashboard({ userProfile }) {
-  const [submissions, setSubmissions] = useState([]);
-  const [profilesMap, setProfilesMap] = useState({});
+type Submission = {
+  id: string;
+  user_id: string;
+  student_name: string;
+  score: number;
+  total_questions: number;
+  category: string;
+  self_rating: number;
+  tab_switch_count: number;
+  submitted_at: string;
+};
+
+type Profile = {
+  id: string;
+  full_name: string;
+  email: string;
+  role: string;
+};
+
+export default function TeacherDashboard({ userProfile }: { userProfile: any }) {
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [profilesMap, setProfilesMap] = useState<Record<string, Profile>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('ALL');
+  const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [addLoading, setAddLoading] = useState(false);
-
-  // Form states for Add Student modal
   const [newStudentName, setNewStudentName] = useState('');
   const [newSubject, setNewSubject] = useState('HTML');
   const [newScore, setNewScore] = useState('18');
@@ -22,7 +41,6 @@ export default function TeacherDashboard({ userProfile }) {
     setLoading(true);
     setError('');
     try {
-      // 1. Fetch test submissions
       const { data: subData, error: subError } = await supabase
         .from('test_submissions')
         .select('*')
@@ -30,21 +48,20 @@ export default function TeacherDashboard({ userProfile }) {
 
       if (subError) throw subError;
 
-      // 2. Fetch profiles to resolve student names
       const { data: profData, error: profError } = await supabase
         .from('profiles')
         .select('id, full_name, email, role');
 
       if (!profError && profData) {
-        const pMap = {};
+        const pMap: Record<string, Profile> = {};
         profData.forEach((p) => {
           pMap[p.id] = p;
         });
         setProfilesMap(pMap);
       }
 
-      setSubmissions(subData || []);
-    } catch (err) {
+      setSubmissions((subData as Submission[]) || []);
+    } catch (err: any) {
       console.error('Error fetching teacher dashboard data:', err);
       setError(err.message || 'Failed to load submissions.');
     } finally {
@@ -55,7 +72,7 @@ export default function TeacherDashboard({ userProfile }) {
   useEffect(() => {
     fetchSubmissions();
 
-    let pollInterval;
+    let pollInterval: NodeJS.Timeout;
 
     const channel = supabase
       .channel('test_submissions_changes')
@@ -65,7 +82,7 @@ export default function TeacherDashboard({ userProfile }) {
         (payload) => {
           setSubmissions((prev) => {
             if (prev.some((sub) => sub.id === payload.new.id)) return prev;
-            return [payload.new, ...prev];
+            return [payload.new as Submission, ...prev];
           });
         }
       )
@@ -74,7 +91,7 @@ export default function TeacherDashboard({ userProfile }) {
         { event: 'UPDATE', schema: 'public', table: 'test_submissions' },
         (payload) => {
           setSubmissions((prev) =>
-            prev.map((sub) => (sub.id === payload.new.id ? payload.new : sub))
+            prev.map((sub) => (sub.id === payload.new.id ? (payload.new as Submission) : sub))
           );
         }
       )
@@ -111,8 +128,7 @@ export default function TeacherDashboard({ userProfile }) {
     };
   }, []);
 
-  // Add manual student submission record
-  const handleAddStudent = async (e) => {
+  const handleAddStudent = async (e: React.FormEvent) => {
     e.preventDefault();
     setAddLoading(true);
     try {
@@ -135,7 +151,7 @@ export default function TeacherDashboard({ userProfile }) {
       setNewStudentName('');
       setShowAddModal(false);
       fetchSubmissions();
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to add student record:', err);
       alert(`Error: ${err.message}`);
     } finally {
@@ -143,16 +159,15 @@ export default function TeacherDashboard({ userProfile }) {
     }
   };
 
-  // Export Results to CSV
   const exportToCSV = () => {
     if (submissions.length === 0) return alert('No data available to export.');
-    
-    const headers = ['Student Name', 'Email', 'Subject', 'Score', 'Total', 'Percentage', 'Tab Switches', 'Submitted At'];
-    const rows = submissions.map(sub => {
+
+    const headers = ['Student Name', 'Email', 'Subject', 'Score', 'Total', 'Percentage', 'Self Rating', 'Tab Switches', 'Submitted At'];
+    const rows = submissions.map((sub) => {
       const prof = profilesMap[sub.user_id];
       const name = sub.student_name || prof?.full_name || 'Unknown Student';
       const email = prof?.email || 'N/A';
-      const subject = sub.category || sub.selected_category || 'General';
+      const subject = sub.category || 'General';
       const total = sub.total_questions || 20;
       const pct = Math.round((sub.score / total) * 100);
       return [
@@ -162,12 +177,13 @@ export default function TeacherDashboard({ userProfile }) {
         sub.score,
         total,
         `"${pct}%"`,
+        sub.self_rating || 0,
         sub.tab_switch_count || 0,
-        `"${new Date(sub.submitted_at).toLocaleString()}"`
+        `"${new Date(sub.submitted_at).toLocaleString()}"`,
       ].join(',');
     });
 
-    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows].join('\n');
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows].join('\n');
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
@@ -177,8 +193,7 @@ export default function TeacherDashboard({ userProfile }) {
     document.body.removeChild(link);
   };
 
-  // Helper to generate initials from full name or email
-  const getInitials = (name, email) => {
+  const getInitials = (name: string, email: string) => {
     const target = name || email || 'ST';
     const parts = target.trim().split(' ').filter(Boolean);
     if (parts.length >= 2) {
@@ -187,7 +202,7 @@ export default function TeacherDashboard({ userProfile }) {
     return target.substring(0, 2).toUpperCase();
   };
 
-  const getAvatarGradient = (initials) => {
+  const getAvatarGradient = (initials: string) => {
     const charCode = (initials.charCodeAt(0) || 0) + (initials.charCodeAt(1) || 0);
     const gradients = [
       'from-indigo-600 to-purple-600',
@@ -199,19 +214,17 @@ export default function TeacherDashboard({ userProfile }) {
     return gradients[charCode % gradients.length];
   };
 
-  // Filter logic
   const filteredSubmissions = submissions.filter((sub) => {
     const prof = profilesMap[sub.user_id];
     const studentName = sub.student_name || prof?.full_name || prof?.email || 'Unknown Student';
     const matchesSearch = studentName.toLowerCase().includes(searchTerm.toLowerCase());
-    const subject = sub.category || sub.selected_category || 'General';
+    const subject = sub.category || 'General';
     const matchesCategory =
       categoryFilter === 'ALL' || subject.toUpperCase() === categoryFilter.toUpperCase();
 
     return matchesSearch && matchesCategory;
   });
 
-  // Analytics Metrics
   const totalSubmissions = submissions.length;
   const avgPercentage =
     totalSubmissions > 0
@@ -223,16 +236,22 @@ export default function TeacherDashboard({ userProfile }) {
         )
       : 0;
 
-  const highestScore =
+  const avgTabSwitches =
     totalSubmissions > 0
-      ? Math.max(
-          ...submissions.map((sub) =>
-            sub.total_questions ? Math.round((sub.score / sub.total_questions) * 100) : 0
-          )
-        )
+      ? Math.round(
+          (submissions.reduce((acc, curr) => acc + (curr.tab_switch_count || 0), 0) / totalSubmissions) * 10
+        ) / 10
       : 0;
 
-  const getGradeBadge = (score, total) => {
+  const topPerformers = [...submissions]
+    .sort((a, b) => {
+      const pctA = a.total_questions ? (a.score / a.total_questions) * 100 : 0;
+      const pctB = b.total_questions ? (b.score / b.total_questions) * 100 : 0;
+      return pctB - pctA;
+    })
+    .slice(0, 5);
+
+  const getGradeBadge = (score: number, total: number) => {
     if (!total) return { label: 'N/A', style: 'bg-slate-800 text-slate-400 border-slate-700' };
     const pct = Math.round((score / total) * 100);
     if (pct >= 85) return { label: 'A+', style: 'bg-emerald-950/70 text-emerald-400 border-emerald-500/40' };
@@ -244,7 +263,6 @@ export default function TeacherDashboard({ userProfile }) {
 
   return (
     <div className="w-full max-w-7xl mx-auto space-y-6 text-slate-100 font-sans p-3 sm:p-6">
-
       {/* HEADER BANNER */}
       <div className="bg-slate-900/80 backdrop-blur-xl border border-indigo-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-indigo-950/60 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
         <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
@@ -313,27 +331,53 @@ export default function TeacherDashboard({ userProfile }) {
 
         <div className="bg-slate-900/60 backdrop-blur-xl border border-indigo-500/20 rounded-2xl p-5 shadow-xl flex items-center justify-between">
           <div>
-            <p className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Highest Score</p>
-            <p className="text-3xl sm:text-4xl font-black text-emerald-400">{highestScore}%</p>
+            <p className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Avg Tab Switches</p>
+            <p className="text-3xl sm:text-4xl font-black text-amber-400">{avgTabSwitches}</p>
           </div>
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-            <CheckCircle2 className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+            <ShieldAlert className="w-6 h-6" />
           </div>
         </div>
 
         <div className="bg-slate-900/60 backdrop-blur-xl border border-indigo-500/20 rounded-2xl p-5 shadow-xl flex items-center justify-between">
           <div>
-            <p className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Live Status</p>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-sm font-extrabold text-emerald-400">Sync Active</span>
-            </div>
+            <p className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Top Performers</p>
+            <p className="text-3xl sm:text-4xl font-black text-emerald-400">{topPerformers.length > 0 ? Math.round((topPerformers[0].score / (topPerformers[0].total_questions || 1)) * 100) : 0}%</p>
           </div>
           <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-            <RefreshCw className="w-6 h-6 animate-spin" style={{ animationDuration: '6s' }} />
+            <Trophy className="w-6 h-6" />
           </div>
         </div>
       </div>
+
+      {/* TOP PERFORMERS STRIP */}
+      {topPerformers.length > 0 && (
+        <div className="bg-slate-900/60 backdrop-blur-xl border border-indigo-500/20 rounded-2xl p-5 shadow-xl">
+          <div className="flex items-center gap-2 mb-4">
+            <Trophy className="w-4 h-4 text-amber-400" />
+            <h3 className="text-xs font-black text-slate-300 uppercase tracking-widest">Top Performers</h3>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            {topPerformers.map((sub, idx) => {
+              const prof = profilesMap[sub.user_id];
+              const studentName = sub.student_name || prof?.full_name || prof?.email || 'Student';
+              const total = sub.total_questions || 20;
+              const pct = Math.round((sub.score / total) * 100);
+              return (
+                <div key={sub.id} className="bg-slate-950/60 border border-slate-800 rounded-xl p-3 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 text-white font-black text-xs flex items-center justify-center flex-shrink-0">
+                    {idx + 1}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-white truncate">{studentName}</p>
+                    <p className="text-[10px] text-slate-400 font-semibold">{pct}% · {sub.category}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* SEARCH & FILTERS BAR */}
       <div className="bg-slate-900/60 backdrop-blur-xl border border-indigo-500/20 rounded-2xl p-4 shadow-xl flex flex-col sm:flex-row gap-4 justify-between items-center">
@@ -409,16 +453,27 @@ export default function TeacherDashboard({ userProfile }) {
                   const pct = Math.round((sub.score / total) * 100);
                   const grade = getGradeBadge(sub.score, total);
                   const tabSwitches = sub.tab_switch_count ?? 0;
-                  const category = sub.category || sub.selected_category || 'HTML';
+                  const category = sub.category || 'HTML';
                   const formattedDate = new Date(sub.submitted_at).toLocaleString('en-US', {
-                    month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true,
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true,
                   });
 
                   return (
-                    <tr key={sub.id || sub.submitted_at} className="hover:bg-slate-800/40 transition-colors">
+                    <tr
+                      key={sub.id || sub.submitted_at}
+                      onClick={() => setSelectedSubmission(sub)}
+                      className="hover:bg-slate-800/40 transition-colors cursor-pointer"
+                    >
                       <td className="py-4 px-5">
                         <div className="flex items-center gap-3">
-                          <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${gradient} text-white font-extrabold text-xs flex items-center justify-center shadow-md flex-shrink-0`}>
+                          <div
+                            className={`w-9 h-9 rounded-full bg-gradient-to-br ${gradient} text-white font-extrabold text-xs flex items-center justify-center shadow-md flex-shrink-0`}
+                          >
                             {initials}
                           </div>
                           <div>
@@ -468,6 +523,95 @@ export default function TeacherDashboard({ userProfile }) {
           </div>
         )}
       </div>
+
+      {/* STUDENT DETAIL MODAL */}
+      {selectedSubmission && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="w-full max-w-lg bg-slate-900 border border-indigo-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl relative">
+            <button
+              onClick={() => setSelectedSubmission(null)}
+              className="absolute top-5 right-5 text-slate-400 hover:text-white text-lg font-bold cursor-pointer"
+            >
+              ✕
+            </button>
+
+            <h3 className="text-xl font-black text-white mb-1">Student Details</h3>
+            <p className="text-xs text-slate-400 mb-6 font-medium">Complete test breakdown for this submission.</p>
+
+            {(() => {
+              const sub = selectedSubmission;
+              const prof = profilesMap[sub.user_id];
+              const studentName = sub.student_name || prof?.full_name || prof?.email || 'Student';
+              const studentEmail = prof?.email || 'N/A';
+              const total = sub.total_questions || 20;
+              const pct = Math.round((sub.score / total) * 100);
+              const grade = getGradeBadge(sub.score, total);
+              const tabSwitches = sub.tab_switch_count ?? 0;
+
+              return (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div
+                      className={`w-12 h-12 rounded-full bg-gradient-to-br ${getAvatarGradient(getInitials(studentName, studentEmail))} text-white font-extrabold text-sm flex items-center justify-center shadow-md`}
+                    >
+                      {getInitials(studentName, studentEmail)}
+                    </div>
+                    <div>
+                      <p className="text-base font-black text-white">{studentName}</p>
+                      <p className="text-xs text-slate-400 font-medium">{studentEmail}</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Subject</p>
+                      <p className="text-sm font-black text-white">{sub.category || 'General'}</p>
+                    </div>
+                    <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Score</p>
+                      <p className="text-sm font-black text-white">{sub.score} / {total}</p>
+                    </div>
+                    <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Percentage</p>
+                      <p className="text-sm font-black text-emerald-400">{pct}%</p>
+                    </div>
+                    <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Grade</p>
+                      <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-black border ${grade.style}`}>
+                        {grade.label}
+                      </span>
+                    </div>
+                    <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Self Rating</p>
+                      <p className="text-sm font-black text-indigo-400">{sub.self_rating || 0}%</p>
+                    </div>
+                    <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Tab Switches</p>
+                      <p className={`text-sm font-black ${tabSwitches > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>
+                        {tabSwitches}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Submitted At</p>
+                    <p className="text-sm font-black text-white">
+                      {new Date(sub.submitted_at).toLocaleString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true,
+                      })}
+                    </p>
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+      )}
 
       {/* ADD STUDENT MODAL */}
       {showAddModal && (

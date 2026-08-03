@@ -161,7 +161,6 @@ export default function Home() {
   };
 
   const quizData = activeQuizQuestions;
-  const examDuration = quizData.length * 90;
 
   const saveSubmissionToSupabase = useCallback(
     async (finalScore: number, questionsCount: number) => {
@@ -448,38 +447,29 @@ export default function Home() {
               />
             )}
 
-            {step === 'quiz' && (
-              <QuizScreen
-                currentQuestion={quizData[currentQIndex]}
-                totalQuestions={quizData.length}
-                currentIndex={currentQIndex}
-                selectedAnswer={selectedAnswers[currentQIndex]}
-                subjectiveAnswer={subjectiveAnswers[currentQIndex] || ''}
-                onSelectOption={handleSelectOption}
-                onSubjectiveAnswer={handleSubjectiveAnswer}
-                onNext={handleNext}
-                onTimeUp={handleTimeUp}
-                isLocked={isExamLocked}
-                tabSwitchCount={tabSwitchCount}
-                maxWarnings={MAX_WARNINGS}
-                examDuration={examDuration}
-              />
-            )}
+             {step === 'quiz' && (
+               <QuizScreen
+                 currentQuestion={quizData[currentQIndex]}
+                 totalQuestions={quizData.length}
+                 currentIndex={currentQIndex}
+                 selectedAnswer={selectedAnswers[currentQIndex]}
+                 subjectiveAnswer={subjectiveAnswers[currentQIndex] || ''}
+                 onSelectOption={handleSelectOption}
+                 onSubjectiveAnswer={handleSubjectiveAnswer}
+                 onNext={handleNext}
+                 onTimeUp={handleTimeUp}
+                 isLocked={isExamLocked}
+                 tabSwitchCount={tabSwitchCount}
+                 maxWarnings={MAX_WARNINGS}
+               />
+             )}
 
-            {step === 'result' && (
-              <ResultScreen
-                studentName={studentName || userProfile?.full_name || 'Student'}
-                score={score}
-                totalQuestions={quizData.length}
-                selfRating={selfRating}
-                questions={quizData}
-                selectedAnswers={selectedAnswers}
-                subjectiveAnswers={subjectiveAnswers}
-                tabSwitchCount={tabSwitchCount}
-                selectedCategory={selectedCategory}
-                onSubmitFinal={handleFinalSubmit}
-              />
-            )}
+             {step === 'result' && (
+               <ResultScreen
+                 studentName={studentName || userProfile?.full_name || 'Student'}
+                 onSubmitFinal={handleFinalSubmit}
+               />
+             )}
           </>
         )}
       </main>
