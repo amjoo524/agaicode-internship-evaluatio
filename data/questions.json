@@ -38,7 +38,254 @@
     "answer": "D",
     "explanation": "<p> is the paragraph tag. It wraps a block of text and automatically adds spacing above and below the paragraph."
   },
-
+  {
+    "id": 4,
+    "section": "HTML",
+    "q": "Which tag is used to add a line break in HTML?",
+    "options": {
+      "A": "<break>",
+      "B": "<br>",
+      "C": "<lb>",
+      "D": "<newline>"
+    },
+    "answer": "B",
+    "explanation": "<br> is a self-closing tag that forces the content after it onto a new line. It has no closing tag."
+  },
+  {
+    "id": 5,
+    "section": "HTML",
+    "q": "Which tag makes text bold in HTML?",
+    "options": {
+      "A": "<bold>",
+      "B": "<bld>",
+      "C": "<b>",
+      "D": "<strong> only"
+    },
+    "answer": "C",
+    "explanation": "<b> makes text visually bold. <strong> also makes text bold but adds extra meaning — it tells search engines the text is important."
+  },
+  {
+    "id": 6,
+    "section": "HTML",
+    "q": "Which tag is used to insert an image in HTML?",
+    "options": {
+      "A": "<image>",
+      "B": "<pic>",
+      "C": "<src>",
+      "D": "<img>"
+    },
+    "answer": "D",
+    "explanation": "<img> is used to display images. It requires the src attribute for the image path and the alt attribute for accessibility."
+  },
+  {
+    "id": 7,
+    "section": "HTML",
+    "q": "Which attribute is used to specify the URL in an anchor tag?",
+    "options": {
+      "A": "src",
+      "B": "href",
+      "C": "link",
+      "D": "url"
+    },
+    "answer": "B",
+    "explanation": "The href (Hypertext Reference) attribute inside the <a> tag defines the URL the link will go to when clicked."
+  },
+  {
+    "id": 8,
+    "section": "HTML",
+    "q": "What does target='_blank' do in an anchor tag?",
+    "options": {
+      "A": "Opens the link in the same tab",
+      "B": "Closes the current tab",
+      "C": "Opens the link in a new tab",
+      "D": "Downloads the linked file"
+    },
+    "answer": "C",
+    "explanation": "target='_blank' opens the link in a new browser tab. target='_self' (the default) opens it in the same tab."
+  },
+  {
+    "id": 9,
+    "section": "HTML",
+    "q": "Which tag draws a horizontal line in HTML?",
+    "options": {
+      "A": "<line>",
+      "B": "<hl>",
+      "C": "<hr>",
+      "D": "<hline>"
+    },
+    "answer": "C",
+    "explanation": "<hr> (Horizontal Rule) draws a horizontal line across the page. It is used to visually separate sections of content."
+  },
+  {
+    "id": 10,
+    "section": "HTML",
+    "q": "Which tag displays text as subscript (below baseline)?",
+    "options": {
+      "A": "<sub>",
+      "B": "<sup>",
+      "C": "<small>",
+      "D": "<low>"
+    },
+    "answer": "A",
+    "explanation": "<sub> displays text below the normal baseline and smaller. Example: H<sub>2</sub>O for water formula."
+  },
+  {
+    "id": 11,
+    "section": "HTML",
+    "q": "Which tag displays text as superscript (above baseline)?",
+    "options": {
+      "A": "<sub>",
+      "B": "<up>",
+      "C": "<sup>",
+      "D": "<high>"
+    },
+    "answer": "C",
+    "explanation": "<sup> displays text above the normal baseline and smaller. Example: A<sup>2</sup> for math powers."
+  },
+  {
+    "id": 12,
+    "section": "HTML",
+    "q": "Which tag preserves spaces and line breaks exactly as written?",
+    "options": {
+      "A": "<p>",
+      "B": "<text>",
+      "C": "<pre>",
+      "D": "<code>"
+    },
+    "answer": "C",
+    "explanation": "<pre> (Preformatted text) displays text exactly as written — preserving all spaces and line breaks. Great for showing code."
+  },
+  {
+    "id": 13,
+    "section": "HTML",
+    "q": "Which is the correct semantic tag for the main content area of a page?",
+    "options": {
+      "A": "<body>",
+      "B": "<content>",
+      "C": "<section>",
+      "D": "<main>"
+    },
+    "answer": "D",
+    "explanation": "<main> represents the primary content of a page. There should be only one <main> tag per page. It tells browsers and search engines where the core content is."
+  },
+  {
+    "id": 14,
+    "section": "HTML",
+    "q": "Which tag is a block-level container used to group elements?",
+    "options": {
+      "A": "<span>",
+      "B": "<group>",
+      "C": "<div>",
+      "D": "<inline>"
+    },
+    "answer": "C",
+    "explanation": "<div> is a block-level container. It takes the full width of its parent and starts on a new line. Used to group and organize HTML elements."
+  },
+  {
+    "id": 15,
+    "section": "HTML",
+    "q": "Which tag is an inline container used to style part of a text?",
+    "options": {
+      "A": "<div>",
+      "B": "<span>",
+      "C": "<p>",
+      "D": "<group>"
+    },
+    "answer": "B",
+    "explanation": "<span> is an inline element — it does not break the line and only takes as much width as its content. Used to style a specific word or phrase."
+  },
+  {
+    "id": 16,
+    "section": "HTML",
+    "q": "Which semantic tag represents the top section of a webpage?",
+    "options": {
+      "A": "<top>",
+      "B": "<head>",
+      "C": "<header>",
+      "D": "<navbar>"
+    },
+    "answer": "C",
+    "explanation": "<header> is a semantic tag for the top section of a page or section. It usually contains the logo, site name, and navigation. Note: <head> is different — it holds metadata."
+  },
+  {
+    "id": 17,
+    "section": "HTML",
+    "q": "Which semantic tag represents the bottom section of a webpage?",
+    "options": {
+      "A": "<bottom>",
+      "B": "<footer>",
+      "C": "<end>",
+      "D": "<section>"
+    },
+    "answer": "B",
+    "explanation": "<footer> is a semantic tag for the bottom section of a page. It usually contains copyright info, contact details, and social links."
+  },
+  {
+    "id": 18,
+    "section": "HTML",
+    "q": "Which tag is used for table header cells?",
+    "options": {
+      "A": "<td>",
+      "B": "<tr>",
+      "C": "<th>",
+      "D": "<table>"
+    },
+    "answer": "C",
+    "explanation": "<th> (Table Header) is used for header cells in a table. Text inside <th> is bold and centered by default. <td> is used for regular data cells."
+  },
+  {
+    "id": 19,
+    "section": "HTML",
+    "q": "What does the colspan attribute do in a table?",
+    "options": {
+      "A": "Adds a new row",
+      "B": "Changes the font size",
+      "C": "Merges multiple columns into one cell",
+      "D": "Adds padding to cells"
+    },
+    "answer": "C",
+    "explanation": "colspan='n' makes a table cell span across n columns — similar to merging cells in Excel. Example: colspan='2' makes one cell take the space of two columns."
+  },
+  {
+    "id": 20,
+    "section": "HTML",
+    "q": "Which tag is used to collect user input in HTML?",
+    "options": {
+      "A": "<data>",
+      "B": "<field>",
+      "C": "<input>",
+      "D": "<collect>"
+    },
+    "answer": "C",
+    "explanation": "<input> is used inside a <form> to collect data from the user. The type attribute changes its behavior — type='text', type='password', type='email' etc."
+  },
+  {
+    "id": 21,
+    "section": "HTML",
+    "type": "subjective",
+    "q": "Write the correct HTML code to create a clickable image that opens https://google.com in a new tab.",
+    "options": {},
+    "answer": "",
+    "explanation": "<a href=\"https://google.com\" target=\"_blank\"><img src=\"image.jpg\" alt=\"Google\"></a>"
+  },
+  {
+    "id": 22,
+    "section": "HTML",
+    "type": "subjective",
+    "q": "What is the difference between <div> and <span>? Give one example of each.",
+    "options": {},
+    "answer": "",
+    "explanation": "div is a block element (takes full width). span is an inline element (takes content width only)."
+  },
+  {
+    "id": 23,
+    "section": "HTML",
+    "type": "subjective",
+    "q": "Write HTML code for a table with caption \"Class List\", 2 columns (Name, Roll No), and 2 rows of data.",
+    "options": {},
+    "answer": "",
+    "explanation": "<table><caption>Class List</caption><thead><tr><th>Name</th><th>Roll No</th></tr></thead><tbody><tr><td>Amjad</td><td>1664</td></tr><tr><td>Saqlain</td><td>1890</td></tr></tbody></table>"
+  },
   {
     "id": 24,
     "section": "CSS",
