@@ -93,39 +93,51 @@ export default function QuizScreen({
     if (!currentQuestion || (!currentQuestion.code && !currentQuestion.q)) return null;
     const text = currentQuestion.code || currentQuestion.q;
     const parts = text.split('[BLANK]');
+
+    const handleDrop = (e) => {
+      if (isLocked) return;
+      e.preventDefault();
+      const option = e.dataTransfer.getData('text/plain');
+      if (option) {
+        onSelectOption(option);
+      }
+    };
+
+    const handleDragOver = (e) => {
+      if (isLocked) return;
+      e.preventDefault();
+    };
+
+    const handleBlankClick = () => {
+      if (isLocked) return;
+      if (selectedAnswer) {
+        onSelectOption('');
+      }
+    };
+
+    const DropZone = () => (
+      <span
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+        onClick={handleBlankClick}
+        className={`inline-flex items-center justify-center min-w-[140px] h-[32px] px-3 mx-1 rounded-lg font-mono text-xs font-bold border-2 border-dashed transition-all whitespace-nowrap
+          ${!selectedAnswer
+            ? 'bg-slate-900/60 border-indigo-500/50 text-indigo-400 cursor-pointer hover:border-indigo-400 hover:bg-slate-900/80 animate-pulse'
+            : 'bg-indigo-600 border-indigo-400 text-white shadow-lg shadow-indigo-900/50 cursor-default'
+          }`}
+      >
+        {selectedAnswer ? selectedAnswer : 'Drop / Click here 🎯'}
+      </span>
+    );
+
     return (
-      <div className="inline-flex flex-wrap items-center leading-loose">
+      <div className="inline-flex flex-wrap items-center leading-relaxed font-mono text-sm text-slate-300">
         {parts.map((part, index) => {
           const isLast = index === parts.length - 1;
           return (
             <span key={index} className="inline-flex items-center flex-wrap">
-              <span className="text-slate-300">{part}</span>
-              {!isLast && (
-                <div
-                  onDragOver={(e) => !isLocked && e.preventDefault()}
-                  onDrop={(e) => {
-                    if (isLocked) return;
-                    e.preventDefault();
-                    const option = e.dataTransfer.getData('text/plain');
-                    if (option) {
-                      onSelectOption(option);
-                    }
-                  }}
-                  onClick={() => {
-                    if (isLocked) return;
-                    if (selectedAnswer) {
-                      onSelectOption('');
-                    }
-                  }}
-                  className={`inline-flex items-center justify-center min-w-[120px] h-[34px] px-3 mx-2 rounded-lg font-bold text-xs transition-all border-2 cursor-pointer
-                    ${!selectedAnswer
-                      ? 'bg-slate-900 border-dashed border-indigo-500/50 text-indigo-400 select-none animate-pulse'
-                      : 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-900/40 hover:bg-indigo-500'
-                    }`}
-                  >
-                    {selectedAnswer ? selectedAnswer : 'Drop / Click here 🎯'}
-                  </div>
-              )}
+              <span className="text-slate-300 break-all">{part}</span>
+              {!isLast && <DropZone />}
             </span>
           );
         })}
@@ -306,8 +318,10 @@ export default function QuizScreen({
 
         <div className="flex-1 overflow-y-auto my-1 pr-1 custom-scrollbar flex flex-col">
           {isDragAndDrop && (
-            <div className="space-y-3">
-              <div className="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+            <div className="flex flex-col flex-1 min-h-0 space-y-4">
+
+              {/* Code Snippet Box */}
+              <div className="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shadow-xl flex-shrink-0">
                 <div className="flex items-center justify-between px-3 py-2 bg-slate-900 border-b border-slate-800/80 select-none">
                   <div className="flex items-center gap-1.5">
                     <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80"></div>
@@ -319,18 +333,21 @@ export default function QuizScreen({
                   </span>
                   <div className="w-10"></div>
                 </div>
-                <div className="p-3 font-mono text-xs leading-relaxed text-slate-300 overflow-x-auto whitespace-pre">
+                <div className="p-4 font-mono text-sm leading-relaxed text-slate-300 overflow-x-auto whitespace-pre">
                   {renderCodeWithBlank()}
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <p className="text-xs text-slate-400 font-medium select-none flex items-center gap-1.5">
-                  💡 Drag an option into the blank space or click to select instantly:
+              {/* Options Chips */}
+              <div className="flex-shrink-0">
+                <p className="text-xs text-slate-400 font-medium mb-3 select-none flex items-center gap-1.5">
+                  <span className="text-xs">💡</span>
+                  <span>Drag an option into the blank space or click a chip to select instantly</span>
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {currentQuestion.options.map((option) => {
                     const isPlaced = selectedAnswer === option;
+                    const isCorrect = option === currentQuestion.answer;
                     return (
                       <button
                         key={option}
@@ -342,10 +359,12 @@ export default function QuizScreen({
                         }}
                         onClick={() => handleSelect(option)}
                         disabled={isLocked}
-                        className={`px-3 py-2 rounded-lg font-mono text-xs font-bold border transition-all select-none
+                        className={`px-4 py-2.5 rounded-xl font-mono text-xs font-bold border-2 transition-all select-none whitespace-nowrap
                           ${isPlaced
-                            ? 'bg-indigo-600 border-indigo-500 text-white shadow-md'
-                            : 'bg-slate-900/80 hover:bg-slate-800 border-slate-700/80 text-slate-200 shadow-md cursor-grab active:cursor-grabbing hover:-translate-y-0.5'
+                            ? isCorrect
+                              ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300 shadow-lg shadow-emerald-900/30'
+                              : 'bg-red-500/20 border-red-500/50 text-red-300 shadow-lg shadow-red-900/30'
+                            : 'bg-slate-900/80 hover:bg-slate-800 border-slate-700/80 text-slate-200 shadow-md cursor-grab active:cursor-grabbing active:scale-[0.97] hover:-translate-y-0.5 hover:border-indigo-500/50'
                           }`}
                       >
                         {option}
