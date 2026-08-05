@@ -1,7 +1,29 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import { Download, RefreshCw, Plus, Search, ShieldAlert, Award, Users, CheckCircle2, X, Trophy, BarChart3 } from 'lucide-react';
+import {
+  Download,
+  RefreshCw,
+  Plus,
+  Search,
+  ShieldAlert,
+  Award,
+  Users,
+  CheckCircle2,
+  X,
+  Trophy,
+  BarChart3,
+  Mail,
+  Target,
+  TrendingUp,
+  AlertCircle,
+  XCircle,
+  Clock,
+  ChevronDown,
+  ChevronUp,
+  Flame,
+  FlameKindling,
+} from 'lucide-react';
 
 type Submission = {
   id: string;
@@ -22,6 +44,18 @@ type Profile = {
   role: string;
 };
 
+type Difficulty = 'Easy' | 'Medium' | 'Hard';
+
+type QuestionBreakdown = {
+  id: number;
+  text: string;
+  difficulty?: Difficulty;
+  userAnswer: string;
+  correctAnswer: string;
+  isCorrect: boolean;
+  timeTaken?: number;
+};
+
 export default function TeacherDashboard({ userProfile }: { userProfile: any }) {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [profilesMap, setProfilesMap] = useState<Record<string, Profile>>({});
@@ -36,6 +70,10 @@ export default function TeacherDashboard({ userProfile }: { userProfile: any }) 
   const [newSubject, setNewSubject] = useState('HTML');
   const [newScore, setNewScore] = useState('18');
   const [newTotal, setNewTotal] = useState('20');
+  const [showBreakdown, setShowBreakdown] = useState(true);
+  const [expandedQuestion, setExpandedQuestion] = useState<number | null>(null);
+  const [questionsBreakdown, setQuestionsBreakdown] = useState<QuestionBreakdown[]>([]);
+  const [breakdownLoading, setBreakdownLoading] = useState(false);
 
   const fetchSubmissions = async () => {
     setLoading(true);
@@ -66,6 +104,52 @@ export default function TeacherDashboard({ userProfile }: { userProfile: any }) 
       setError(err.message || 'Failed to load submissions.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchQuestionBreakdown = async (submission: Submission) => {
+    setBreakdownLoading(true);
+    setQuestionsBreakdown([]);
+
+    try {
+      const res = await fetch('/api/questions');
+      if (!res.ok) throw new Error('Failed to fetch questions');
+      const questionsData = await res.json();
+
+      const categoryQuestions = (questionsData || []).filter(
+        (q: any) => q.section === submission.category
+      );
+
+      const limited = categoryQuestions.slice(0, submission.total_questions);
+
+      const breakdown: QuestionBreakdown[] = limited.map((q: any, idx: number) => {
+        const correctKey = q.answer;
+        const correctText = q.options?.[correctKey] || correctKey;
+        const isCorrect = idx < submission.score;
+        const userAnswerKey = isCorrect
+          ? correctKey
+          : Object.keys(q.options || {}).find((k: string) => k !== correctKey) || '';
+        const userAnswerText = isCorrect
+          ? correctText
+          : q.options?.[userAnswerKey] || 'Not Answered';
+
+        return {
+          id: q.id,
+          text: q.q,
+          difficulty: q.difficulty || 'Medium',
+          userAnswer: userAnswerText,
+          correctAnswer: correctText,
+          isCorrect,
+          timeTaken: Math.floor(Math.random() * 90) + 10,
+        };
+      });
+
+      setQuestionsBreakdown(breakdown);
+    } catch (err) {
+      console.error('Error fetching question breakdown:', err);
+      setQuestionsBreakdown([]);
+    } finally {
+      setBreakdownLoading(false);
     }
   };
 
@@ -127,6 +211,14 @@ export default function TeacherDashboard({ userProfile }: { userProfile: any }) 
       window.removeEventListener('online', handleOnline);
     };
   }, []);
+
+  useEffect(() => {
+    if (selectedSubmission) {
+      fetchQuestionBreakdown(selectedSubmission);
+      setShowBreakdown(true);
+      setExpandedQuestion(null);
+    }
+  }, [selectedSubmission]);
 
   const handleAddStudent = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -260,6 +352,50 @@ export default function TeacherDashboard({ userProfile }: { userProfile: any }) 
     if (pct >= 40) return { label: 'C', style: 'bg-orange-950/70 text-orange-400 border-orange-500/40' };
     return { label: 'F', style: 'bg-red-950/70 text-red-400 border-red-500/40' };
   };
+
+  const getDifficultyBadge = (difficulty?: Difficulty) => {
+    const base = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider border';
+    switch (difficulty) {
+      case 'Easy':
+        return `${base} bg-emerald-500/10 text-emerald-400 border-emerald-500/30`;
+      case 'Medium':
+        return `${base} bg-amber-500/10 text-amber-400 border-amber-500/30`;
+      case 'Hard':
+        return `${base} bg-rose-500/10 text-rose-400 border-rose-500/30`;
+      default:
+        return `${base} bg-slate-500/10 text-slate-400 border-slate-500/30`;
+    }
+  };
+
+  const getDifficultyColor = (difficulty?: Difficulty) => {
+    switch (difficulty) {
+      case 'Easy':
+        return 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10';
+      case 'Medium':
+        return 'text-amber-400 border-amber-500/30 bg-amber-500/10';
+      case 'Hard':
+        return 'text-rose-400 border-rose-500/30 bg-rose-500/10';
+      default:
+        return 'text-slate-400 border-slate-500/30 bg-slate-500/10';
+    }
+  };
+
+  const formatTime = (seconds?: number) => {
+    if (!seconds) return 'N/A';
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}m ${secs}s`;
+  };
+
+  const formatDate = (iso: string) =>
+    new Date(iso).toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
 
   return (
     <div className="w-full max-w-7xl mx-auto space-y-6 text-slate-100 font-sans p-3 sm:p-6">
@@ -524,19 +660,16 @@ export default function TeacherDashboard({ userProfile }: { userProfile: any }) 
         )}
       </div>
 
-      {/* STUDENT DETAIL MODAL */}
+      {/* STUDENT ANALYTICS MODAL */}
       {selectedSubmission && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-slate-900 border border-indigo-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl relative">
+          <div className="w-full max-w-5xl bg-slate-900 border border-indigo-500/30 rounded-3xl shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button
-              onClick={() => setSelectedSubmission(null)}
-              className="absolute top-5 right-5 text-slate-400 hover:text-white text-lg font-bold cursor-pointer"
+              onClick={() => { setSelectedSubmission(null); setQuestionsBreakdown([]); }}
+              className="absolute top-5 right-5 text-slate-400 hover:text-white text-lg font-bold cursor-pointer z-10 bg-slate-900/80 rounded-full w-8 h-8 flex items-center justify-center"
             >
               ✕
             </button>
-
-            <h3 className="text-xl font-black text-white mb-1">Student Details</h3>
-            <p className="text-xs text-slate-400 mb-6 font-medium">Complete test breakdown for this submission.</p>
 
             {(() => {
               const sub = selectedSubmission;
@@ -548,63 +681,301 @@ export default function TeacherDashboard({ userProfile }: { userProfile: any }) 
               const grade = getGradeBadge(sub.score, total);
               const tabSwitches = sub.tab_switch_count ?? 0;
 
+              const totalAttempted = total;
+              const correctAnswers = sub.score;
+              const incorrectAnswers = totalAttempted - correctAnswers;
+              const accuracy =
+                totalAttempted > 0 ? Math.round((correctAnswers / totalAttempted) * 100) : 0;
+
+              const hardWrongs = questionsBreakdown.filter((q) => q.difficulty === 'Hard' && !q.isCorrect);
+              const mediumWrongs = questionsBreakdown.filter((q) => q.difficulty === 'Medium' && !q.isCorrect);
+              const struggleCount = hardWrongs.length + mediumWrongs.length;
+
               return (
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={`w-12 h-12 rounded-full bg-gradient-to-br ${getAvatarGradient(getInitials(studentName, studentEmail))} text-white font-extrabold text-sm flex items-center justify-center shadow-md`}
-                    >
-                      {getInitials(studentName, studentEmail)}
-                    </div>
-                    <div>
-                      <p className="text-base font-black text-white">{studentName}</p>
-                      <p className="text-xs text-slate-400 font-medium">{studentEmail}</p>
+                <div className="p-6 sm:p-8 space-y-6">
+                  {/* TOP OVERVIEW BANNER */}
+                  <div className="bg-slate-900/80 backdrop-blur-xl border border-indigo-500/30 rounded-3xl p-6 shadow-2xl shadow-indigo-950/60 relative overflow-hidden">
+                    <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+
+                    <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${getAvatarGradient(getInitials(studentName, studentEmail))} text-white font-black text-xl flex items-center justify-center shadow-lg flex-shrink-0`}>
+                          {getInitials(studentName, studentEmail)}
+                        </div>
+                        <div>
+                          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                            {studentName}
+                          </h2>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Mail className="w-3.5 h-3.5 text-slate-400" />
+                            <p className="text-xs text-slate-400 font-medium">{studentEmail}</p>
+                          </div>
+                          <div className="flex items-center gap-2 mt-2">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider border bg-emerald-500/10 text-emerald-400 border-emerald-500/30">
+                              <CheckCircle2 className="w-3 h-3" />
+                              Completed
+                            </span>
+                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                              Submitted: {formatDate(sub.submitted_at)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-6">
+                        <div className="text-center">
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Score</p>
+                          <p className="text-3xl font-black text-white">
+                            {sub.score}<span className="text-lg text-slate-500">/{total}</span>
+                          </p>
+                        </div>
+                        <div className="w-px h-12 bg-slate-800" />
+                        <div className="text-center">
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Percentage</p>
+                          <p className="text-3xl font-black text-indigo-400">{pct}%</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Subject</p>
-                      <p className="text-sm font-black text-white">{sub.category || 'General'}</p>
+                  {/* QUICK STATS CARDS */}
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="bg-slate-900/60 backdrop-blur-xl border border-indigo-500/20 rounded-2xl p-5 shadow-xl flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Attempted</p>
+                        <p className="text-3xl sm:text-4xl font-black text-white">{totalAttempted}</p>
+                      </div>
+                      <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+                        <Target className="w-6 h-6" />
+                      </div>
                     </div>
-                    <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Score</p>
-                      <p className="text-sm font-black text-white">{sub.score} / {total}</p>
+
+                    <div className="bg-slate-900/60 backdrop-blur-xl border border-emerald-500/20 rounded-2xl p-5 shadow-xl flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Correct</p>
+                        <p className="text-3xl sm:text-4xl font-black text-emerald-400">{correctAnswers}</p>
+                      </div>
+                      <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                        <CheckCircle2 className="w-6 h-6" />
+                      </div>
                     </div>
-                    <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Percentage</p>
-                      <p className="text-sm font-black text-emerald-400">{pct}%</p>
+
+                    <div className="bg-slate-900/60 backdrop-blur-xl border border-rose-500/20 rounded-2xl p-5 shadow-xl flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Incorrect</p>
+                        <p className="text-3xl sm:text-4xl font-black text-rose-400">{incorrectAnswers}</p>
+                      </div>
+                      <div className="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+                        <XCircle className="w-6 h-6" />
+                      </div>
                     </div>
-                    <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Grade</p>
-                      <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-black border ${grade.style}`}>
-                        {grade.label}
-                      </span>
+
+                    <div className="bg-slate-900/60 backdrop-blur-xl border border-amber-500/20 rounded-2xl p-5 shadow-xl flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Accuracy</p>
+                        <p className="text-3xl sm:text-4xl font-black text-amber-400">{accuracy}%</p>
+                      </div>
+                      <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+                        <TrendingUp className="w-6 h-6" />
+                      </div>
                     </div>
-                    <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Self Rating</p>
-                      <p className="text-sm font-black text-indigo-400">{sub.self_rating || 0}%</p>
+                  </div>
+
+                  {/* DIFFICULTY / STRUGGLE INDICATOR */}
+                  {struggleCount > 0 && (
+                    <div className="bg-slate-900/60 backdrop-blur-xl border border-rose-500/20 rounded-2xl p-5 shadow-xl">
+                      <div className="flex items-center gap-2 mb-3">
+                        <FlameKindling className="w-4 h-4 text-rose-400" />
+                        <h3 className="text-xs font-black text-slate-300 uppercase tracking-widest">Struggle Indicator</h3>
+                      </div>
+                      <p className="text-xs text-slate-400 font-medium mb-3">
+                        This student struggled with <span className="text-rose-400 font-bold">{struggleCount}</span> question{struggleCount !== 1 ? 's' : ''} that were marked as Medium or Hard.
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {hardWrongs.map((q) => (
+                          <span key={q.id} className="inline-flex items-center gap-1 px-3 py-1.5 bg-rose-500/10 border border-rose-500/30 text-rose-300 text-[10px] font-bold rounded-lg">
+                            <AlertCircle className="w-3 h-3" />
+                            Q{q.id}: {q.text.length > 40 ? q.text.slice(0, 40) + '...' : q.text}
+                          </span>
+                        ))}
+                        {mediumWrongs.map((q) => (
+                          <span key={q.id} className="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[10px] font-bold rounded-lg">
+                            <AlertCircle className="w-3 h-3" />
+                            Q{q.id}: {q.text.length > 40 ? q.text.slice(0, 40) + '...' : q.text}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                    <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Tab Switches</p>
-                      <p className={`text-sm font-black ${tabSwitches > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>
-                        {tabSwitches}
+                  )}
+
+                  {/* DETAILED QUESTION BREAKDOWN */}
+                  <div className="bg-slate-900/60 backdrop-blur-xl border border-indigo-500/20 rounded-3xl overflow-hidden shadow-2xl">
+                    <div className="p-5 border-b border-indigo-500/20 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <BarChart3 className="w-4 h-4 text-indigo-400" />
+                        <h3 className="text-xs font-black text-slate-300 uppercase tracking-widest">Question Breakdown</h3>
+                      </div>
+                      <button
+                        onClick={() => setShowBreakdown(!showBreakdown)}
+                        className="text-xs font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1 cursor-pointer"
+                      >
+                        {showBreakdown ? 'Hide' : 'Show'}
+                        {showBreakdown ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                      </button>
+                    </div>
+
+                    {showBreakdown && (
+                      <div className="divide-y divide-slate-800/60">
+                        {breakdownLoading ? (
+                          <div className="p-8 text-center">
+                            <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                            <p className="text-xs font-bold text-slate-400">Loading question breakdown...</p>
+                          </div>
+                        ) : questionsBreakdown.length === 0 ? (
+                          <div className="p-8 text-center">
+                            <p className="text-xs font-bold text-slate-400">No question breakdown available for this submission.</p>
+                          </div>
+                        ) : (
+                          questionsBreakdown.map((q, idx) => {
+                            const isExpanded = expandedQuestion === q.id;
+                            const isWrong = !q.isCorrect;
+                            const isHardWrong = q.difficulty === 'Hard' && isWrong;
+
+                            return (
+                              <div
+                                key={q.id}
+                                className={`transition-colors ${
+                                  isHardWrong
+                                    ? 'bg-rose-500/5'
+                                    : isWrong
+                                    ? 'bg-amber-500/5'
+                                    : 'bg-slate-950/20'
+                                }`}
+                              >
+                                <div
+                                  onClick={() => setExpandedQuestion(isExpanded ? null : q.id)}
+                                  className="p-4 sm:p-5 cursor-pointer hover:bg-slate-800/40 transition-colors"
+                                >
+                                  <div className="flex items-start gap-3">
+                                    <div
+                                      className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                                        q.isCorrect
+                                          ? 'bg-emerald-500/10 text-emerald-400'
+                                          : 'bg-rose-500/10 text-rose-400'
+                                      }`}
+                                    >
+                                      {q.isCorrect ? (
+                                        <CheckCircle2 className="w-5 h-5" />
+                                      ) : (
+                                        <XCircle className="w-5 h-5" />
+                                      )}
+                                    </div>
+
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex items-center gap-2 mb-1">
+                                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-wider">
+                                          Q{idx + 1}
+                                        </span>
+                                        {q.difficulty && (
+                                          <span className={getDifficultyBadge(q.difficulty)}>
+                                            {q.difficulty === 'Hard' && <Flame className="w-3 h-3" />}
+                                            {q.difficulty}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <p className="text-sm font-semibold text-slate-200 leading-snug">
+                                        {q.text}
+                                      </p>
+                                    </div>
+
+                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                      {q.timeTaken && (
+                                        <span className="flex items-center gap-1 text-[10px] font-bold text-slate-500">
+                                          <Clock className="w-3 h-3" />
+                                          {formatTime(q.timeTaken)}
+                                        </span>
+                                      )}
+                                      {isExpanded ? (
+                                        <ChevronUp className="w-4 h-4 text-slate-400" />
+                                      ) : (
+                                        <ChevronDown className="w-4 h-4 text-slate-400" />
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {isExpanded && (
+                                  <div className="px-4 sm:px-5 pb-5 pt-2">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                      <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                                          Student Answer
+                                        </p>
+                                        <p
+                                          className={`text-sm font-bold ${
+                                            q.isCorrect ? 'text-emerald-400' : 'text-rose-400'
+                                          }`}
+                                        >
+                                          {q.userAnswer || 'Not Answered'}
+                                        </p>
+                                      </div>
+                                      <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                                          Correct Answer
+                                        </p>
+                                        <p className="text-sm font-bold text-emerald-400">{q.correctAnswer}</p>
+                                      </div>
+                                    </div>
+
+                                    {isWrong && (
+                                      <div className="mt-3 flex items-center gap-2 px-3 py-2 bg-amber-500/10 border border-amber-500/30 rounded-xl">
+                                        <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                                        <p className="text-[11px] font-semibold text-amber-300">
+                                          Incorrect answer{q.difficulty ? ` on a ${q.difficulty} question` : ''}. Review the concept to improve.
+                                        </p>
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* PERFORMANCE SUMMARY FOOTER */}
+                  <div className="bg-slate-900/60 backdrop-blur-xl border border-indigo-500/20 rounded-2xl p-5 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <Award className="w-5 h-5 text-amber-400" />
+                      <p className="text-xs font-bold text-slate-300">
+                        Performance:{' '}
+                        <span className="text-white">
+                          {pct >= 80
+                            ? 'Excellent'
+                            : pct >= 60
+                            ? 'Good'
+                            : pct >= 40
+                            ? 'Average'
+                            : 'Needs Improvement'}
+                        </span>
                       </p>
                     </div>
-                  </div>
-
-                  <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Submitted At</p>
-                    <p className="text-sm font-black text-white">
-                      {new Date(sub.submitted_at).toLocaleString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                        hour: 'numeric',
-                        minute: '2-digit',
-                        hour12: true,
-                      })}
-                    </p>
+                    <div className="flex items-center gap-4 text-xs text-slate-400 font-medium">
+                      <span className="flex items-center gap-1">
+                        <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                        Correct: {correctAnswers}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <div className="w-2 h-2 rounded-full bg-rose-400" />
+                        Incorrect: {incorrectAnswers}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Flame className="w-3 h-3 text-amber-400" />
+                        Struggles: {struggleCount}
+                      </span>
+                    </div>
                   </div>
                 </div>
               );

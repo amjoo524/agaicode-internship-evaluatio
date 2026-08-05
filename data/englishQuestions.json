@@ -1,0 +1,352 @@
+[
+  {
+    "id": 1,
+    "section": "English",
+    "type": "drag-and-drop",
+    "q": "She [BLANK] to the market every morning.",
+    "options": {
+      "A": "go",
+      "B": "goes",
+      "C": "going",
+      "D": "gone"
+    },
+    "answer": "B",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 2,
+    "section": "English",
+    "type": "drag-and-drop",
+    "q": "They [BLANK] playing football when it started raining.",
+    "options": {
+      "A": "was",
+      "B": "were",
+      "C": "are",
+      "D": "is"
+    },
+    "answer": "B",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 3,
+    "section": "English",
+    "type": "drag-and-drop",
+    "q": "I [BLANK] thinking about the problem for hours.",
+    "options": {
+      "A": "am",
+      "B": "is",
+      "C": "are",
+      "D": "be"
+    },
+    "answer": "A",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 4,
+    "section": "English",
+    "type": "drag-and-drop",
+    "q": "By next year, she [BLANK] her graduation.",
+    "options": {
+      "A": "completes",
+      "B": "will complete",
+      "C": "completed",
+      "D": "completing"
+    },
+    "answer": "B",
+    "difficulty": "Medium"
+  },
+  {
+    "id": 5,
+    "section": "English",
+    "type": "drag-and-drop",
+    "q": "If I [BLANK] you, I would accept the offer.",
+    "options": {
+      "A": "am",
+      "B": "was",
+      "C": "were",
+      "D": "be"
+    },
+    "answer": "C",
+    "difficulty": "Medium"
+  },
+  {
+    "id": 6,
+    "section": "English",
+    "type": "drag-and-drop",
+    "q": "The cake [BLANK] by my mother yesterday.",
+    "options": {
+      "A": "bakes",
+      "B": "baked",
+      "C": "was baked",
+      "D": "is baked"
+    },
+    "answer": "C",
+    "difficulty": "Medium"
+  },
+  {
+    "id": 7,
+    "section": "English",
+    "type": "drag-and-drop",
+    "q": "We [BLANK] here since 2010.",
+    "options": {
+      "A": "live",
+      "B": "lived",
+      "C": "have lived",
+      "D": "are living"
+    },
+    "answer": "C",
+    "difficulty": "Medium"
+  },
+  {
+    "id": 8,
+    "section": "English",
+    "type": "drag-and-drop",
+    "q": "She asked me where I [BLANK].",
+    "options": {
+      "A": "live",
+      "B": "lived",
+      "C": "am living",
+      "D": "have lived"
+    },
+    "answer": "B",
+    "difficulty": "Hard"
+  },
+  {
+    "id": 9,
+    "section": "English",
+    "type": "mcq",
+    "q": "Select the correct synonym for 'Benevolent':",
+    "options": {
+      "A": "Kind",
+      "B": "Hostile",
+      "C": "Jealous",
+      "D": "Angry"
+    },
+    "answer": "A",
+    "difficulty": "Medium"
+  },
+  {
+    "id": 10,
+    "section": "English",
+    "type": "mcq",
+    "q": "Choose the antonym of 'Ephemeral':",
+    "options": {
+      "A": "Short-lived",
+      "B": "Permanent",
+      "C": "Brief",
+      "D": "Momentary"
+    },
+    "answer": "B",
+    "difficulty": "Hard"
+  },
+  {
+    "id": 11,
+    "section": "English",
+    "type": "mcq",
+    "q": "Which word is a synonym of 'Candid'?",
+    "options": {
+      "A": "Deceitful",
+      "B": "Frank",
+      "C": "Arrogant",
+      "D": " shy"
+    },
+    "answer": "B",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 12,
+    "section": "English",
+    "type": "mcq",
+    "q": "Pick the antonym of 'Ameliorate':",
+    "options": {
+      "A": "Improve",
+      "B": "Worsen",
+      "C": "Enhance",
+      "D": "Fix"
+    },
+    "answer": "B",
+    "difficulty": "Hard"
+  },
+  {
+    "id": 13,
+    "section": "English",
+    "type": "mcq",
+    "q": "What is the plural form of 'Analysis'?",
+    "options": {
+      "A": "Analysies",
+      "B": "Analyses",
+      "C": "Analysis",
+      "D": "Analysi"
+    },
+    "answer": "B",
+    "difficulty": "Medium"
+  },
+  {
+    "id": 14,
+    "section": "English",
+    "type": "mcq",
+    "q": "Choose the correct sentence:",
+    "options": {
+      "A": "He don't like coffee.",
+      "B": "He doesn't likes coffee.",
+      "C": "He doesn't like coffee.",
+      "D": "He not like coffee."
+    },
+    "answer": "C",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 15,
+    "section": "English",
+    "type": "mcq",
+    "q": "Which sentence uses the correct preposition?",
+    "options": {
+      "A": "She is good in painting.",
+      "B": "She is good at painting.",
+      "C": "She is good on painting.",
+      "D": "She is good for painting."
+    },
+    "answer": "B",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 16,
+    "section": "English",
+    "type": "drag-and-drop",
+    "q": "Neither the teacher nor the students [BLANK] present.",
+    "options": {
+      "A": "was",
+      "B": "were",
+      "C": "has",
+      "D": "have"
+    },
+    "answer": "B",
+    "difficulty": "Hard"
+  },
+  {
+    "id": 17,
+    "section": "English",
+    "type": "drag-and-drop",
+    "q": "I wish I [BLANK] the answer to that question.",
+    "options": {
+      "A": "know",
+      "B": "knew",
+      "C": "have known",
+      "D": "knowing"
+    },
+    "answer": "B",
+    "difficulty": "Medium"
+  },
+  {
+    "id": 18,
+    "section": "English",
+    "type": "mcq",
+    "q": "Select the synonym of 'Mitigate':",
+    "options": {
+      "A": "Aggravate",
+      "B": "Alleviate",
+      "C": "Intensify",
+      "D": "Worsen"
+    },
+    "answer": "B",
+    "difficulty": "Hard"
+  },
+  {
+    "id": 19,
+    "section": "English",
+    "type": "mcq",
+    "q": "Which word is an antonym of 'Prolong'?",
+    "options": {
+      "A": "Extend",
+      "B": " Curtail",
+      "C": "Lengthen",
+      "D": "Stretch"
+    },
+    "answer": "B",
+    "difficulty": "Medium"
+  },
+  {
+    "id": 20,
+    "section": "English",
+    "type": "drag-and-drop",
+    "q": "The movie [BLANK] by critics last week.",
+    "options": {
+      "A": "praised",
+      "B": "was praised",
+      "C": "is praised",
+      "D": "praising"
+    },
+    "answer": "B",
+    "difficulty": "Medium"
+  },
+  {
+    "id": 21,
+    "section": "English",
+    "type": "mcq",
+    "q": "Identify the correct use of the word 'Ubiquitous':",
+    "options": {
+      "A": "The ubiquitous smartphone has changed how we communicate.",
+      "B": "The ubiquitous cake was delicious.",
+      "C": "He ran in an ubiquitous manner.",
+      "D": "Ubiquitous is a type of fruit."
+    },
+    "answer": "A",
+    "difficulty": "Hard"
+  },
+  {
+    "id": 22,
+    "section": "English",
+    "type": "drag-and-drop",
+    "q": "If it rains, we [BLANK] at home.",
+    "options": {
+      "A": "stay",
+      "B": "will stay",
+      "C": "stayed",
+      "D": "staying"
+    },
+    "answer": "B",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 23,
+    "section": "English",
+    "type": "mcq",
+    "q": "Choose the synonym of 'Inevitable':",
+    "options": {
+      "A": "Avoidable",
+      "B": "Uncertain",
+      "C": "Unavoidable",
+      "D": "Rare"
+    },
+    "answer": "C",
+    "difficulty": "Medium"
+  },
+  {
+    "id": 24,
+    "section": "English",
+    "type": "drag-and-drop",
+    "q": "He [BLANK] his homework before the deadline.",
+    "options": {
+      "A": "finish",
+      "B": "finished",
+      "C": "finishing",
+      "D": "finishes"
+    },
+    "answer": "B",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 25,
+    "section": "English",
+    "type": "mcq",
+    "q": "Select the antonym of 'Copious':",
+    "options": {
+      "A": "Abundant",
+      "B": "Scarce",
+      "C": "Plentiful",
+      "D": "Generous"
+    },
+    "answer": "B",
+    "difficulty": "Hard"
+  }
+]

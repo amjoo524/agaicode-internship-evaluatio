@@ -34,6 +34,12 @@ const WARNING_MESSAGES = [
   "🚨 Final Warning (5/5): One more switch and your test will be auto-submitted!"
 ];
 
+// Tags that never need a closing pair (self-closing / void elements)
+const VOID_TAGS = [
+  'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+  'link', 'meta', 'param', 'source', 'track', 'wbr'
+];
+
 const getSectionBadgeStyle = (section) => {
   switch (section) {
     case 'HTML': return 'text-orange-400 bg-orange-500/10 border border-orange-500/30';
@@ -84,8 +90,9 @@ export default function QuizScreen({
   const isTimeLow = timeLeft <= 300; 
 
   const renderCodeWithBlank = () => {
-    if (!currentQuestion || !currentQuestion.code) return null;
-    const parts = currentQuestion.code.split('[BLANK]');
+    if (!currentQuestion || (!currentQuestion.code && !currentQuestion.q)) return null;
+    const text = currentQuestion.code || currentQuestion.q;
+    const parts = text.split('[BLANK]');
     return (
       <div className="inline-flex flex-wrap items-center leading-loose">
         {parts.map((part, index) => {
@@ -110,14 +117,14 @@ export default function QuizScreen({
                       onSelectOption('');
                     }
                   }}
-                  className={`inline-flex items-center justify-center min-w-[110px] h-[32px] px-3 mx-2 rounded-lg font-bold text-xs transition-all border-2 cursor-pointer
-                    ${!selectedAnswer 
-                      ? 'bg-slate-900 border-dashed border-indigo-500/50 text-indigo-400 select-none animate-pulse' 
+                  className={`inline-flex items-center justify-center min-w-[120px] h-[34px] px-3 mx-2 rounded-lg font-bold text-xs transition-all border-2 cursor-pointer
+                    ${!selectedAnswer
+                      ? 'bg-slate-900 border-dashed border-indigo-500/50 text-indigo-400 select-none animate-pulse'
                       : 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-900/40 hover:bg-indigo-500'
                     }`}
-                >
-                  {selectedAnswer ? selectedAnswer : 'Drop / Click 🎯'}
-                </div>
+                  >
+                    {selectedAnswer ? selectedAnswer : 'Drop / Click here 🎯'}
+                  </div>
               )}
             </span>
           );
@@ -308,7 +315,7 @@ export default function QuizScreen({
                     <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></div>
                   </div>
                   <span className="text-xs font-mono text-slate-400 font-semibold tracking-wider">
-                    {currentQuestion.section === 'HTML' ? 'index.html' : currentQuestion.section === 'CSS' ? 'styles.css' : 'index.js'}
+                    {currentQuestion.section === 'HTML' ? 'index.html' : currentQuestion.section === 'CSS' ? 'styles.css' : currentQuestion.section === 'English' ? 'sentence.txt' : 'index.js'}
                   </span>
                   <div className="w-10"></div>
                 </div>
@@ -397,26 +404,76 @@ export default function QuizScreen({
 
               <div className={`border border-slate-800 rounded-xl overflow-hidden shadow-2xl flex-1 min-h-[220px] ${activeTab === 'code' ? 'block' : 'hidden'}`}>
                 <Editor
+                  key={`editor-${currentIndex}`}
                   height="220px"
                   defaultLanguage={currentQuestion.section === 'HTML' ? 'html' : currentQuestion.section === 'CSS' ? 'css' : 'javascript'}
                   theme="vs-dark"
                   value={subjectiveAnswer || ''}
                   onChange={(value) => onSubjectiveAnswer(value || '')}
                   onMount={(editor, monaco) => {
-                    // Custom keybinding to inject HTML boilerplate when '!' and then Tab/Enter is pressed
+                    // --- VS Code-style '!' + Enter -> HTML boilerplate ---
+                    // Only fires when the suggestion widget is NOT visible, so it
+                    // never steals Enter away from accepting an IntelliSense suggestion.
                     editor.addCommand(monaco.KeyCode.Enter, () => {
                       const position = editor.getPosition();
                       const model = editor.getModel();
                       const lineContent = model.getLineContent(position.lineNumber);
-                      
+
                       if (lineContent.trim() === '!') {
                         const boilerplate = `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>Document</title>\n</head>\n<body>\n  \n</body>\n</html>`;
                         const range = new monaco.Range(position.lineNumber, 1, position.lineNumber, lineContent.length + 1);
                         editor.executeEdits('boilerplate', [{ range, text: boilerplate }]);
+                        // Drop the cursor right inside <body> so you can start typing immediately
+                        editor.setPosition({ lineNumber: position.lineNumber + 7, column: 3 });
+                        editor.focus();
                         return;
                       }
-                      // Default Enter action fallback
+                      // Default Enter action fallback (keeps normal newline + auto-indent)
                       editor.trigger('keyboard', 'type', { text: '\n' });
+                    }, '!suggestWidgetVisible');
+
+                    // --- VS Code-style auto-closing HTML tags ---
+                    // Typing "<div>" auto-inserts "</div>" right after the cursor,
+                    // just like real VS Code. Only runs for HTML questions since
+                    // CSS/JS don't have tags to close.
+                    editor.onDidType((typedText) => {
+                      if (typedText !== '>') return;
+                      if (currentQuestion?.section !== 'HTML') return;
+
+                      const position = editor.getPosition();
+                      const model = editor.getModel();
+                      const textBeforeCursor = model.getValueInRange({
+                        startLineNumber: position.lineNumber,
+                        startColumn: 1,
+                        endLineNumber: position.lineNumber,
+                        endColumn: position.column,
+                      });
+
+                      // Matches "<tagname ...>" ending exactly where we just typed '>'
+                      const tagMatch = textBeforeCursor.match(/<([a-zA-Z][a-zA-Z0-9-]*)(?:\s[^<>]*)?>$/);
+                      if (!tagMatch) return;
+
+                      const tagName = tagMatch[1];
+                      const isSelfClosing =
+                        textBeforeCursor.trim().endsWith('/>') ||
+                        VOID_TAGS.includes(tagName.toLowerCase());
+                      if (isSelfClosing) return;
+
+                      // Don't double up if a matching closing tag already exists right after
+                      const textAfterCursor = model.getValueInRange({
+                        startLineNumber: position.lineNumber,
+                        startColumn: position.column,
+                        endLineNumber: position.lineNumber,
+                        endColumn: model.getLineMaxColumn(position.lineNumber),
+                      });
+                      if (textAfterCursor.trimStart().toLowerCase().startsWith(`</${tagName.toLowerCase()}>`)) return;
+
+                      editor.executeEdits('auto-close-tag', [{
+                        range: new monaco.Range(position.lineNumber, position.column, position.lineNumber, position.column),
+                        text: `</${tagName}>`,
+                      }]);
+                      // Keep the cursor sitting between the opening and closing tag
+                      editor.setPosition(position);
                     });
                   }}
                   options={{
@@ -427,16 +484,19 @@ export default function QuizScreen({
                     scrollBeyondLastLine: false,
                     automaticLayout: true,
                     tabSize: 2,
-                    autoClosingTags: true,
                     autoClosingBrackets: 'always',
+                    autoClosingQuotes: 'always',
                     autoClosingDelete: 'always',
                     autoClosingOvertype: 'always',
+                    autoSurround: 'languageDefined',
                     suggestOnTriggerCharacters: true,
                     acceptSuggestionOnEnter: 'on',
                     quickSuggestions: true,
                     formatOnType: true,
                     formatOnPaste: true,
                     snippetSuggestions: 'inline',
+                    matchBrackets: 'always',
+                    bracketPairColorization: { enabled: true },
                   }}
                 />
               </div>

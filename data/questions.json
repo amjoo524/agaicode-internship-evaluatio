@@ -286,6 +286,7 @@
     "answer": "",
     "explanation": "<table><caption>Class List</caption><thead><tr><th>Name</th><th>Roll No</th></tr></thead><tbody><tr><td>Amjad</td><td>1664</td></tr><tr><td>Saqlain</td><td>1890</td></tr></tbody></table>"
   },
+
   {
     "id": 24,
     "section": "CSS",
@@ -302,332 +303,578 @@
   {
     "id": 25,
     "section": "CSS",
-    "q": "Which HTML tag is used to define an internal style sheet?",
+    "q": "Which of these is NOT a valid way to add CSS to an HTML page?",
     "options": {
-      "A": "<script>",
-      "B": "<css>",
-      "C": "<style>",
-      "D": "<link>"
+      "A": "Inline style attribute",
+      "B": "<style> tag",
+      "C": "External stylesheet",
+      "D": "A Python script"
     },
-    "answer": "C",
-    "explanation": "Internal styles are defined within the <style> element in HTML."
+    "answer": "D",
+    "explanation": "A Python script is not a valid method for embedding or linking CSS into an HTML page."
   },
   {
     "id": 26,
     "section": "CSS",
-    "q": "Which HTML attribute is used to define inline styles?",
+    "q": "Which selector is used to select an element by its class?",
     "options": {
-      "A": "class",
-      "B": "style",
-      "C": "styles",
-      "D": "font"
+      "A": "#classname",
+      "B": "*classname",
+      "C": ".classname",
+      "D": "@classname"
     },
-    "answer": "B",
-    "explanation": "The style attribute is used to apply inline styles directly to an HTML element."
+    "answer": "C",
+    "explanation": "Class selectors in CSS are denoted with a dot (.) prefix."
   },
   {
     "id": 27,
     "section": "CSS",
-    "q": "Which CSS property is used to change the text color?",
+    "q": "Which selector is used to select an element by its id?",
     "options": {
-      "A": "text-color",
-      "B": "font-color",
-      "C": "color",
-      "D": "background-color"
+      "A": "#idname",
+      "B": ".idname",
+      "C": "*idname",
+      "D": "&idname"
     },
-    "answer": "C",
-    "explanation": "The 'color' property in CSS changes the foreground text color."
+    "answer": "A",
+    "explanation": "ID selectors in CSS are denoted with a hash (#) prefix."
   },
   {
     "id": 28,
     "section": "CSS",
-    "q": "Which CSS property changes the background color of an element?",
+    "q": "color: rgb(255, 0, 0); sets the text color to:",
     "options": {
-      "A": "bg-color",
-      "B": "background-color",
-      "C": "background",
-      "D": "color-background"
+      "A": "Green",
+      "B": "Blue",
+      "C": "Red",
+      "D": "Black"
     },
-    "answer": "B",
-    "explanation": "background-color sets the background color of an element."
+    "answer": "C",
+    "explanation": "RGB value with full red (255,0,0) targets the red color channel."
   },
   {
     "id": 29,
     "section": "CSS",
-    "q": "Which CSS property changes the size of text?",
+    "q": "Which property is used to set the text color of an element?",
     "options": {
-      "A": "text-size",
-      "B": "size",
-      "C": "font-size",
-      "D": "text-style"
+      "A": "background-color",
+      "B": "color",
+      "C": "font-color",
+      "D": "text-color"
     },
-    "answer": "C",
-    "explanation": "font-size sets the size of text using units like px, em, or rem."
+    "answer": "B",
+    "explanation": "The 'color' property sets the text color of an element."
   },
   {
     "id": 30,
     "section": "CSS",
-    "q": "Which CSS property is used to change the font of text?",
+    "q": "Which property sets the background color of an element?",
     "options": {
-      "A": "font-name",
-      "B": "text-font",
-      "C": "font-type",
-      "D": "font-family"
+      "A": "color",
+      "B": "bg-color",
+      "C": "background-color",
+      "D": "fill"
     },
-    "answer": "D",
-    "explanation": "font-family sets which font or list of fallback fonts to use."
+    "answer": "C",
+    "explanation": "background-color defines the background area color."
   },
   {
     "id": 31,
     "section": "CSS",
-    "q": "Which CSS property makes text bold?",
+    "q": "font-weight: bold; roughly corresponds to which numeric value?",
     "options": {
-      "A": "text-style",
-      "B": "font-bold",
-      "C": "text-weight",
-      "D": "font-weight"
+      "A": "400",
+      "B": "700",
+      "C": "100",
+      "D": "900"
     },
-    "answer": "D",
-    "explanation": "font-weight controls the thickness of text (e.g., bold or numeric values 100-900)."
+    "answer": "B",
+    "explanation": "Bold text weight generally corresponds to the numeric value 700."
   },
   {
     "id": 32,
     "section": "CSS",
-    "q": "Which CSS property aligns text horizontally?",
+    "q": "Which unit is relative to the font-size of the parent element (for typographic properties)?",
     "options": {
-      "A": "text-position",
-      "B": "align-text",
-      "C": "text-align",
-      "D": "align"
+      "A": "px",
+      "B": "em",
+      "C": "rem",
+      "D": "vh"
     },
-    "answer": "C",
-    "explanation": "text-align controls horizontal alignment: left, right, or center."
+    "answer": "B",
+    "explanation": "The 'em' unit is relative to the font-size of its direct or inherited parent element."
   },
   {
     "id": 33,
     "section": "CSS",
-    "q": "Which CSS property adds underline, line-through, or removes decoration from text?",
+    "q": "Which unit is always relative to the font-size of the root (html) element?",
     "options": {
-      "A": "text-style",
-      "B": "underline",
-      "C": "text-decoration",
-      "D": "font-decoration"
+      "A": "em",
+      "B": "rem",
+      "C": "%",
+      "D": "vw"
     },
-    "answer": "C",
-    "explanation": "text-decoration accepts values like underline, line-through, or none."
+    "answer": "B",
+    "explanation": "'rem' stands for Root Em, scaling directly with the root HTML tag font size."
   },
   {
     "id": 34,
     "section": "CSS",
-    "q": "Which CSS property transforms text to uppercase or lowercase?",
+    "q": "96px is roughly equal to how many inches?",
     "options": {
-      "A": "text-case",
-      "B": "font-case",
-      "C": "text-transform",
-      "D": "text-uppercase"
+      "A": "2 inch",
+      "B": "1 inch",
+      "C": "0.5 inch",
+      "D": "96 inch"
     },
-    "answer": "C",
-    "explanation": "text-transform changes capitalization: uppercase, lowercase, or capitalize."
+    "answer": "B",
+    "explanation": "In standard CSS specifications, 96 pixels equals 1 inch."
   },
   {
     "id": 35,
     "section": "CSS",
-    "q": "Which CSS property adds space INSIDE an element (between content and border)?",
+    "q": "In the CSS box model, which part is the innermost?",
     "options": {
-      "A": "margin",
-      "B": "padding",
-      "C": "spacing",
-      "D": "border-spacing"
+      "A": "Margin",
+      "B": "Border",
+      "C": "Padding",
+      "D": "Content"
     },
-    "answer": "B",
-    "explanation": "padding controls inner spacing inside the element's border."
+    "answer": "D",
+    "explanation": "Content sits at the core of the box model, surrounded by padding, border, and margin."
   },
   {
     "id": 36,
     "section": "CSS",
-    "q": "Which CSS property adds space OUTSIDE an element (between elements)?",
+    "q": "Which property is used to round the corners of an element's border?",
     "options": {
-      "A": "padding",
-      "B": "space",
-      "C": "gap",
-      "D": "margin"
+      "A": "border-style",
+      "B": "border-radius",
+      "C": "border-color",
+      "D": "corner-radius"
     },
-    "answer": "D",
-    "explanation": "margin controls outer spacing around an element."
+    "answer": "B",
+    "explanation": "border-radius curves the structural corners of a box."
   },
   {
     "id": 37,
     "section": "CSS",
-    "q": "Which CSS property adds a border around an element?",
+    "q": "An element with display: block; takes up:",
     "options": {
-      "A": "outline",
-      "B": "border",
-      "C": "frame",
-      "D": "box"
+      "A": "Only the space required by its content",
+      "B": "The full width available",
+      "C": "No space at all",
+      "D": "A circular shape"
     },
     "answer": "B",
-    "explanation": "border sets the border width, style, and color in shorthand or individual properties."
+    "explanation": "Block-level elements stretch out horizontally to fill the entire available width."
   },
   {
     "id": 38,
     "section": "CSS",
-    "q": "Which CSS position value keeps an element fixed relative to the browser window, even during scroll?",
+    "q": "Can margin and padding be applied normally on an element with display: inline;?",
     "options": {
-      "A": "static",
-      "B": "relative",
-      "C": "absolute",
-      "D": "fixed"
+      "A": "Yes, fully",
+      "B": "No",
+      "C": "Only margin works",
+      "D": "Only padding works"
     },
-    "answer": "D",
-    "explanation": "position: fixed removes the element from normal flow and positions it relative to the viewport/browser."
+    "answer": "B",
+    "explanation": "Inline elements do not accept top/bottom margins or vertical padding behavior normally."
   },
   {
     "id": 39,
     "section": "CSS",
-    "q": "Which CSS display value enables flexbox layout?",
+    "q": "Which one still reserves the element's space on the page when hidden?",
     "options": {
-      "A": "block",
-      "B": "inline",
-      "C": "grid",
-      "D": "flex"
+      "A": "display: none;",
+      "B": "visibility: hidden;",
+      "C": "Both do",
+      "D": "Neither does"
     },
-    "answer": "D",
-    "explanation": "display: flex turns an element into a flex container."
+    "answer": "B",
+    "explanation": "visibility: hidden hides the visual element but leaves its layout box space intact."
   },
   {
     "id": 40,
     "section": "CSS",
-    "q": "Which CSS property aligns flex items along the main axis?",
+    "q": "Which position value removes an element from the normal flow and positions it relative to its closest positioned ancestor?",
     "options": {
-      "A": "align-items",
-      "B": "flex-align",
-      "C": "justify-content",
-      "D": "align-content"
+      "A": "static",
+      "B": "relative",
+      "C": "absolute",
+      "D": "sticky"
     },
     "answer": "C",
-    "explanation": "justify-content aligns items along the main axis (flex-start, center, space-between, etc.)."
+    "explanation": "Absolute positioning pulls the element out of flow relative to its nearest positioned ancestor."
   },
   {
     "id": 41,
     "section": "CSS",
-    "q": "Which CSS property aligns flex items along the cross axis?",
+    "q": "Which position value keeps an element fixed relative to the browser window, even while scrolling?",
     "options": {
-      "A": "justify-content",
-      "B": "align-items",
-      "C": "flex-direction",
-      "D": "vertical-align"
+      "A": "relative",
+      "B": "absolute",
+      "C": "fixed",
+      "D": "static"
     },
-    "answer": "B",
-    "explanation": "align-items aligns items along the cross axis."
+    "answer": "C",
+    "explanation": "Fixed positioning anchors elements relative to the viewport window."
   },
   {
     "id": 42,
     "section": "CSS",
-    "q": "How do you select an element with class 'card' in CSS?",
+    "q": "z-index only has an effect when the element's position is:",
     "options": {
-      "A": "card",
-      "B": "#card",
-      "C": ".card",
-      "D": "*card"
+      "A": "static",
+      "B": "anything other than static",
+      "C": "always, regardless of position",
+      "D": "never"
     },
-    "answer": "C",
-    "explanation": "Class selectors use a dot (.) prefix."
+    "answer": "B",
+    "explanation": "z-index applies only to positioned elements (relative, absolute, fixed, sticky)."
   },
   {
     "id": 43,
     "section": "CSS",
-    "q": "How do you select an element with id 'main' in CSS?",
+    "q": "In Flexbox, justify-content controls alignment along the:",
     "options": {
-      "A": "main",
-      "B": ".main",
-      "C": "*main",
-      "D": "#main"
+      "A": "cross axis",
+      "B": "main axis",
+      "C": "both axes equally",
+      "D": "z-axis"
     },
-    "answer": "D",
-    "explanation": "ID selectors use a hash (#) prefix."
+    "answer": "B",
+    "explanation": "justify-content governs item spacing and distribution along the main flex axis."
   },
   {
     "id": 44,
     "section": "CSS",
-    "q": "Which CSS property makes the corners of an element rounded?",
+    "q": "Drag & Drop concept: Fill blank for h1 color property -> h1 { [BLANK] : red; }",
     "options": {
-      "A": "corner-radius",
-      "B": "border-circle",
-      "C": "border-radius",
-      "D": "round-border"
+      "A": "color",
+      "B": "background-color",
+      "C": "border",
+      "D": "margin"
     },
-    "answer": "C",
-    "explanation": "border-radius rounds the outer border corners of an element."
+    "answer": "A",
+    "explanation": "The correct property to style h1 text red is 'color'."
   },
   {
     "id": 45,
     "section": "CSS",
-    "q": "Which unit in CSS is relative to the font-size of the root element?",
+    "q": "Drag & Drop concept: Fill blank for bold font weight -> p { [BLANK] : bold; }",
     "options": {
-      "A": "em",
-      "B": "rem",
-      "C": "px",
-      "D": "%"
+      "A": "font-weight",
+      "B": "font-style",
+      "C": "text-decoration",
+      "D": "font-family"
     },
-    "answer": "B",
-    "explanation": "rem (Root Em) is relative to the font size of the root (<html>) element."
+    "answer": "A",
+    "explanation": "font-weight handles bold text formatting."
   },
   {
     "id": 46,
     "section": "CSS",
-    "q": "What is the default value of the CSS 'position' property?",
+    "q": "Drag & Drop concept: Center alignment -> div { text-align: [BLANK]; }",
     "options": {
-      "A": "relative",
-      "B": "absolute",
-      "C": "static",
-      "D": "fixed"
+      "A": "center",
+      "B": "middle",
+      "C": "top",
+      "D": "auto"
     },
-    "answer": "C",
-    "explanation": "The default positioning for HTML elements is static."
+    "answer": "A",
+    "explanation": "text-align uses 'center' value for horizontal centering."
   },
   {
     "id": 47,
     "section": "CSS",
-    "q": "Which property is used to stack elements along the z-axis?",
+    "q": "Drag & Drop concept: Set fixed box height -> div { [BLANK] : 50px; }",
     "options": {
-      "A": "z-index",
-      "B": "stack-order",
-      "C": "layer",
+      "A": "height",
+      "B": "width",
+      "C": "top",
       "D": "depth"
     },
     "answer": "A",
-    "explanation": "z-index controls stacking order of positioned elements."
+    "explanation": "Height property dictates the vertical dimension size."
   },
   {
     "id": 48,
     "section": "CSS",
-    "q": "Which CSS property hides an element while still reserving its space in layout?",
+    "q": "Drag & Drop concept: Perfect circle radius -> div { border-radius: [BLANK]; }",
     "options": {
-      "A": "display: none;",
-      "B": "visibility: hidden;",
-      "C": "opacity: 0;",
-      "D": "hidden: true;"
+      "A": "50%",
+      "B": "100px",
+      "C": "round",
+      "D": "circle"
     },
-    "answer": "B",
-    "explanation": "visibility: hidden hides the element but keeps its layout space."
+    "answer": "A",
+    "explanation": "A 50% border radius transforms a square box into a circle."
   },
   {
     "id": 49,
     "section": "CSS",
-    "q": "Which CSS property completely removes an element from document flow?",
+    "q": "Drag & Drop concept: Inner spacing property -> div { [BLANK] : 10px; }",
     "options": {
-      "A": "visibility: hidden;",
-      "B": "display: none;",
-      "C": "opacity: 0;",
-      "D": "clear: both;"
+      "A": "padding",
+      "B": "margin",
+      "C": "gap",
+      "D": "spacing"
     },
-    "answer": "B",
-    "explanation": "display: none removes element without preserving layout space."
+    "answer": "A",
+    "explanation": "Padding establishes inner spacing around content inside borders."
   },
   {
     "id": 50,
     "section": "CSS",
-    "q": "What is the default flex-direction in a flex container?",
+    "q": "Drag & Drop concept: Element outer spacing -> div { [BLANK] : 1px 2px 3px 4px; }",
+    "options": {
+      "A": "margin",
+      "B": "padding",
+      "C": "border",
+      "D": "outline"
+    },
+    "answer": "A",
+    "explanation": "Margin sets outer offsets around box elements."
+  },
+  {
+    "id": 51,
+    "section": "CSS",
+    "q": "Drag & Drop concept: ID selector format -> [BLANK] { background-color: blue; }",
+    "options": {
+      "A": "#box",
+      "B": ".box",
+      "C": "*box",
+      "D": "box#"
+    },
+    "answer": "A",
+    "explanation": "#box targets elements matching ID attribute values."
+  },
+  {
+    "id": 52,
+    "section": "CSS",
+    "q": "Drag & Drop concept: Class selector format -> [BLANK] { color: red; }",
+    "options": {
+      "A": ".heading",
+      "B": "#heading",
+      "C": "heading.",
+      "D": "*heading"
+    },
+    "answer": "A",
+    "explanation": ".heading targets elements sharing the class name."
+  },
+  {
+    "id": 53,
+    "section": "CSS",
+    "q": "Drag & Drop concept: Universal selector -> [BLANK] { margin: 0; padding: 0; }",
+    "options": {
+      "A": "*",
+      "B": "all",
+      "C": "%",
+      "D": "@"
+    },
+    "answer": "A",
+    "explanation": "The asterisk (*) selects all elements in the document."
+  },
+  {
+    "id": 54,
+    "section": "CSS",
+    "q": "Drag & Drop concept: Text underline property -> a { [BLANK] : underline; }",
+    "options": {
+      "A": "text-decoration",
+      "B": "text-style",
+      "C": "font-decoration",
+      "D": "line-style"
+    },
+    "answer": "A",
+    "explanation": "text-decoration handles underlines and line styling."
+  },
+  {
+    "id": 55,
+    "section": "CSS",
+    "q": "Drag & Drop concept: Text casing transform -> p { [BLANK] : uppercase; }",
+    "options": {
+      "A": "text-transform",
+      "B": "text-case",
+      "C": "font-transform",
+      "D": "case-style"
+    },
+    "answer": "A",
+    "explanation": "text-transform controls letter capitalization formatting."
+  },
+  {
+    "id": 56,
+    "section": "CSS",
+    "q": "Drag & Drop concept: Complete removal display -> div { display: [BLANK]; }",
+    "options": {
+      "A": "none",
+      "B": "hidden",
+      "C": "invisible",
+      "D": "block"
+    },
+    "answer": "A",
+    "explanation": "display: none completely deletes element rendering and flow footprint."
+  },
+  {
+    "id": 57,
+    "section": "CSS",
+    "q": "Drag & Drop concept: Sticky viewport positioning -> div { position: [BLANK]; }",
+    "options": {
+      "A": "fixed",
+      "B": "relative",
+      "C": "absolute",
+      "D": "static"
+    },
+    "answer": "A",
+    "explanation": "fixed positioning locks elements relative to screen scroll behavior."
+  },
+  {
+    "id": 58,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Definition Task: Define CSS in your own words. What kind of language is it, and why do we need it alongside HTML?",
+    "options": {},
+    "answer": "",
+    "explanation": "CSS is a style sheet language used for describing the presentation of a document written in HTML. We need it to separate structure from design/layout."
+  },
+  {
+    "id": 59,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Definition Task: What is a 'selector' in CSS? Give one example of a class selector and one example of an id selector.",
+    "options": {},
+    "answer": "",
+    "explanation": "Selectors are patterns used to select the element(s) you want to style. Example class selector: .card; Example id selector: #header."
+  },
+  {
+    "id": 60,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Definition Task: What is the CSS Box Model? Name its four parts, from innermost to outermost.",
+    "options": {},
+    "answer": "",
+    "explanation": "The box model is a box that wraps around every HTML element. Four parts from inside out: Content, Padding, Border, Margin."
+  },
+  {
+    "id": 61,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Definition Task: What is the difference between display: none; and visibility: hidden;?",
+    "options": {},
+    "answer": "",
+    "explanation": "display: none removes the element entirely from the layout, while visibility: hidden hides it visually but keeps its spatial footprint intact."
+  },
+  {
+    "id": 62,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Definition Task: What is Flexbox used for? Explain the difference between the 'main axis' and the 'cross axis'.",
+    "options": {},
+    "answer": "",
+    "explanation": "Flexbox is a one-dimensional layout model for aligning items. The main axis is the primary direction along which flex items are laid out, and the cross axis runs perpendicular to it."
+  },
+  {
+    "id": 63,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Coding Task 1: Style a Button — Create a button and set its background color to green using internal or inline styling rules.",
+    "options": {},
+    "answer": "",
+    "explanation": "<button class=\"btn\">Click Me</button>\n.btn { background-color: green; padding: 10px 20px; border: none; border-radius: 6px; font-size: 14px; }"
+  },
+  {
+    "id": 64,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Coding Task 2: Simple Navbar — Style the navbar so three links sit next to each other in a single line evenly spaced using display: flex.",
+    "options": {},
+    "answer": "",
+    "explanation": "nav { display: flex; justify-content: space-between; }\nnav a { text-decoration: none; color: #222; }"
+  },
+  {
+    "id": 65,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Coding Task 3: Simple Profile Card — Give the profile card a border, padding, and fixed width.",
+    "options": {},
+    "answer": "",
+    "explanation": ".profile-card { border: 1px solid #ccc; padding: 16px; width: 300px; }"
+  },
+  {
+    "id": 66,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Coding Task 4: Center 3 Boxes — Center 3 small boxes both vertically and horizontally inside a big parent box using Flexbox.",
+    "options": {},
+    "answer": "",
+    "explanation": ".parent { height: 220px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; }\n.box { width: 50px; height: 50px; background: teal; color: white; display: flex; align-items: center; justify-content: center; margin: 0 6px; }"
+  },
+  {
+    "id": 67,
+    "section": "CSS",
+    "type": "subjective",
+    "q": "Coding Task 5: Perfect Circle — Turn a 100px x 100px box into a perfect circle with background color using border-radius.",
+    "options": {},
+    "answer": "",
+    "explanation": ".circle { width: 100px; height: 100px; background-color: #f5a623; border-radius: 50%; }"
+  },
+  {
+    "id": 68,
+    "section": "CSS",
+    "q": "Which CSS property specifies the stack order of positioned elements?",
+    "options": {
+      "A": "layer-order",
+      "B": "z-index",
+      "C": "depth-index",
+      "D": "element-order"
+    },
+    "answer": "B",
+    "explanation": "z-index manages overlapping element stacking tiers."
+  },
+  {
+    "id": 69,
+    "section": "CSS",
+    "q": "How do you specify multiple fallback font families in CSS?",
+    "options": {
+      "A": "Separated by commas",
+      "B": "Separated by plus signs",
+      "C": "Separated by semicolons",
+      "D": "Separated by arrows"
+    },
+    "answer": "A",
+    "explanation": "font-family values use comma separation to designate fallback hierarchy."
+  },
+  {
+    "id": 70,
+    "section": "CSS",
+    "q": "Which property controls the space between individual characters in a word?",
+    "options": {
+      "A": "word-spacing",
+      "B": "line-height",
+      "C": "letter-spacing",
+      "D": "character-space"
+    },
+    "answer": "C",
+    "explanation": "letter-spacing adjusts gaps between letters."
+  },
+  {
+    "id": 71,
+    "section": "CSS",
+    "q": "Which property sets the transparency or opacity of an entire element container?",
+    "options": {
+      "A": "transparent",
+      "B": "opacity",
+      "C": "visibility",
+      "D": "filter-alpha"
+    },
+    "answer": "B",
+    "explanation": "opacity governs transparent rendering levels from 0 to 1."
+  },
+  {
+    "id": 72,
+    "section": "CSS",
+    "q": "What is the default value of flex-direction in a flex container?",
     "options": {
       "A": "column",
       "B": "row",
@@ -635,267 +882,22 @@
       "D": "column-reverse"
     },
     "answer": "B",
-    "explanation": "Default flex-direction is 'row'."
-  },
-  {
-    "id": 51,
-    "section": "CSS",
-    "q": "Which CSS property defines space between rows and columns in Flexbox?",
-    "options": {
-      "A": "margin",
-      "B": "padding",
-      "C": "gap",
-      "D": "space"
-    },
-    "answer": "C",
-    "explanation": "gap property specifies spacing between flex items."
-  },
-  {
-    "id": 52,
-    "section": "CSS",
-    "q": "Which selector selects ALL elements on a webpage?",
-    "options": {
-      "A": ".all",
-      "B": "*",
-      "C": "all",
-      "D": "#all"
-    },
-    "answer": "B",
-    "explanation": "* is the universal selector in CSS."
-  },
-  {
-    "id": 53,
-    "section": "CSS",
-    "q": "Which CSS property changes mouse pointer when hovering over an element?",
-    "options": {
-      "A": "pointer",
-      "B": "mouse-icon",
-      "C": "cursor",
-      "D": "hover-effect"
-    },
-    "answer": "C",
-    "explanation": "cursor property specifies the mouse cursor type (e.g., pointer)."
-  },
-  {
-    "id": 54,
-    "section": "CSS",
-    "q": "How do you apply a style to an element when a user hovers over it with the mouse?",
-    "options": {
-      "A": "element:active",
-      "B": "element:focus",
-      "C": "element:hover",
-      "D": "element:visited"
-    },
-    "answer": "C",
-    "explanation": ":hover pseudo-class applies styles when mouse hovers over an element."
-  },
-  {
-    "id": 55,
-    "section": "CSS",
-    "q": "Which box-sizing value includes padding and border in element total width?",
-    "options": {
-      "A": "content-box",
-      "B": "border-box",
-      "C": "padding-box",
-      "D": "flex-box"
-    },
-    "answer": "B",
-    "explanation": "border-box includes padding & border inside total element width."
-  },
-  {
-    "id": 56,
-    "section": "CSS",
-    "q": "Which property specifies letter spacing in text?",
-    "options": {
-      "A": "word-spacing",
-      "B": "line-height",
-      "C": "letter-spacing",
-      "D": "text-spacing"
-    },
-    "answer": "C",
-    "explanation": "letter-spacing increases or decreases space between characters."
-  },
-  {
-    "id": 57,
-    "section": "CSS",
-    "q": "Which CSS property controls line height in a text block?",
-    "options": {
-      "A": "line-height",
-      "B": "text-height",
-      "C": "font-height",
-      "D": "spacing-height"
-    },
-    "answer": "A",
-    "explanation": "line-height sets distance between lines of text."
-  },
-  {
-    "id": 58,
-    "section": "CSS",
-    "q": "Which CSS selector styles elements when clicked or pressed?",
-    "options": {
-      "A": ":hover",
-      "B": ":active",
-      "C": ":focus",
-      "D": ":visited"
-    },
-    "answer": "B",
-    "explanation": ":active selector styles elements while active/pressed."
-  },
-  {
-    "id": 59,
-    "section": "CSS",
-    "q": "Which property sets transparency level of an element?",
-    "options": {
-      "A": "filter",
-      "B": "visibility",
-      "C": "opacity",
-      "D": "transparent"
-    },
-    "answer": "C",
-    "explanation": "opacity sets transparency value from 0 (invisible) to 1 (opaque)."
-  },
-  {
-    "id": 60,
-    "section": "CSS",
-    "q": "How to make flex items wrap to next line if space runs out?",
-    "options": {
-      "A": "flex-wrap: wrap;",
-      "B": "flex-flow: enable;",
-      "C": "wrap: yes;",
-      "D": "flex-line: break;"
-    },
-    "answer": "A",
-    "explanation": "flex-wrap: wrap enables flex items to wrap onto multiple lines."
-  },
-  {
-    "id": 61,
-    "section": "CSS",
-    "q": "Which CSS pseudo-class targets the first child element of a parent?",
-    "options": {
-      "A": ":first-line",
-      "B": ":first-child",
-      "C": ":first-element",
-      "D": ":first-of-all"
-    },
-    "answer": "B",
-    "explanation": ":first-child targets the very first child element."
-  },
-  {
-    "id": 62,
-    "section": "CSS",
-    "q": "Which CSS property is used to set a background image?",
-    "options": {
-      "A": "background-src",
-      "B": "background-image",
-      "C": "bg-picture",
-      "D": "image-background"
-    },
-    "answer": "B",
-    "explanation": "background-image: url('file.jpg') sets a background image on an element."
-  },
-  {
-    "id": 63,
-    "section": "CSS",
-    "q": "Which CSS property sets list item marker style for unordered lists?",
-    "options": {
-      "A": "list-style-type",
-      "B": "marker-style",
-      "C": "bullet-type",
-      "D": "list-type"
-    },
-    "answer": "A",
-    "explanation": "list-style-type sets bullet style like disc, circle, square, or none."
-  },
-  {
-    "id": 64,
-    "section": "CSS",
-    "type": "subjective",
-    "q": "Write CSS code to center one div perfectly inside another div using Flexbox.",
-    "options": {},
-    "answer": "",
-    "explanation": ".parent { display: flex; justify-content: center; align-items: center; }"
-  },
-  {
-    "id": 65,
-    "section": "CSS",
-    "type": "subjective",
-    "q": "Write CSS code for a card div with: white background, 20px padding, rounded corners, and a 1px solid border.",
-    "options": {},
-    "answer": "",
-    "explanation": ".card { background-color: white; padding: 20px; border-radius: 12px; border: 1px solid #DEE2E6; }"
-  },
-  {
-    "id": 66,
-    "section": "CSS",
-    "type": "subjective",
-    "q": "Design a Primary Button using HTML & CSS. Requirements: background-color (#0d6efd), white text color, padding (10px 20px), no border, border-radius (5px), and cursor (pointer). Add a :hover effect to change background-color to #0b5ed7.",
-    "options": {},
-    "answer": "",
-    "explanation": "<button class=\"btn\">Click Me</button>\n.btn { background-color: #0d6efd; color: #ffffff; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }\n.btn:hover { background-color: #0b5ed7; }"
-  },
-  {
-    "id": 67,
-    "section": "CSS",
-    "type": "subjective",
-    "q": "Create a Profile Card Box. Requirements: width (300px), padding (15px), 2px solid border, text-align (center), and margin (auto for centering).",
-    "options": {},
-    "answer": "",
-    "explanation": "<div class=\"profile-card\"><h3>User Profile</h3><p>Web Developer</p></div>\n.profile-card { width: 300px; padding: 15px; border: 2px solid #000; text-align: center; margin: 0 auto; }"
-  },
-  {
-    "id": 68,
-    "section": "CSS",
-    "type": "subjective",
-    "q": "Design a Login Form structure. Requirements: <form> container with Email, Password inputs, and Submit button. Use CSS Flexbox with display: flex, flex-direction: column, and gap (10px).",
-    "options": {},
-    "answer": "",
-    "explanation": "<form class=\"login-form\"><input type=\"email\" placeholder=\"Email\"><input type=\"password\" placeholder=\"Password\"><button type=\"submit\">Login</button></form>\n.login-form { display: flex; flex-direction: column; gap: 10px; width: 250px; }"
-  },
-  {
-    "id": 69,
-    "section": "CSS",
-    "type": "subjective",
-    "q": "Design a Notification Box with a Badge. Requirements: Parent box with position: relative, Badge with position: absolute (top: 0, right: 0), red background, and white text.",
-    "options": {},
-    "answer": "",
-    "explanation": "<div class=\"box\">Notifications <span class=\"badge\">5</span></div>\n.box { position: relative; width: 150px; padding: 20px; background: #f0f0f0; }\n.badge { position: absolute; top: 0; right: 0; background: red; color: white; padding: 2px 6px; border-radius: 50%; }"
-  },
-  {
-    "id": 70,
-    "section": "CSS",
-    "type": "subjective",
-    "q": "Design a Navigation Bar layout using Flexbox. Requirements: background-color (#333), white text, display: flex, justify-content (space-between), and padding (15px).",
-    "options": {},
-    "answer": "",
-    "explanation": "<nav class=\"navbar\"><div class=\"logo\">MySite</div><div class=\"links\">Home About</div></nav>\n.navbar { display: flex; justify-content: space-between; background-color: #333; color: #fff; padding: 15px; }"
-  },
-  {
-    "id": 71,
-    "section": "CSS",
-    "type": "subjective",
-    "q": "Create a CSS Hover Box Effect. Requirements: Base state border 1px solid #ccc, and on :hover change border-color to #0d6efd and background-color to #e7f1ff.",
-    "options": {},
-    "answer": "",
-    "explanation": ".box { border: 1px solid #ccc; padding: 10px; }\n.box:hover { border-color: #0d6efd; background-color: #e7f1ff; }"
-  },
-  {
-    "id": 72,
-    "section": "CSS",
-    "type": "subjective",
-    "q": "Design a Search Bar Box using Flexbox. Requirements: Flex container holding an input field and button, input flex-grow: 1, and border-radius on main container.",
-    "options": {},
-    "answer": "",
-    "explanation": "<div class=\"search-box\"><input type=\"text\" placeholder=\"Search...\"><button>Search</button></div>\n.search-box { display: flex; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; }\n.search-box input { flex-grow: 1; border: none; padding: 10px; }\n.search-box button { border: none; background: #0d6efd; color: white; padding: 10px 15px; }"
+    "explanation": "Flexbox containers align children horizontally by default via 'row'."
   },
   {
     "id": 73,
     "section": "CSS",
-    "type": "subjective",
-    "q": "Write CSS code to center a fixed element horizontally at the top of the viewport. Requirements: position: fixed, top: 0, left: 50%, and transform not allowed — use margin / width calculation instead.",
-    "options": {},
-    "answer": "",
-    "explanation": ".top-bar { position: fixed; top: 0; left: 0; width: 100%; text-align: center; }"
+    "q": "Which CSS property sets spacing between rows and columns inside a grid or flex layout?",
+    "options": {
+      "A": "spacing",
+      "B": "margin-grid",
+      "C": "gap",
+      "D": "grid-space"
+    },
+    "answer": "C",
+    "explanation": "The 'gap' property manages gutters between layout cells or items efficiently."
   },
+
   {
     "id": 74,
     "section": "JS",

@@ -1,15 +1,16 @@
-import { 
-  Globe, Palette, Zap, Atom, Triangle, Layers, 
+import {
+  Globe, Palette, Zap, Atom, Triangle, Layers,
   Check, User, HelpCircle, Gauge, ArrowRight, ShieldAlert,
-  Clock, MonitorOff, CheckSquare, Settings
+  Clock, MonitorOff, CheckSquare, Settings, MessageCircle
 } from 'lucide-react';
 
 const categories = [
   { id: 'HTML', name: 'HTML', desc: 'HyperText Markup Language', Icon: Globe, activeColor: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/50' },
   { id: 'CSS', name: 'CSS', desc: 'Cascading Style Sheets', Icon: Palette, activeColor: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/50' },
-  { id: 'JS', name: 'JavaScript', desc: 'JS Basics, ES6+ & Async', Icon: Zap, activeColor: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/50' },
+  { id: 'JS', name: 'JS', desc: 'JS Basics, ES6+ & Async', Icon: Zap, activeColor: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/50' },
   { id: 'React', name: 'React', desc: 'Hooks & Component Lifecycle', Icon: Atom, activeColor: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/50' },
   { id: 'Next.js', name: 'Next.js', desc: 'App Router, SSR & Routing', Icon: Triangle, activeColor: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/50' },
+  { id: 'English', name: 'English & Grammar', desc: 'Tenses, Vocabulary & Structure', Icon: MessageCircle, activeColor: 'bg-teal-500/10 text-teal-400 border-teal-500/50' },
   { id: 'ALL', name: 'Full Stack', desc: 'All subjects combined', Icon: Layers, activeColor: 'bg-indigo-500/20 text-indigo-400 border-indigo-500' },
 ];
 

@@ -136,13 +136,18 @@ export default function Home() {
   }, [checkUserStatus]);
 
   useEffect(() => {
-    fetch('/api/questions')
-      .then((res) => {
+    Promise.all([
+      fetch('/api/questions').then((res) => {
         if (!res.ok) throw new Error('Could not establish connection to the Academy API.');
         return res.json();
-      })
-      .then((data) => {
-        setQuizQuestions(data);
+      }),
+      fetch('/api/englishQuestions').then((res) => {
+        if (!res.ok) throw new Error('Could not establish connection to the English Questions API.');
+        return res.json();
+      }),
+    ])
+      .then(([techQuestions, englishQuestions]) => {
+        setQuizQuestions([...techQuestions, ...englishQuestions]);
         setLoading(false);
       })
       .catch((err) => {
