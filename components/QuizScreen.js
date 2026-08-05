@@ -1,5 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import Editor from '@monaco-editor/react';
+import { Code2, Eye } from 'lucide-react';
 
 const playAlarmSound = () => {
   try {
@@ -19,17 +21,17 @@ const playAlarmSound = () => {
     const now = audioCtx.currentTime;
     playBeep(now, 880, 0.12);
     playBeep(now + 0.15, 660, 0.12);
-    playBeep(now + 0.3, 880, 0.12);
-    playBeep(now + 0.45, 660, 0.12);
   } catch (e) {
     console.error("Audio Context error:", e);
   }
 };
 
 const WARNING_MESSAGES = [
-  "⚠️ Warning 1: Tab switch detect ho gaya hai! Dhyan se exam do.",
-  "🚨 Warning 2: Bar bar tab mat badlo, teacher monitor kar rahe hain!",
-  "❌ Final Warning: Agli baar tab switch kiya toh test auto-submit ho jayega!"
+  "⚠️ Warning 1/5: Please focus on the test window and avoid switching tabs.",
+  "⚠️ Warning 2/5: Tab switching is monitored, please stay on screen.",
+  "⚠️ Warning 3/5: Be careful, you are getting closer to the warning limit.",
+  "⚠️ Warning 4/5: Second last warning! Please stay focused on the test.",
+  "🚨 Final Warning (5/5): One more switch and your test will be auto-submitted!"
 ];
 
 const getSectionBadgeStyle = (section) => {
@@ -55,13 +57,14 @@ export default function QuizScreen({
   onTimeUp,
   isLocked,
   tabSwitchCount,
-  maxWarnings,
+  maxWarnings = 5,
 }) {
   const SECONDS_PER_QUESTION = 110; 
   const calculatedTotalTime = (totalQuestions || 1) * SECONDS_PER_QUESTION;
 
   const [timeLeft, setTimeLeft] = useState(calculatedTotalTime);
   const [latestWarningText, setLatestWarningText] = useState('');
+  const [activeTab, setActiveTab] = useState('code'); 
   const timerRef = useRef(null);
 
   useEffect(() => {
@@ -69,6 +72,10 @@ export default function QuizScreen({
       setTimeLeft(totalQuestions * SECONDS_PER_QUESTION);
     }
   }, [totalQuestions]);
+
+  useEffect(() => {
+    setActiveTab('code');
+  }, [currentIndex]);
 
   const progressPercentage = (currentIndex / totalQuestions) * 100;
   const isSubjective = currentQuestion?.type === 'subjective';
@@ -134,12 +141,14 @@ export default function QuizScreen({
   }, []);
 
   useEffect(() => {
-    if (tabSwitchCount > 0) {
+    if (tabSwitchCount > 0 && tabSwitchCount <= maxWarnings) {
       const idx = Math.min(tabSwitchCount - 1, WARNING_MESSAGES.length - 1);
       setLatestWarningText(WARNING_MESSAGES[idx]);
-      playAlarmSound();
+      if (tabSwitchCount > 1) {
+        playAlarmSound();
+      }
     }
-  }, [tabSwitchCount]);
+  }, [tabSwitchCount, maxWarnings]);
 
   const formatTime = (seconds) => {
     const h = Math.floor(seconds / 3600);
@@ -165,36 +174,83 @@ export default function QuizScreen({
     onSelectOption(key);
   };
 
+  const getPreviewSource = () => {
+    const userCode = subjectiveAnswer || '';
+    const section = currentQuestion?.section;
+
+    if (section === 'CSS') {
+      return `
+        <!DOCTYPE html>
+        <html>
+          <head><style>${userCode}</style></head>
+          <body style="background:#ffffff; color:#111827; padding:16px; font-family:sans-serif;">
+            <div class="preview-container">
+              <h3>CSS Live Preview Output</h3>
+              <p>This is a sample text to test your CSS styles (e.g. colors, margins, fonts).</p>
+              <div class="box" style="padding:10px; border:2px dashed #6366f1; margin-top:10px;">Sample Box Element</div>
+            </div>
+          </body>
+        </html>
+      `;
+    } else if (section === 'HTML') {
+      return `
+        <!DOCTYPE html>
+        <html>
+          <head><style>body { background:#ffffff; color:#111827; padding:16px; font-family:sans-serif; }</style></head>
+          <body>${userCode}</body>
+        </html>
+      `;
+    } else {
+      return `
+        <!DOCTYPE html>
+        <html>
+          <head><style>body { background:#0f172a; color:#f8fafc; padding:16px; font-family:monospace; font-size:13px; }</style></head>
+          <body>
+            <strong>JS Execution Output Log:</strong>
+            <pre id="console-output" style="margin-top:10px; color:#38bdf8;"></pre>
+            <script>
+              try {
+                const consoleLog = (...args) => {
+                  document.getElementById('console-output').innerText += args.join(' ') + '\\n';
+                };
+                console.log = consoleLog;
+                ${userCode}
+              } catch(err) {
+                document.getElementById('console-output').innerHTML += '<span style="color:#f43f5e;">Error: ' + err.message + '</span>';
+              }
+            </script>
+          </body>
+        </html>
+      `;
+    }
+  };
+
   return (
     <div className="min-h-screen w-full bg-[#020617] text-slate-200 p-3 lg:p-6 flex flex-col justify-center items-center overflow-hidden">
       <div className="w-full max-w-[1100px] h-[92vh] max-h-[780px] bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 lg:p-7 shadow-2xl relative backdrop-blur-xl flex flex-col justify-between">
 
-        {/* ── TOP SECTION (Fixed Content) ─────────────────────────────────── */}
         <div className="flex-shrink-0">
-          {/* Warning Banner */}
           {tabSwitchCount > 0 && (
-            <div className="mb-3 p-3 bg-rose-500/10 border border-rose-500/40 rounded-xl flex items-center justify-between animate-fadeIn">
+            <div className="mb-3 p-3 bg-amber-500/10 border border-amber-500/40 rounded-xl flex items-center justify-between animate-fadeIn">
               <div className="flex items-center gap-3">
-                <span className="text-xl">🚨</span>
-                <p className="text-rose-400 text-xs lg:text-sm font-bold">
-                  {latestWarningText} <span className="text-slate-400 font-normal">({tabSwitchCount}/{maxWarnings} warnings)</span>
+                <span className="text-xl">⚠️</span>
+                <p className="text-amber-400 text-xs lg:text-sm font-bold">
+                  {latestWarningText} <span className="text-slate-400 font-normal">({tabSwitchCount}/{maxWarnings})</span>
                 </p>
               </div>
               <div className="flex gap-1">
                 {Array.from({ length: maxWarnings }).map((_, i) => (
-                  <div key={i} className={`w-2.5 h-2.5 rounded-full ${i < tabSwitchCount ? 'bg-rose-500' : 'bg-slate-800'}`} />
+                  <div key={i} className={`w-2.5 h-2.5 rounded-full ${i < tabSwitchCount ? 'bg-amber-500' : 'bg-slate-800'}`} />
                 ))}
               </div>
             </div>
           )}
 
-          {/* Top Bar */}
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
               Question {currentIndex + 1} <span className="text-slate-600">/</span> {totalQuestions}
             </span>
 
-            {/* Big Timer */}
             <div className={`flex items-center gap-2.5 px-5 py-1.5 rounded-xl font-black border tracking-wider
               transition-all duration-300 text-2xl
               ${isTimeLow
@@ -209,11 +265,10 @@ export default function QuizScreen({
             </div>
 
             <span className="text-xs text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-xl">
-              🛡️ Secure Session
+              🛡️ Flexible Session
             </span>
           </div>
 
-          {/* Progress Bar */}
           <div className="w-full bg-slate-800/80 h-1.5 rounded-full mb-3 overflow-hidden p-0.5">
             <div
               className="bg-indigo-500 h-full rounded-full transition-all duration-500 shadow-sm shadow-indigo-500"
@@ -221,7 +276,6 @@ export default function QuizScreen({
             />
           </div>
 
-          {/* Section Header */}
           <div className="flex justify-between items-center border-b border-slate-800/80 pb-2.5 mb-3">
             <div className="flex items-center gap-2">
               <span className={`text-xs font-bold px-3 py-1 rounded-lg uppercase tracking-wider ${getSectionBadgeStyle(currentQuestion.section)}`}>
@@ -229,7 +283,7 @@ export default function QuizScreen({
               </span>
               {isSubjective && (
                 <span className="text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-lg uppercase tracking-wider">
-                  Section B
+                  Coding Workspace & Live Preview
                 </span>
               )}
             </div>
@@ -238,15 +292,12 @@ export default function QuizScreen({
             </span>
           </div>
 
-          {/* Question Text */}
           <h2 className="text-base lg:text-lg font-bold mb-3 text-white leading-snug">
             {currentQuestion.q}
           </h2>
         </div>
 
-        {/* ── MIDDLE SECTION (Options / Code / Textarea) ──────────────────── */}
-        <div className="flex-1 overflow-y-auto my-1 pr-1 custom-scrollbar">
-          {/* Drag and Drop */}
+        <div className="flex-1 overflow-y-auto my-1 pr-1 custom-scrollbar flex flex-col">
           {isDragAndDrop && (
             <div className="space-y-3">
               <div className="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
@@ -299,7 +350,6 @@ export default function QuizScreen({
             </div>
           )}
 
-          {/* MCQ Options */}
           {!isSubjective && !isDragAndDrop && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
               {Object.entries(currentQuestion.options).map(([key, value]) => (
@@ -317,28 +367,92 @@ export default function QuizScreen({
             </div>
           )}
 
-          {/* Subjective Textarea */}
           {isSubjective && (
-            <div className="space-y-2">
-              <p className="text-xs text-slate-400 font-medium">
-                ✏️ Provide your detailed written response below:
-              </p>
-              <textarea
-                value={subjectiveAnswer}
-                onChange={(e) => onSubjectiveAnswer(e.target.value)}
-                disabled={isLocked}
-                placeholder="Write your structured solution here..."
-                rows={3}
-                className="w-full px-4 py-2.5 border border-slate-800 rounded-xl text-xs
-                  text-slate-200 font-mono leading-relaxed resize-none outline-none
-                  focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500
-                  bg-slate-950 placeholder-slate-600 shadow-inner"
-              />
+            <div className="space-y-2 h-full flex flex-col flex-1">
+              <div className="flex items-center justify-between text-xs font-medium px-1">
+                <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800">
+                  <button
+                    onClick={() => setActiveTab('code')}
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg transition-all font-semibold ${
+                      activeTab === 'code' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    <Code2 className="w-3.5 h-3.5" />
+                    Code Editor
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('preview')}
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg transition-all font-semibold ${
+                      activeTab === 'preview' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    Live Preview
+                  </button>
+                </div>
+                <span className="font-mono text-indigo-400 text-xs">
+                  ⚡ Auto-closing tags & VS Code features active
+                </span>
+              </div>
+
+              <div className={`border border-slate-800 rounded-xl overflow-hidden shadow-2xl flex-1 min-h-[220px] ${activeTab === 'code' ? 'block' : 'hidden'}`}>
+                <Editor
+                  height="220px"
+                  defaultLanguage={currentQuestion.section === 'HTML' ? 'html' : currentQuestion.section === 'CSS' ? 'css' : 'javascript'}
+                  theme="vs-dark"
+                  value={subjectiveAnswer || ''}
+                  onChange={(value) => onSubjectiveAnswer(value || '')}
+                  onMount={(editor, monaco) => {
+                    // Custom keybinding to inject HTML boilerplate when '!' and then Tab/Enter is pressed
+                    editor.addCommand(monaco.KeyCode.Enter, () => {
+                      const position = editor.getPosition();
+                      const model = editor.getModel();
+                      const lineContent = model.getLineContent(position.lineNumber);
+                      
+                      if (lineContent.trim() === '!') {
+                        const boilerplate = `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>Document</title>\n</head>\n<body>\n  \n</body>\n</html>`;
+                        const range = new monaco.Range(position.lineNumber, 1, position.lineNumber, lineContent.length + 1);
+                        editor.executeEdits('boilerplate', [{ range, text: boilerplate }]);
+                        return;
+                      }
+                      // Default Enter action fallback
+                      editor.trigger('keyboard', 'type', { text: '\n' });
+                    });
+                  }}
+                  options={{
+                    readOnly: isLocked,
+                    minimap: { enabled: false },
+                    wordWrap: 'on',
+                    fontSize: 13,
+                    scrollBeyondLastLine: false,
+                    automaticLayout: true,
+                    tabSize: 2,
+                    autoClosingTags: true,
+                    autoClosingBrackets: 'always',
+                    autoClosingDelete: 'always',
+                    autoClosingOvertype: 'always',
+                    suggestOnTriggerCharacters: true,
+                    acceptSuggestionOnEnter: 'on',
+                    quickSuggestions: true,
+                    formatOnType: true,
+                    formatOnPaste: true,
+                    snippetSuggestions: 'inline',
+                  }}
+                />
+              </div>
+
+              <div className={`border border-slate-800 rounded-xl overflow-hidden shadow-2xl bg-white flex-1 min-h-[220px] ${activeTab === 'preview' ? 'block' : 'hidden'}`}>
+                <iframe
+                  title="Live Preview Output"
+                  srcDoc={getPreviewSource()}
+                  className="w-full h-full min-h-[220px] border-0 bg-white"
+                  sandbox="allow-scripts"
+                />
+              </div>
             </div>
           )}
         </div>
 
-        {/* ── BOTTOM SECTION (Fixed Next Button / Footer) ─────────────────── */}
         <div className="flex-shrink-0 pt-3 border-t border-slate-800/60 mt-2">
           {!isLocked ? (
             <button onClick={onNext}
@@ -349,7 +463,7 @@ export default function QuizScreen({
           ) : (
             <div className="p-2.5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-center">
               <p className="text-rose-400 font-bold text-xs">
-                🚫 Assessment session locked due to safety breaches. Auto-submitting evaluation...
+                🚫 Assessment limit reached (5 warnings). Auto-submitting evaluation...
               </p>
             </div>
           )}

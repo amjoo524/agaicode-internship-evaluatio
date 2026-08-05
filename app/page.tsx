@@ -10,7 +10,7 @@ import ResultScreen from '../components/ResultScreen';
 import LockScreen from '../components/LockScreen';
 import TeacherDashboard from '../components/TeacherDashboard';
 
-const MAX_WARNINGS = 2;
+const MAX_WARNINGS = 5;
 
 export default function Home() {
   const [user, setUser] = useState<any>(null);
@@ -249,6 +249,9 @@ export default function Home() {
     [step, handleAutoSubmit]
   );
 
+  // ==========================================
+  // ONLY TAB SWITCH & MINIMIZE DETECTION ACTIVE (Copy/Paste & Shortcuts removed)
+  // ==========================================
   useEffect(() => {
     if (step !== 'quiz') return;
 
@@ -256,43 +259,13 @@ export default function Home() {
     const handleVisibility = () => {
       if (document.hidden) handleCheatAttempt('Tab switched or browser minimized');
     };
-    const handleContextMenu = (e: MouseEvent) => {
-      e.preventDefault();
-      handleCheatAttempt('Right-click context menu disabled');
-    };
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'F12') {
-        e.preventDefault();
-        handleCheatAttempt('F12 Developer Tools blocked');
-      }
-      if (e.ctrlKey && (e.key === 'c' || e.key === 'C')) {
-        e.preventDefault();
-        handleCheatAttempt('Copy shortcut blocked');
-      }
-      if (e.ctrlKey && (e.key === 'v' || e.key === 'V')) {
-        e.preventDefault();
-        handleCheatAttempt('Paste shortcut blocked');
-      }
-      if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
-        e.preventDefault();
-        handleCheatAttempt('View Source blocked');
-      }
-      if (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'I')) {
-        e.preventDefault();
-        handleCheatAttempt('Inspect Element blocked');
-      }
-    };
 
     window.addEventListener('blur', handleBlur);
     document.addEventListener('visibilitychange', handleVisibility);
-    document.addEventListener('contextmenu', handleContextMenu);
-    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
       window.removeEventListener('blur', handleBlur);
       document.removeEventListener('visibilitychange', handleVisibility);
-      document.removeEventListener('contextmenu', handleContextMenu);
-      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [step, handleCheatAttempt]);
 
