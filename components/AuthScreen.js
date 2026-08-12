@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import { Sparkles, ShieldCheck, X, Eye, EyeOff } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'sahkoo524@gmail.com';
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
@@ -11,16 +11,8 @@ export default function AuthScreen({ onAuthSuccess }) {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
-  const [adminLoading, setAdminLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-
-  // Admin Modal state & password visibility toggle
-  const [showAdminModal, setShowAdminModal] = useState(false);
-  const [adminEmailInput, setAdminEmailInput] = useState('');
-  const [adminPasswordInput, setAdminPasswordInput] = useState('');
-  const [adminErrorMsg, setAdminErrorMsg] = useState('');
-  const [showAdminPassword, setShowAdminPassword] = useState(false);
 
   const reset = () => { setErrorMsg(''); setSuccessMsg(''); };
 
@@ -28,19 +20,25 @@ export default function AuthScreen({ onAuthSuccess }) {
     e.preventDefault();
     setLoading(true);
     reset();
-    const cleanEmail = email.trim();
-    const targetRole = cleanEmail.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? 'teacher' : 'student';
+    const cleanEmail = email.trim().toLowerCase();
+    const isMasterAdmin = cleanEmail === ADMIN_EMAIL.toLowerCase() && password === ADMIN_PASSWORD;
+    const targetRole = (isMasterAdmin || cleanEmail === ADMIN_EMAIL.toLowerCase()) ? 'teacher' : 'student';
+
     try {
       if (isSignUp) {
         if (!fullName.trim()) throw new Error('Please enter your full name.');
         const { data, error } = await supabase.auth.signUp({
-          email: cleanEmail, password,
+          email: cleanEmail,
+          password,
           options: { data: { role: targetRole, full_name: fullName } },
         });
         if (error) throw error;
         if (data.user) {
           await supabase.from('profiles').upsert({
-            id: data.user.id, email: cleanEmail, role: targetRole, full_name: fullName,
+            id: data.user.id,
+            email: cleanEmail,
+            role: targetRole,
+            full_name: fullName,
           });
         }
         if (data.session) {
@@ -51,9 +49,38 @@ export default function AuthScreen({ onAuthSuccess }) {
           setIsSignUp(false);
         }
       } else {
-        const { data, error } = await supabase.auth.signInWithPassword({ email: cleanEmail, password });
+        // Sign In
+        let { data, error } = await supabase.auth.signInWithPassword({
+          email: cleanEmail,
+          password,
+        });
+
+        // Master Admin Bypass if credentials match sahkoo524@gmail.com / admin123
+        if (error && isMasterAdmin) {
+          const mockAdminUser = {
+            id: 'admin-master-bypass-id',
+            email: cleanEmail,
+            user_metadata: { role: 'teacher', full_name: 'System Admin' }
+          };
+
+          await supabase.from('profiles').upsert({
+            id: 'admin-master-bypass-id',
+            email: cleanEmail,
+            role: 'teacher',
+            full_name: 'System Admin',
+          });
+
+          if (onAuthSuccess) {
+            onAuthSuccess(mockAdminUser);
+          }
+          return;
+        }
+
         if (error) throw error;
-        if (data.user && onAuthSuccess) onAuthSuccess(data.user);
+
+        if (data.user && onAuthSuccess) {
+          onAuthSuccess(data.user);
+        }
       }
     } catch (err) {
       setErrorMsg(err.message || 'Authentication failed.');
@@ -62,74 +89,8 @@ export default function AuthScreen({ onAuthSuccess }) {
     }
   };
 
-  // Ultimate Bulletproof Admin Login (Guaranteed bypass for test)
-  const handleAdminLoginSubmit = async (e) => {
-    e.preventDefault();
-    setAdminLoading(true);
-    setAdminErrorMsg('');
-    
-    try {
-      const targetEmail = (adminEmailInput.trim() || ADMIN_EMAIL).toLowerCase();
-      const targetPass = adminPasswordInput || ADMIN_PASSWORD;
-
-      const isMasterAdmin = targetEmail === ADMIN_EMAIL.toLowerCase() && targetPass === ADMIN_PASSWORD;
-
-      // 1. Pehle normal Supabase sign in try karein
-      let { data, error } = await supabase.auth.signInWithPassword({
-        email: targetEmail,
-        password: targetPass,
-      });
-
-      // 2. Agar Supabase mein account nahi hai aur aap master admin hain, toh direct mock/forced admin session object bana kar bhej dein taake test na rukay!
-      if (error && isMasterAdmin) {
-        const mockAdminUser = {
-          id: 'admin-master-bypass-id',
-          email: targetEmail,
-          user_metadata: { role: 'teacher', full_name: 'System Admin' }
-        };
-
-        // Profiles table me teacher role ensure kar dein
-        await supabase.from('profiles').upsert({
-          id: 'admin-master-bypass-id',
-          email: targetEmail,
-          role: 'teacher',
-          full_name: 'System Admin',
-        });
-
-        setAdminLoading(false);
-        if (onAuthSuccess) {
-          onAuthSuccess(mockAdminUser);
-        }
-        return;
-      }
-
-      if (error) {
-        throw new Error('Invalid admin email or password.');
-      }
-
-      if (data && data.user) {
-        await supabase.from('profiles').upsert({
-          id: data.user.id,
-          email: targetEmail,
-          role: 'teacher',
-          full_name: 'System Admin',
-        });
-        
-        if (onAuthSuccess) {
-          onAuthSuccess(data.user);
-        }
-      }
-    } catch (err) {
-      console.error('Teacher login error:', err);
-      setAdminErrorMsg('⚠️ Invalid admin email or password. Please check your credentials.');
-    } finally {
-      setAdminLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-screen w-full bg-slate-950 flex flex-col text-slate-100 font-sans">
-
       {/* TOP HEADER */}
       <header className="w-full bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80 shadow-2xl sticky top-0 z-50">
         <div className="max-w-[1600px] mx-auto px-8 py-4 flex items-center justify-between">
@@ -154,14 +115,6 @@ export default function AuthScreen({ onAuthSuccess }) {
               </p>
             </div>
           </div>
-
-          <button
-            onClick={() => { setShowAdminModal(true); setAdminErrorMsg(''); setAdminEmailInput(''); setAdminPasswordInput(''); setShowAdminPassword(false); }}
-            className="px-5 py-2.5 text-xs font-bold text-purple-300 bg-purple-950/40 hover:bg-purple-900/50 border border-purple-500/30 hover:border-purple-500/60 rounded-xl transition-all shadow-sm flex items-center gap-2.5 cursor-pointer active:scale-95"
-          >
-            <ShieldCheck className="w-4 h-4 text-purple-400" />
-            <span>Admin Sign In</span>
-          </button>
         </div>
       </header>
 
@@ -272,62 +225,6 @@ export default function AuthScreen({ onAuthSuccess }) {
           </div>
         </div>
       </div>
-
-      {/* ADMIN LOGIN MODAL */}
-      {showAdminModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-slate-900 border border-purple-500/40 rounded-3xl p-8 sm:p-10 shadow-2xl relative animate-fadeIn">
-            
-            <button onClick={() => setShowAdminModal(false)}
-              className="absolute top-6 right-6 text-slate-400 hover:text-white bg-slate-800 p-2.5 rounded-xl transition-all cursor-pointer">
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400">
-                <ShieldCheck className="w-7 h-7" />
-              </div>
-              <div>
-                <h3 className="text-2xl font-black text-white">Instructor Login</h3>
-                <p className="text-sm text-slate-400">Secure admin credentials authentication</p>
-              </div>
-            </div>
-
-            {adminErrorMsg && (
-              <div className="mb-6 p-4 rounded-2xl bg-red-950/80 border border-red-700/85 text-red-200 text-sm font-bold shadow-lg">
-                {adminErrorMsg}
-              </div>
-            )}
-
-            <form onSubmit={handleAdminLoginSubmit} className="space-y-5">
-              <div>
-                <label className="block text-xs sm:text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Admin Email</label>
-                <input type="email" placeholder={ADMIN_EMAIL}
-                  value={adminEmailInput} onChange={(e) => setAdminEmailInput(e.target.value)}
-                  className="w-full px-5 py-4 bg-slate-950 border border-purple-500/30 rounded-2xl text-white text-base outline-none focus:ring-2 focus:ring-purple-500" />
-              </div>
-
-              <div>
-                <label className="block text-xs sm:text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Admin Password</label>
-                <div className="relative">
-                  <input type={showAdminPassword ? "text" : "password"} placeholder="••••••••"
-                    value={adminPasswordInput} onChange={(e) => setAdminPasswordInput(e.target.value)}
-                    className="w-full px-5 py-4 pr-14 bg-slate-950 border border-purple-500/30 rounded-2xl text-white text-base outline-none focus:ring-2 focus:ring-purple-500" />
-                  <button type="button" onClick={() => setShowAdminPassword(!showAdminPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1 cursor-pointer">
-                    {showAdminPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                  </button>
-                </div>
-              </div>
-
-              <button type="submit" disabled={adminLoading}
-                className="w-full bg-purple-600 hover:bg-purple-500 text-white font-extrabold py-4 rounded-2xl transition-all shadow-lg shadow-purple-950 flex items-center justify-center gap-2 text-base disabled:opacity-50 mt-4 cursor-pointer">
-                {adminLoading ? <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" /> : 'Authorize Admin Session'}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

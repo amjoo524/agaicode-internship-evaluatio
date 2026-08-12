@@ -52,6 +52,21 @@ export default function Home() {
       return;
     }
 
+    const adminEmail = (process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'sahkoo524@gmail.com').toLowerCase();
+    const isTeacher = currentUser.email?.toLowerCase() === adminEmail || currentUser.user_metadata?.role === 'teacher';
+
+    // Synchronously set initial profile state so the correct role component mounts immediately with 0ms delay!
+    const initialProfile = {
+      id: currentUser.id,
+      email: currentUser.email,
+      role: isTeacher ? 'teacher' : 'student',
+      full_name: currentUser.user_metadata?.full_name || (isTeacher ? 'System Admin' : currentUser.email?.split('@')[0]),
+    };
+
+    setUserProfile(initialProfile);
+    setStudentName(initialProfile.full_name || '');
+    setAuthLoading(false);
+
     setCheckingLock(true);
     try {
       const { data: prof, error: profErr } = await supabase
@@ -63,20 +78,12 @@ export default function Home() {
       let profileData = prof;
 
       if (profErr || !prof) {
+        profileData = initialProfile;
+      } else {
         profileData = {
-          id: currentUser.id,
-          email: currentUser.email,
-          role: currentUser.user_metadata?.role || 'student',
-          full_name: currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0],
-        };
-      }
-
-      const adminEmail = (process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'sahkoo524@gmail.com').toLowerCase();
-      if (currentUser.email?.toLowerCase() === adminEmail || profileData?.email?.toLowerCase() === adminEmail) {
-        profileData = {
-          ...profileData,
-          role: 'teacher',
-          full_name: profileData?.full_name || 'System Admin',
+          ...prof,
+          role: (currentUser.email?.toLowerCase() === adminEmail || prof.role === 'teacher' || isTeacher) ? 'teacher' : 'student',
+          full_name: prof.full_name || initialProfile.full_name,
         };
       }
 
@@ -113,7 +120,6 @@ export default function Home() {
       console.error('Error fetching user status:', err);
     } finally {
       setCheckingLock(false);
-      setAuthLoading(false);
     }
   }, []);
 
@@ -213,10 +219,19 @@ export default function Home() {
     setStep('start');
   }, [saveSubmissionToSupabase, score, quizData]);
 
+  const checkIsAnswerCorrect = (q: any, selected: string) => {
+    if (!q || !selected) return false;
+    if (q.answer === selected) return true;
+    if (q.options && typeof q.options === 'object' && !Array.isArray(q.options)) {
+      if (q.options[q.answer] === selected) return true;
+    }
+    return false;
+  };
+
   const handleAutoSubmit = useCallback(() => {
     let finalScore = 0;
     quizData.forEach((q, index) => {
-      if (q.type !== 'subjective' && selectedAnswers[index] === q.answer) {
+      if (q.type !== 'subjective' && checkIsAnswerCorrect(q, selectedAnswers[index])) {
         finalScore += 1;
       }
     });
@@ -295,7 +310,7 @@ export default function Home() {
     } else {
       let finalScore = 0;
       quizData.forEach((q, index) => {
-        if (q.type !== 'subjective' && selectedAnswers[index] === q.answer) {
+        if (q.type !== 'subjective' && checkIsAnswerCorrect(q, selectedAnswers[index])) {
           finalScore += 1;
         }
       });
@@ -308,7 +323,7 @@ export default function Home() {
   const handleTimeUp = () => {
     let finalScore = 0;
     quizData.forEach((q, index) => {
-      if (q.type !== 'subjective' && selectedAnswers[index] === q.answer) {
+      if (q.type !== 'subjective' && checkIsAnswerCorrect(q, selectedAnswers[index])) {
         finalScore += 1;
       }
     });

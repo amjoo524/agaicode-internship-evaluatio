@@ -4,13 +4,13 @@
     "section": "English",
     "type": "drag-and-drop",
     "q": "She [BLANK] to the market every morning.",
-    "options": {
-      "A": "go",
-      "B": "goes",
-      "C": "going",
-      "D": "gone"
-    },
-    "answer": "B",
+    "options": [
+      "go",
+      "goes",
+      "going",
+      "gone"
+    ],
+    "answer": "goes",
     "difficulty": "Easy"
   },
   {
@@ -18,13 +18,13 @@
     "section": "English",
     "type": "drag-and-drop",
     "q": "They [BLANK] playing football when it started raining.",
-    "options": {
-      "A": "was",
-      "B": "were",
-      "C": "are",
-      "D": "is"
-    },
-    "answer": "B",
+    "options": [
+      "was",
+      "were",
+      "are",
+      "is"
+    ],
+    "answer": "were",
     "difficulty": "Easy"
   },
   {
@@ -32,13 +32,13 @@
     "section": "English",
     "type": "drag-and-drop",
     "q": "I [BLANK] thinking about the problem for hours.",
-    "options": {
-      "A": "am",
-      "B": "is",
-      "C": "are",
-      "D": "be"
-    },
-    "answer": "A",
+    "options": [
+      "am",
+      "is",
+      "are",
+      "be"
+    ],
+    "answer": "am",
     "difficulty": "Easy"
   },
   {
@@ -46,13 +46,13 @@
     "section": "English",
     "type": "drag-and-drop",
     "q": "By next year, she [BLANK] her graduation.",
-    "options": {
-      "A": "completes",
-      "B": "will complete",
-      "C": "completed",
-      "D": "completing"
-    },
-    "answer": "B",
+    "options": [
+      "completes",
+      "will complete",
+      "completed",
+      "completing"
+    ],
+    "answer": "will complete",
     "difficulty": "Medium"
   },
   {
@@ -60,13 +60,13 @@
     "section": "English",
     "type": "drag-and-drop",
     "q": "If I [BLANK] you, I would accept the offer.",
-    "options": {
-      "A": "am",
-      "B": "was",
-      "C": "were",
-      "D": "be"
-    },
-    "answer": "C",
+    "options": [
+      "am",
+      "was",
+      "were",
+      "be"
+    ],
+    "answer": "were",
     "difficulty": "Medium"
   },
   {
@@ -74,13 +74,13 @@
     "section": "English",
     "type": "drag-and-drop",
     "q": "The cake [BLANK] by my mother yesterday.",
-    "options": {
-      "A": "bakes",
-      "B": "baked",
-      "C": "was baked",
-      "D": "is baked"
-    },
-    "answer": "C",
+    "options": [
+      "bakes",
+      "baked",
+      "was baked",
+      "is baked"
+    ],
+    "answer": "was baked",
     "difficulty": "Medium"
   },
   {
@@ -88,13 +88,13 @@
     "section": "English",
     "type": "drag-and-drop",
     "q": "We [BLANK] here since 2010.",
-    "options": {
-      "A": "live",
-      "B": "lived",
-      "C": "have lived",
-      "D": "are living"
-    },
-    "answer": "C",
+    "options": [
+      "live",
+      "lived",
+      "have lived",
+      "are living"
+    ],
+    "answer": "have lived",
     "difficulty": "Medium"
   },
   {
@@ -102,13 +102,13 @@
     "section": "English",
     "type": "drag-and-drop",
     "q": "She asked me where I [BLANK].",
-    "options": {
-      "A": "live",
-      "B": "lived",
-      "C": "am living",
-      "D": "have lived"
-    },
-    "answer": "B",
+    "options": [
+      "live",
+      "lived",
+      "am living",
+      "have lived"
+    ],
+    "answer": "lived",
     "difficulty": "Hard"
   },
   {
@@ -148,7 +148,7 @@
       "A": "Deceitful",
       "B": "Frank",
       "C": "Arrogant",
-      "D": " shy"
+      "D": "Shy"
     },
     "answer": "B",
     "difficulty": "Easy"
@@ -214,13 +214,13 @@
     "section": "English",
     "type": "drag-and-drop",
     "q": "Neither the teacher nor the students [BLANK] present.",
-    "options": {
-      "A": "was",
-      "B": "were",
-      "C": "has",
-      "D": "have"
-    },
-    "answer": "B",
+    "options": [
+      "was",
+      "were",
+      "has",
+      "have"
+    ],
+    "answer": "were",
     "difficulty": "Hard"
   },
   {
@@ -228,13 +228,13 @@
     "section": "English",
     "type": "drag-and-drop",
     "q": "I wish I [BLANK] the answer to that question.",
-    "options": {
-      "A": "know",
-      "B": "knew",
-      "C": "have known",
-      "D": "knowing"
-    },
-    "answer": "B",
+    "options": [
+      "know",
+      "knew",
+      "have known",
+      "knowing"
+    ],
+    "answer": "knew",
     "difficulty": "Medium"
   },
   {
@@ -258,7 +258,7 @@
     "q": "Which word is an antonym of 'Prolong'?",
     "options": {
       "A": "Extend",
-      "B": " Curtail",
+      "B": "Curtail",
       "C": "Lengthen",
       "D": "Stretch"
     },
@@ -270,13 +270,13 @@
     "section": "English",
     "type": "drag-and-drop",
     "q": "The movie [BLANK] by critics last week.",
-    "options": {
-      "A": "praised",
-      "B": "was praised",
-      "C": "is praised",
-      "D": "praising"
-    },
-    "answer": "B",
+    "options": [
+      "praised",
+      "was praised",
+      "is praised",
+      "praising"
+    ],
+    "answer": "was praised",
     "difficulty": "Medium"
   },
   {
@@ -298,13 +298,13 @@
     "section": "English",
     "type": "drag-and-drop",
     "q": "If it rains, we [BLANK] at home.",
-    "options": {
-      "A": "stay",
-      "B": "will stay",
-      "C": "stayed",
-      "D": "staying"
-    },
-    "answer": "B",
+    "options": [
+      "stay",
+      "will stay",
+      "stayed",
+      "staying"
+    ],
+    "answer": "will stay",
     "difficulty": "Easy"
   },
   {
@@ -326,13 +326,13 @@
     "section": "English",
     "type": "drag-and-drop",
     "q": "He [BLANK] his homework before the deadline.",
-    "options": {
-      "A": "finish",
-      "B": "finished",
-      "C": "finishing",
-      "D": "finishes"
-    },
-    "answer": "B",
+    "options": [
+      "finish",
+      "finished",
+      "finishing",
+      "finishes"
+    ],
+    "answer": "finished",
     "difficulty": "Easy"
   },
   {

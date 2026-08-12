@@ -345,9 +345,11 @@ export default function QuizScreen({
                   <span>Drag an option into the blank space or click a chip to select instantly</span>
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {currentQuestion.options.map((option) => {
+                  {(Array.isArray(currentQuestion.options)
+                    ? currentQuestion.options
+                    : Object.values(currentQuestion.options || {})
+                  ).map((option) => {
                     const isPlaced = selectedAnswer === option;
-                    const isCorrect = option === currentQuestion.answer;
                     return (
                       <button
                         key={option}
@@ -361,9 +363,7 @@ export default function QuizScreen({
                         disabled={isLocked}
                         className={`px-4 py-2.5 rounded-xl font-mono text-xs font-bold border-2 transition-all select-none whitespace-nowrap
                           ${isPlaced
-                            ? isCorrect
-                              ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300 shadow-lg shadow-emerald-900/30'
-                              : 'bg-red-500/20 border-red-500/50 text-red-300 shadow-lg shadow-red-900/30'
+                            ? 'bg-indigo-600 border-indigo-400 text-white shadow-lg shadow-indigo-900/50 ring-2 ring-indigo-500/30'
                             : 'bg-slate-900/80 hover:bg-slate-800 border-slate-700/80 text-slate-200 shadow-md cursor-grab active:cursor-grabbing active:scale-[0.97] hover:-translate-y-0.5 hover:border-indigo-500/50'
                           }`}
                       >
@@ -534,9 +534,9 @@ export default function QuizScreen({
 
         <div className="flex-shrink-0 pt-3 border-t border-slate-800/60 mt-2">
           {!isLocked ? (
-            <button onClick={onNext}
+            <button type="button" onClick={onNext}
               className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl
-                transition-all shadow-lg shadow-indigo-950 flex items-center justify-center gap-2 text-sm sm:text-base">
+                transition-all shadow-lg shadow-indigo-950 flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer">
               {isLastQuestion ? '✓ Finish & Submit Assessment' : 'Next Question →'}
             </button>
           ) : (

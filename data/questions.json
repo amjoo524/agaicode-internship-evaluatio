@@ -550,183 +550,211 @@
   {
     "id": 44,
     "section": "CSS",
-    "q": "Drag & Drop concept: Fill blank for h1 color property -> h1 { [BLANK] : red; }",
-    "options": {
-      "A": "color",
-      "B": "background-color",
-      "C": "border",
-      "D": "margin"
-    },
-    "answer": "A",
+    "type": "drag-and-drop",
+    "q": "Complete the CSS rule to set the text color of h1 to red.",
+    "code": "h1 {\n  [BLANK]: red;\n}",
+    "options": [
+      "color",
+      "background-color",
+      "border",
+      "margin"
+    ],
+    "answer": "color",
     "explanation": "The correct property to style h1 text red is 'color'."
   },
   {
     "id": 45,
     "section": "CSS",
-    "q": "Drag & Drop concept: Fill blank for bold font weight -> p { [BLANK] : bold; }",
-    "options": {
-      "A": "font-weight",
-      "B": "font-style",
-      "C": "text-decoration",
-      "D": "font-family"
-    },
-    "answer": "A",
+    "type": "drag-and-drop",
+    "q": "Complete the CSS rule to make paragraph text bold.",
+    "code": "p {\n  [BLANK]: bold;\n}",
+    "options": [
+      "font-weight",
+      "font-style",
+      "text-decoration",
+      "font-family"
+    ],
+    "answer": "font-weight",
     "explanation": "font-weight handles bold text formatting."
   },
   {
     "id": 46,
     "section": "CSS",
-    "q": "Drag & Drop concept: Center alignment -> div { text-align: [BLANK]; }",
-    "options": {
-      "A": "center",
-      "B": "middle",
-      "C": "top",
-      "D": "auto"
-    },
-    "answer": "A",
+    "type": "drag-and-drop",
+    "q": "Complete the CSS rule to center-align the text inside a div.",
+    "code": "div {\n  text-align: [BLANK];\n}",
+    "options": [
+      "center",
+      "middle",
+      "top",
+      "auto"
+    ],
+    "answer": "center",
     "explanation": "text-align uses 'center' value for horizontal centering."
   },
   {
     "id": 47,
     "section": "CSS",
-    "q": "Drag & Drop concept: Set fixed box height -> div { [BLANK] : 50px; }",
-    "options": {
-      "A": "height",
-      "B": "width",
-      "C": "top",
-      "D": "depth"
-    },
-    "answer": "A",
+    "type": "drag-and-drop",
+    "q": "Complete the CSS rule to set a div height to 50px.",
+    "code": "div {\n  [BLANK]: 50px;\n}",
+    "options": [
+      "height",
+      "width",
+      "top",
+      "depth"
+    ],
+    "answer": "height",
     "explanation": "Height property dictates the vertical dimension size."
   },
   {
     "id": 48,
     "section": "CSS",
-    "q": "Drag & Drop concept: Perfect circle radius -> div { border-radius: [BLANK]; }",
-    "options": {
-      "A": "50%",
-      "B": "100px",
-      "C": "round",
-      "D": "circle"
-    },
-    "answer": "A",
+    "type": "drag-and-drop",
+    "q": "Complete the CSS rule to make a square div a perfect circle.",
+    "code": "div {\n  border-radius: [BLANK];\n}",
+    "options": [
+      "50%",
+      "100px",
+      "round",
+      "circle"
+    ],
+    "answer": "50%",
     "explanation": "A 50% border radius transforms a square box into a circle."
   },
   {
     "id": 49,
     "section": "CSS",
-    "q": "Drag & Drop concept: Inner spacing property -> div { [BLANK] : 10px; }",
-    "options": {
-      "A": "padding",
-      "B": "margin",
-      "C": "gap",
-      "D": "spacing"
-    },
-    "answer": "A",
+    "type": "drag-and-drop",
+    "q": "Complete the CSS rule to add inner spacing of 10px inside a div.",
+    "code": "div {\n  [BLANK]: 10px;\n}",
+    "options": [
+      "padding",
+      "margin",
+      "gap",
+      "spacing"
+    ],
+    "answer": "padding",
     "explanation": "Padding establishes inner spacing around content inside borders."
   },
   {
     "id": 50,
     "section": "CSS",
-    "q": "Drag & Drop concept: Element outer spacing -> div { [BLANK] : 1px 2px 3px 4px; }",
-    "options": {
-      "A": "margin",
-      "B": "padding",
-      "C": "border",
-      "D": "outline"
-    },
-    "answer": "A",
+    "type": "drag-and-drop",
+    "q": "Complete the CSS rule to set outer margin offsets around a div.",
+    "code": "div {\n  [BLANK]: 1px 2px 3px 4px;\n}",
+    "options": [
+      "margin",
+      "padding",
+      "border",
+      "outline"
+    ],
+    "answer": "margin",
     "explanation": "Margin sets outer offsets around box elements."
   },
   {
     "id": 51,
     "section": "CSS",
-    "q": "Drag & Drop concept: ID selector format -> [BLANK] { background-color: blue; }",
-    "options": {
-      "A": "#box",
-      "B": ".box",
-      "C": "*box",
-      "D": "box#"
-    },
-    "answer": "A",
+    "type": "drag-and-drop",
+    "q": "Complete the ID selector rule to style an element with id='box'.",
+    "code": "[BLANK] {\n  background-color: blue;\n}",
+    "options": [
+      "#box",
+      ".box",
+      "*box",
+      "box#"
+    ],
+    "answer": "#box",
     "explanation": "#box targets elements matching ID attribute values."
   },
   {
     "id": 52,
     "section": "CSS",
-    "q": "Drag & Drop concept: Class selector format -> [BLANK] { color: red; }",
-    "options": {
-      "A": ".heading",
-      "B": "#heading",
-      "C": "heading.",
-      "D": "*heading"
-    },
-    "answer": "A",
+    "type": "drag-and-drop",
+    "q": "Complete the class selector rule to style elements with class='heading'.",
+    "code": "[BLANK] {\n  color: red;\n}",
+    "options": [
+      ".heading",
+      "#heading",
+      "heading.",
+      "*heading"
+    ],
+    "answer": ".heading",
     "explanation": ".heading targets elements sharing the class name."
   },
   {
     "id": 53,
     "section": "CSS",
-    "q": "Drag & Drop concept: Universal selector -> [BLANK] { margin: 0; padding: 0; }",
-    "options": {
-      "A": "*",
-      "B": "all",
-      "C": "%",
-      "D": "@"
-    },
-    "answer": "A",
+    "type": "drag-and-drop",
+    "q": "Complete the universal selector rule to reset margin and padding on all elements.",
+    "code": "[BLANK] {\n  margin: 0;\n  padding: 0;\n}",
+    "options": [
+      "*",
+      "all",
+      "%",
+      "@"
+    ],
+    "answer": "*",
     "explanation": "The asterisk (*) selects all elements in the document."
   },
   {
     "id": 54,
     "section": "CSS",
-    "q": "Drag & Drop concept: Text underline property -> a { [BLANK] : underline; }",
-    "options": {
-      "A": "text-decoration",
-      "B": "text-style",
-      "C": "font-decoration",
-      "D": "line-style"
-    },
-    "answer": "A",
+    "type": "drag-and-drop",
+    "q": "Complete the CSS rule to underline anchor tag links.",
+    "code": "a {\n  [BLANK]: underline;\n}",
+    "options": [
+      "text-decoration",
+      "text-style",
+      "font-decoration",
+      "line-style"
+    ],
+    "answer": "text-decoration",
     "explanation": "text-decoration handles underlines and line styling."
   },
   {
     "id": 55,
     "section": "CSS",
-    "q": "Drag & Drop concept: Text casing transform -> p { [BLANK] : uppercase; }",
-    "options": {
-      "A": "text-transform",
-      "B": "text-case",
-      "C": "font-transform",
-      "D": "case-style"
-    },
-    "answer": "A",
+    "type": "drag-and-drop",
+    "q": "Complete the CSS rule to transform paragraph text to uppercase.",
+    "code": "p {\n  [BLANK]: uppercase;\n}",
+    "options": [
+      "text-transform",
+      "text-case",
+      "font-transform",
+      "case-style"
+    ],
+    "answer": "text-transform",
     "explanation": "text-transform controls letter capitalization formatting."
   },
   {
     "id": 56,
     "section": "CSS",
-    "q": "Drag & Drop concept: Complete removal display -> div { display: [BLANK]; }",
-    "options": {
-      "A": "none",
-      "B": "hidden",
-      "C": "invisible",
-      "D": "block"
-    },
-    "answer": "A",
+    "type": "drag-and-drop",
+    "q": "Complete the CSS rule to completely hide and remove a div from the document layout.",
+    "code": "div {\n  display: [BLANK];\n}",
+    "options": [
+      "none",
+      "hidden",
+      "invisible",
+      "block"
+    ],
+    "answer": "none",
     "explanation": "display: none completely deletes element rendering and flow footprint."
   },
   {
     "id": 57,
     "section": "CSS",
-    "q": "Drag & Drop concept: Sticky viewport positioning -> div { position: [BLANK]; }",
-    "options": {
-      "A": "fixed",
-      "B": "relative",
-      "C": "absolute",
-      "D": "static"
-    },
-    "answer": "A",
+    "type": "drag-and-drop",
+    "q": "Complete the CSS rule to lock a div position relative to the browser viewport.",
+    "code": "div {\n  position: [BLANK];\n}",
+    "options": [
+      "fixed",
+      "relative",
+      "absolute",
+      "static"
+    ],
+    "answer": "fixed",
     "explanation": "fixed positioning locks elements relative to screen scroll behavior."
   },
   {
