@@ -1,7 +1,19 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import Editor from '@monaco-editor/react';
-import { Code2, Eye } from 'lucide-react';
+import { 
+  Code2, 
+  Eye, 
+  Columns, 
+  Maximize2, 
+  Minimize2, 
+  RotateCcw, 
+  Sparkles, 
+  ZoomIn, 
+  ZoomOut,
+  HelpCircle,
+  CheckCircle2
+} from 'lucide-react';
 
 const playAlarmSound = () => {
   try {
@@ -40,6 +52,103 @@ const VOID_TAGS = [
   'link', 'meta', 'param', 'source', 'track', 'wbr'
 ];
 
+const HTML_KNOWN_TAGS = new Set([
+  'div', 'span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'a', 'button',
+  'ul', 'ol', 'li', 'form', 'input', 'label', 'textarea', 'select', 'option',
+  'img', 'header', 'footer', 'nav', 'main', 'section', 'article', 'aside',
+  'table', 'tr', 'td', 'th', 'thead', 'tbody', 'code', 'pre', 'b', 'i',
+  'strong', 'em', 'small', 'mark', 'hr', 'br', 'canvas', 'svg', 'audio', 'video'
+]);
+
+const parseEmmetSingle = (text) => {
+  const trimmed = text.trim();
+  if (!trimmed) return null;
+
+  const emmetRegex = /^([a-zA-Z0-9-]*)(?:#([a-zA-Z0-9-_]+))?((?:\.[a-zA-Z0-9-_]+)+)?$/;
+  const match = trimmed.match(emmetRegex);
+  if (!match) return null;
+
+  let [, tagName, idName, rawClasses] = match;
+
+  if (!tagName && (idName || rawClasses)) {
+    tagName = 'div';
+  }
+
+  if (!tagName) return null;
+
+  const lowerTag = tagName.toLowerCase();
+  const hasMeta = Boolean(idName || rawClasses);
+
+  if (!hasMeta && !HTML_KNOWN_TAGS.has(lowerTag)) {
+    return null;
+  }
+
+  let classes = [];
+  if (rawClasses) {
+    classes = rawClasses.split('.').filter(Boolean);
+  }
+
+  let attrs = [];
+  if (idName) attrs.push(`id="${idName}"`);
+  if (classes.length > 0) attrs.push(`class="${classes.join(' ')}"`);
+
+  if (lowerTag === 'a' && !attrs.some(a => a.startsWith('href'))) {
+    attrs.push('href="#"');
+  } else if (lowerTag === 'img' && !attrs.some(a => a.startsWith('src'))) {
+    attrs.push('src="" alt=""');
+  } else if (lowerTag === 'input' && !attrs.some(a => a.startsWith('type'))) {
+    attrs.push('type="text"');
+  } else if (lowerTag === 'form' && !attrs.some(a => a.startsWith('action'))) {
+    attrs.push('action=""');
+  }
+
+  const attrStr = attrs.length > 0 ? ' ' + attrs.join(' ') : '';
+  const isVoid = VOID_TAGS.includes(lowerTag);
+  const openTag = `${lowerTag}${attrStr}`;
+
+  return {
+    tagName: lowerTag,
+    openTag,
+    isVoid,
+    code: isVoid ? `<${openTag} />` : `<${openTag}></${lowerTag}>`,
+    cursorOffset: isVoid ? `<${openTag} />`.length : `<${openTag}>`.length
+  };
+};
+
+const parseEmmetAbbr = (text) => {
+  const trimmed = text.trim();
+  if (!trimmed) return null;
+
+  if (trimmed === '!') {
+    const code = `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>Document</title>\n</head>\n<body>\n  \n</body>\n</html>`;
+    return { code, cursorLineOffset: 7, cursorCol: 3, isSnippet: true };
+  }
+
+  const childMatch = trimmed.match(/^([a-zA-Z0-9.#-_]+)>([a-zA-Z0-9.#-_]+)$/);
+  if (childMatch) {
+    const parentParsed = parseEmmetSingle(childMatch[1]);
+    const childParsed = parseEmmetSingle(childMatch[2]);
+    if (parentParsed && childParsed) {
+      const code = `<${parentParsed.openTag}>\n  ${childParsed.code}\n</${parentParsed.tagName}>`;
+      return {
+        code,
+        cursorLineOffset: 1,
+        cursorCol: 3 + childParsed.cursorOffset,
+        isSnippet: true
+      };
+    }
+  }
+
+  const single = parseEmmetSingle(trimmed);
+  if (!single) return null;
+  return {
+    code: single.code,
+    cursorLineOffset: 0,
+    cursorCol: single.cursorOffset,
+    isSnippet: false
+  };
+};
+
 const getSectionBadgeStyle = (section) => {
   switch (section) {
     case 'HTML': return 'text-orange-400 bg-orange-500/10 border border-orange-500/30';
@@ -70,8 +179,15 @@ export default function QuizScreen({
 
   const [timeLeft, setTimeLeft] = useState(calculatedTotalTime);
   const [latestWarningText, setLatestWarningText] = useState('');
-  const [activeTab, setActiveTab] = useState('code'); 
+  const [activeTab, setActiveTab] = useState('split'); 
+  const [editorFontSize, setEditorFontSize] = useState(13);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const [formattedToast, setFormattedToast] = useState(false);
+
   const timerRef = useRef(null);
+  const editorRef = useRef(null);
+  const monacoRef = useRef(null);
 
   useEffect(() => {
     if (totalQuestions) {
@@ -80,8 +196,22 @@ export default function QuizScreen({
   }, [totalQuestions]);
 
   useEffect(() => {
-    setActiveTab('code');
+    setActiveTab('split');
   }, [currentIndex]);
+
+  const handleFormatCode = () => {
+    if (editorRef.current) {
+      editorRef.current.getAction('editor.action.formatDocument')?.run();
+      setFormattedToast(true);
+      setTimeout(() => setFormattedToast(false), 2000);
+    }
+  };
+
+  const handleResetCode = () => {
+    if (confirm('Are you sure you want to clear your code?')) {
+      onSubjectiveAnswer('');
+    }
+  };
 
   const progressPercentage = (currentIndex / totalQuestions) * 100;
   const isSubjective = currentQuestion?.type === 'subjective';
@@ -204,9 +334,10 @@ export default function QuizScreen({
           <head><style>${userCode}</style></head>
           <body style="background:#ffffff; color:#111827; padding:16px; font-family:sans-serif;">
             <div class="preview-container">
-              <h3>CSS Live Preview Output</h3>
-              <p>This is a sample text to test your CSS styles (e.g. colors, margins, fonts).</p>
-              <div class="box" style="padding:10px; border:2px dashed #6366f1; margin-top:10px;">Sample Box Element</div>
+              <h3 style="margin-top:0; color:#4f46e5; font-size:15px; font-weight:bold;">CSS Live Preview Output</h3>
+              <p style="color:#4b5563; font-size:13px;">This sample element tests your CSS styles (classes, colors, margins, fonts):</p>
+              <div class="box" style="padding:12px; border:2px dashed #6366f1; border-radius:8px; margin-top:10px;">Sample Box Element (.box)</div>
+              <button class="btn" style="margin-top:10px; padding:6px 12px; background:#6366f1; color:white; border:none; border-radius:6px; font-weight:600; cursor:pointer;">Sample Button (.btn)</button>
             </div>
           </body>
         </html>
@@ -215,7 +346,7 @@ export default function QuizScreen({
       return `
         <!DOCTYPE html>
         <html>
-          <head><style>body { background:#ffffff; color:#111827; padding:16px; font-family:sans-serif; }</style></head>
+          <head><style>body { background:#ffffff; color:#111827; padding:16px; font-family:sans-serif; line-height:1.5; }</style></head>
           <body>${userCode}</body>
         </html>
       `;
@@ -223,19 +354,49 @@ export default function QuizScreen({
       return `
         <!DOCTYPE html>
         <html>
-          <head><style>body { background:#0f172a; color:#f8fafc; padding:16px; font-family:monospace; font-size:13px; }</style></head>
+          <head>
+            <style>
+              body { background:#090d16; color:#f8fafc; padding:14px; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:12px; margin:0; }
+              .log-entry { margin-bottom: 6px; padding: 6px 10px; border-radius: 6px; border-left: 3px solid #6366f1; background: rgba(30, 41, 59, 0.6); }
+              .log-warn { border-left-color: #f59e0b; color: #fbbf24; background: rgba(245, 158, 11, 0.15); }
+              .log-error { border-left-color: #ef4444; color: #f87171; background: rgba(239, 68, 68, 0.15); }
+              .log-info { border-left-color: #3b82f6; color: #60a5fa; }
+              pre { margin:0; white-space: pre-wrap; word-break: break-word; }
+            </style>
+          </head>
           <body>
-            <strong>JS Execution Output Log:</strong>
-            <pre id="console-output" style="margin-top:10px; color:#38bdf8;"></pre>
+            <div style="font-size:11px; font-weight:bold; text-transform:uppercase; letter-spacing:0.05em; color:#94a3b8; margin-bottom:10px; display:flex; justify-content:space-between; border-b: 1px solid #1e293b; padding-bottom:6px;">
+              <span>⚡ Console Output</span>
+              <span>JS Sandbox</span>
+            </div>
+            <div id="console-output"></div>
             <script>
+              const outputContainer = document.getElementById('console-output');
+              const formatArg = (arg) => {
+                if (arg === null) return 'null';
+                if (arg === undefined) return 'undefined';
+                if (typeof arg === 'object') {
+                  try { return JSON.stringify(arg, null, 2); } catch(e) { return String(arg); }
+                }
+                return String(arg);
+              };
+              const appendLog = (args, type = 'log') => {
+                const div = document.createElement('div');
+                div.className = 'log-entry log-' + type;
+                const pre = document.createElement('pre');
+                pre.textContent = args.map(formatArg).join(' ');
+                div.appendChild(pre);
+                outputContainer.appendChild(div);
+              };
+              console.log = (...args) => appendLog(args, 'log');
+              console.info = (...args) => appendLog(args, 'info');
+              console.warn = (...args) => appendLog(args, 'warn');
+              console.error = (...args) => appendLog(args, 'error');
+              
               try {
-                const consoleLog = (...args) => {
-                  document.getElementById('console-output').innerText += args.join(' ') + '\\n';
-                };
-                console.log = consoleLog;
                 ${userCode}
               } catch(err) {
-                document.getElementById('console-output').innerHTML += '<span style="color:#f43f5e;">Error: ' + err.message + '</span>';
+                appendLog(['Runtime Error:', err.message], 'error');
               }
             </script>
           </body>
@@ -394,139 +555,356 @@ export default function QuizScreen({
           )}
 
           {isSubjective && (
-            <div className="space-y-2 h-full flex flex-col flex-1">
-              <div className="flex items-center justify-between text-xs font-medium px-1">
-                <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800">
+            <div className={`space-y-2 flex flex-col flex-1 min-h-0 ${isFullscreen ? 'fixed inset-4 z-50 bg-slate-950 border border-indigo-500/50 p-4 rounded-2xl shadow-2xl backdrop-blur-2xl' : ''}`}>
+              {/* Editor Header Toolbar */}
+              <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-medium px-2 py-1.5 bg-slate-950/80 rounded-xl border border-slate-800/80">
+                {/* Tab Selectors */}
+                <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-lg border border-slate-800">
                   <button
+                    type="button"
+                    onClick={() => setActiveTab('split')}
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-all font-semibold ${
+                      activeTab === 'split' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+                    }`}
+                    title="Side-by-Side Split View"
+                  >
+                    <Columns className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Split View</span>
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => setActiveTab('code')}
-                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg transition-all font-semibold ${
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-all font-semibold ${
                       activeTab === 'code' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
                     }`}
+                    title="Code Editor Only"
                   >
                     <Code2 className="w-3.5 h-3.5" />
-                    Code Editor
+                    <span>Code</span>
                   </button>
                   <button
+                    type="button"
                     onClick={() => setActiveTab('preview')}
-                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg transition-all font-semibold ${
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-all font-semibold ${
                       activeTab === 'preview' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
                     }`}
+                    title="Live Preview Only"
                   >
                     <Eye className="w-3.5 h-3.5" />
-                    Live Preview
+                    <span>Preview</span>
                   </button>
                 </div>
-                <span className="font-mono text-indigo-400 text-xs">
-                  ⚡ Auto-closing tags & VS Code features active
-                </span>
+
+                {/* Editor Action Controls */}
+                <div className="flex items-center gap-1.5">
+                  {formattedToast && (
+                    <span className="text-[11px] text-emerald-400 font-bold flex items-center gap-1 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/30 animate-fadeIn">
+                      <CheckCircle2 className="w-3 h-3" /> Formatted!
+                    </span>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={handleFormatCode}
+                    className="flex items-center gap-1 px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-indigo-300 hover:text-indigo-200 rounded-lg border border-slate-800 transition-all font-semibold cursor-pointer"
+                    title="Auto Format Code (Alt+Shift+F)"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                    <span className="hidden md:inline">Format</span>
+                  </button>
+
+                  <div className="flex items-center bg-slate-900 rounded-lg border border-slate-800 px-1 py-0.5">
+                    <button
+                      type="button"
+                      onClick={() => setEditorFontSize(prev => Math.max(11, prev - 1))}
+                      className="p-1 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                      title="Decrease Font Size"
+                    >
+                      <ZoomOut className="w-3.5 h-3.5" />
+                    </button>
+                    <span className="text-[11px] font-mono font-bold px-1 text-indigo-400">{editorFontSize}px</span>
+                    <button
+                      type="button"
+                      onClick={() => setEditorFontSize(prev => Math.min(20, prev + 1))}
+                      className="p-1 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                      title="Increase Font Size"
+                    >
+                      <ZoomIn className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleResetCode}
+                    className="p-1.5 bg-slate-900 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 rounded-lg border border-slate-800 transition-all cursor-pointer"
+                    title="Reset Code"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowShortcuts(!showShortcuts)}
+                    className="p-1.5 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-indigo-400 rounded-lg border border-slate-800 transition-all cursor-pointer"
+                    title="Editor Keyboard Shortcuts"
+                  >
+                    <HelpCircle className="w-3.5 h-3.5" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsFullscreen(!isFullscreen)}
+                    className="p-1.5 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white rounded-lg border border-slate-800 transition-all cursor-pointer"
+                    title={isFullscreen ? "Exit Fullscreen" : "Fullscreen Workspace"}
+                  >
+                    {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
               </div>
 
-              <div className={`border border-slate-800 rounded-xl overflow-hidden shadow-2xl flex-1 min-h-[220px] ${activeTab === 'code' ? 'block' : 'hidden'}`}>
-                <Editor
-                  key={`editor-${currentIndex}`}
-                  height="220px"
-                  defaultLanguage={currentQuestion.section === 'HTML' ? 'html' : currentQuestion.section === 'CSS' ? 'css' : 'javascript'}
-                  theme="vs-dark"
-                  value={subjectiveAnswer || ''}
-                  onChange={(value) => onSubjectiveAnswer(value || '')}
-                  onMount={(editor, monaco) => {
-                    // --- VS Code-style '!' + Enter -> HTML boilerplate ---
-                    // Only fires when the suggestion widget is NOT visible, so it
-                    // never steals Enter away from accepting an IntelliSense suggestion.
-                    editor.addCommand(monaco.KeyCode.Enter, () => {
-                      const position = editor.getPosition();
-                      const model = editor.getModel();
-                      const lineContent = model.getLineContent(position.lineNumber);
+              {/* Shortcuts Helper Modal / Banner */}
+              {showShortcuts && (
+                <div className="p-3 bg-indigo-950/60 border border-indigo-500/40 rounded-xl text-xs text-indigo-200 space-y-2 animate-fadeIn shadow-xl">
+                  <div className="flex justify-between items-center border-b border-indigo-500/30 pb-1.5">
+                    <span className="font-bold text-white flex items-center gap-1.5">
+                      ⚡ Monaco Emmet & VS Code Shortcuts
+                    </span>
+                    <button type="button" onClick={() => setShowShortcuts(false)} className="text-xs font-bold text-indigo-400 hover:underline cursor-pointer">Dismiss</button>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-[11px] font-mono">
+                    <div className="bg-slate-900/80 p-2 rounded border border-slate-800">
+                      <span className="text-amber-400 font-bold">.box</span> + <span className="text-indigo-300">Enter</span>
+                      <p className="text-slate-400 text-[10px]">&lt;div class="box"&gt;&lt;/div&gt;</p>
+                    </div>
+                    <div className="bg-slate-900/80 p-2 rounded border border-slate-800">
+                      <span className="text-amber-400 font-bold">button.btn</span> + <span className="text-indigo-300">Enter</span>
+                      <p className="text-slate-400 text-[10px]">&lt;button class="btn"&gt;&lt;/button&gt;</p>
+                    </div>
+                    <div className="bg-slate-900/80 p-2 rounded border border-slate-800">
+                      <span className="text-amber-400 font-bold">#main</span> + <span className="text-indigo-300">Enter</span>
+                      <p className="text-slate-400 text-[10px]">&lt;div id="main"&gt;&lt;/div&gt;</p>
+                    </div>
+                    <div className="bg-slate-900/80 p-2 rounded border border-slate-800">
+                      <span className="text-amber-400 font-bold">p</span> + <span className="text-indigo-300">Enter</span>
+                      <p className="text-slate-400 text-[10px]">&lt;p&gt;&lt;/p&gt;</p>
+                    </div>
+                    <div className="bg-slate-900/80 p-2 rounded border border-slate-800">
+                      <span className="text-amber-400 font-bold">ul&gt;li</span> + <span className="text-indigo-300">Enter</span>
+                      <p className="text-slate-400 text-[10px]">&lt;ul&gt;&lt;li&gt;&lt;/li&gt;&lt;/ul&gt;</p>
+                    </div>
+                    <div className="bg-slate-900/80 p-2 rounded border border-slate-800">
+                      <span className="text-amber-400 font-bold">!</span> + <span className="text-indigo-300">Enter</span>
+                      <p className="text-slate-400 text-[10px]">HTML5 Boilerplate</p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
-                      if (lineContent.trim() === '!') {
-                        const boilerplate = `<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <title>Document</title>\n</head>\n<body>\n  \n</body>\n</html>`;
-                        const range = new monaco.Range(position.lineNumber, 1, position.lineNumber, lineContent.length + 1);
-                        editor.executeEdits('boilerplate', [{ range, text: boilerplate }]);
-                        // Drop the cursor right inside <body> so you can start typing immediately
-                        editor.setPosition({ lineNumber: position.lineNumber + 7, column: 3 });
-                        editor.focus();
-                        return;
-                      }
-                      // Default Enter action fallback (keeps normal newline + auto-indent)
-                      editor.trigger('keyboard', 'type', { text: '\n' });
-                    }, '!suggestWidgetVisible');
+              {/* Code & Preview Main Display Container */}
+              <div className="flex-1 min-h-[220px] flex flex-col md:flex-row gap-2.5 overflow-hidden">
+                {/* Monaco Editor Component */}
+                <div className={`border border-slate-800 rounded-xl overflow-hidden shadow-2xl flex-1 flex flex-col min-h-[220px] transition-all
+                  ${activeTab === 'code' ? 'w-full block' : activeTab === 'split' ? 'w-full md:w-1/2 block' : 'hidden'}`}>
+                  <div className="bg-slate-950 px-3 py-1.5 border-b border-slate-800 flex justify-between items-center text-[11px] font-mono text-slate-400">
+                    <span className="flex items-center gap-1.5 font-bold text-indigo-400">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                      Monaco Editor Pro ({currentQuestion.section})
+                    </span>
+                    <span className="text-[10px] text-slate-500">VS Code Engine</span>
+                  </div>
+                  <div className="flex-1 min-h-0 relative">
+                    <Editor
+                      key={`editor-${currentIndex}-${editorFontSize}`}
+                      height="100%"
+                      defaultLanguage={currentQuestion.section === 'HTML' ? 'html' : currentQuestion.section === 'CSS' ? 'css' : 'javascript'}
+                      theme="monaco-dark-pro"
+                      value={subjectiveAnswer || ''}
+                      onChange={(value) => onSubjectiveAnswer(value || '')}
+                      onMount={(editor, monaco) => {
+                        editorRef.current = editor;
+                        monacoRef.current = monaco;
 
-                    // --- VS Code-style auto-closing HTML tags ---
-                    // Typing "<div>" auto-inserts "</div>" right after the cursor,
-                    // just like real VS Code. Only runs for HTML questions since
-                    // CSS/JS don't have tags to close.
-                    editor.onDidType((typedText) => {
-                      if (typedText !== '>') return;
-                      if (currentQuestion?.section !== 'HTML') return;
+                        monaco.editor.defineTheme('monaco-dark-pro', {
+                          base: 'vs-dark',
+                          inherit: true,
+                          rules: [
+                            { token: 'comment', foreground: '6a9955', fontStyle: 'italic' },
+                            { token: 'keyword', foreground: '569cd6', fontStyle: 'bold' },
+                            { token: 'string', foreground: 'ce9178' },
+                            { token: 'number', foreground: 'b5cea8' },
+                            { token: 'tag', foreground: '4ec9b0' },
+                            { token: 'attribute.name', foreground: '9cdcfe' },
+                          ],
+                          colors: {
+                            'editor.background': '#090d16',
+                            'editor.lineHighlightBackground': '#1e293b60',
+                            'editorLineNumber.foreground': '#475569',
+                            'editorLineNumber.activeForeground': '#818cf8',
+                            'editorIndentGuide.background': '#1e293b',
+                            'editorIndentGuide.activeBackground': '#4338ca',
+                          }
+                        });
+                        monaco.editor.setTheme('monaco-dark-pro');
 
-                      const position = editor.getPosition();
-                      const model = editor.getModel();
-                      const textBeforeCursor = model.getValueInRange({
-                        startLineNumber: position.lineNumber,
-                        startColumn: 1,
-                        endLineNumber: position.lineNumber,
-                        endColumn: position.column,
-                      });
+                        // --- Emmet Completion Provider ---
+                        if (typeof window !== 'undefined' && !window.__emmet_provider_registered) {
+                          window.__emmet_provider_registered = true;
+                          monaco.languages.registerCompletionItemProvider('html', {
+                            triggerCharacters: ['.', '#', '>', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'l', 'm', 'n', 'o', 'p', 's', 't', 'u'],
+                            provideCompletionItems: (model, position) => {
+                              const lineContent = model.getLineContent(position.lineNumber);
+                              const textUntilPosition = lineContent.substring(0, position.column - 1);
+                              const match = textUntilPosition.match(/([a-zA-Z0-9.#-_>!]+)$/);
+                              if (!match) return { suggestions: [] };
 
-                      // Matches "<tagname ...>" ending exactly where we just typed '>'
-                      const tagMatch = textBeforeCursor.match(/<([a-zA-Z][a-zA-Z0-9-]*)(?:\s[^<>]*)?>$/);
-                      if (!tagMatch) return;
+                              const abbr = match[1];
+                              const emmetResult = parseEmmetAbbr(abbr);
+                              if (!emmetResult) return { suggestions: [] };
 
-                      const tagName = tagMatch[1];
-                      const isSelfClosing =
-                        textBeforeCursor.trim().endsWith('/>') ||
-                        VOID_TAGS.includes(tagName.toLowerCase());
-                      if (isSelfClosing) return;
+                              const range = {
+                                startLineNumber: position.lineNumber,
+                                startColumn: position.column - abbr.length,
+                                endLineNumber: position.lineNumber,
+                                endColumn: position.column,
+                              };
 
-                      // Don't double up if a matching closing tag already exists right after
-                      const textAfterCursor = model.getValueInRange({
-                        startLineNumber: position.lineNumber,
-                        startColumn: position.column,
-                        endLineNumber: position.lineNumber,
-                        endColumn: model.getLineMaxColumn(position.lineNumber),
-                      });
-                      if (textAfterCursor.trimStart().toLowerCase().startsWith(`</${tagName.toLowerCase()}>`)) return;
+                              return {
+                                suggestions: [
+                                  {
+                                    label: `⚡ Emmet: ${emmetResult.code.replace(/\n/g, ' ')}`,
+                                    kind: monaco.languages.CompletionItemKind.Snippet,
+                                    insertText: emmetResult.code,
+                                    insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                                    detail: `Expand '${abbr}' abbreviation`,
+                                    range: range,
+                                  }
+                                ]
+                              };
+                            }
+                          });
+                        }
 
-                      editor.executeEdits('auto-close-tag', [{
-                        range: new monaco.Range(position.lineNumber, position.column, position.lineNumber, position.column),
-                        text: `</${tagName}>`,
-                      }]);
-                      // Keep the cursor sitting between the opening and closing tag
-                      editor.setPosition(position);
-                    });
-                  }}
-                  options={{
-                    readOnly: isLocked,
-                    minimap: { enabled: false },
-                    wordWrap: 'on',
-                    fontSize: 13,
-                    scrollBeyondLastLine: false,
-                    automaticLayout: true,
-                    tabSize: 2,
-                    autoClosingBrackets: 'always',
-                    autoClosingQuotes: 'always',
-                    autoClosingDelete: 'always',
-                    autoClosingOvertype: 'always',
-                    autoSurround: 'languageDefined',
-                    suggestOnTriggerCharacters: true,
-                    acceptSuggestionOnEnter: 'on',
-                    quickSuggestions: true,
-                    formatOnType: true,
-                    formatOnPaste: true,
-                    snippetSuggestions: 'inline',
-                    matchBrackets: 'always',
-                    bracketPairColorization: { enabled: true },
-                  }}
-                />
-              </div>
+                        // --- VS Code & Emmet-style Enter command ---
+                        editor.addCommand(monaco.KeyCode.Enter, () => {
+                          const position = editor.getPosition();
+                          const model = editor.getModel();
+                          const lineContent = model.getLineContent(position.lineNumber);
+                          const textBeforeCursor = lineContent.substring(0, position.column - 1);
 
-              <div className={`border border-slate-800 rounded-xl overflow-hidden shadow-2xl bg-white flex-1 min-h-[220px] ${activeTab === 'preview' ? 'block' : 'hidden'}`}>
-                <iframe
-                  title="Live Preview Output"
-                  srcDoc={getPreviewSource()}
-                  className="w-full h-full min-h-[220px] border-0 bg-white"
-                  sandbox="allow-scripts"
-                />
+                          const match = textBeforeCursor.match(/([a-zA-Z0-9.#-_>!]+)$/);
+                          if (match && currentQuestion?.section === 'HTML') {
+                            const abbr = match[1];
+                            const emmetResult = parseEmmetAbbr(abbr);
+                            if (emmetResult) {
+                              const startCol = position.column - abbr.length;
+                              const range = new monaco.Range(position.lineNumber, startCol, position.lineNumber, position.column);
+
+                              editor.executeEdits('emmet-expand', [{ range, text: emmetResult.code }]);
+
+                              if (emmetResult.cursorLineOffset > 0) {
+                                editor.setPosition({
+                                  lineNumber: position.lineNumber + emmetResult.cursorLineOffset,
+                                  column: emmetResult.cursorCol
+                                });
+                              } else {
+                                editor.setPosition({
+                                  lineNumber: position.lineNumber,
+                                  column: startCol + emmetResult.cursorCol
+                                });
+                              }
+                              editor.focus();
+                              return;
+                            }
+                          }
+
+                          editor.trigger('keyboard', 'type', { text: '\n' });
+                        }, '!suggestWidgetVisible');
+
+                        editor.onDidType((typedText) => {
+                          if (typedText !== '>') return;
+                          if (currentQuestion?.section !== 'HTML') return;
+
+                          const position = editor.getPosition();
+                          const model = editor.getModel();
+                          const textBeforeCursor = model.getValueInRange({
+                            startLineNumber: position.lineNumber,
+                            startColumn: 1,
+                            endLineNumber: position.lineNumber,
+                            endColumn: position.column,
+                          });
+
+                          const tagMatch = textBeforeCursor.match(/<([a-zA-Z][a-zA-Z0-9-]*)(?:\s[^<>]*)?>$/);
+                          if (!tagMatch) return;
+
+                          const tagName = tagMatch[1];
+                          const isSelfClosing =
+                            textBeforeCursor.trim().endsWith('/>') ||
+                            VOID_TAGS.includes(tagName.toLowerCase());
+                          if (isSelfClosing) return;
+
+                          const textAfterCursor = model.getValueInRange({
+                            startLineNumber: position.lineNumber,
+                            startColumn: position.column,
+                            endLineNumber: position.lineNumber,
+                            endColumn: model.getLineMaxColumn(position.lineNumber),
+                          });
+                          if (textAfterCursor.trimStart().toLowerCase().startsWith(`</${tagName.toLowerCase()}>`)) return;
+
+                          editor.executeEdits('auto-close-tag', [{
+                            range: new monaco.Range(position.lineNumber, position.column, position.lineNumber, position.column),
+                            text: `</${tagName}>`,
+                          }]);
+                          editor.setPosition(position);
+                        });
+                      }}
+                      options={{
+                        readOnly: isLocked,
+                        minimap: { enabled: false },
+                        wordWrap: 'on',
+                        fontSize: editorFontSize,
+                        scrollBeyondLastLine: false,
+                        automaticLayout: true,
+                        tabSize: 2,
+                        autoClosingBrackets: 'always',
+                        autoClosingQuotes: 'always',
+                        autoClosingDelete: 'always',
+                        autoClosingOvertype: 'always',
+                        autoSurround: 'languageDefined',
+                        suggestOnTriggerCharacters: true,
+                        acceptSuggestionOnEnter: 'on',
+                        quickSuggestions: true,
+                        formatOnType: true,
+                        formatOnPaste: true,
+                        snippetSuggestions: 'inline',
+                        matchBrackets: 'always',
+                        bracketPairColorization: { enabled: true },
+                        cursorBlinking: 'smooth',
+                        cursorSmoothCaretAnimation: 'on',
+                        renderLineHighlight: 'all',
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Live Preview Container */}
+                <div className={`border border-slate-800 rounded-xl overflow-hidden shadow-2xl bg-white flex-1 flex flex-col min-h-[220px] transition-all
+                  ${activeTab === 'preview' ? 'w-full block' : activeTab === 'split' ? 'w-full md:w-1/2 block' : 'hidden'}`}>
+                  <div className="bg-slate-900 px-3 py-1.5 border-b border-slate-800 flex justify-between items-center text-[11px] font-mono text-slate-400">
+                    <span className="flex items-center gap-1.5 font-bold text-emerald-400">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                      Live Output Preview
+                    </span>
+                    <span className="text-[10px] text-slate-500">Interactive IFrame</span>
+                  </div>
+                  <div className="flex-1 h-full min-h-0 bg-white">
+                    <iframe
+                      title="Live Preview Output"
+                      srcDoc={getPreviewSource()}
+                      className="w-full h-full min-h-[200px] border-0 bg-white"
+                      sandbox="allow-scripts"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           )}
