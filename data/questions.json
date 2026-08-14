@@ -925,679 +925,656 @@
     "answer": "C",
     "explanation": "The 'gap' property manages gutters between layout cells or items efficiently."
   },
-
+[
   {
     "id": 74,
     "section": "JS",
-    "q": "What is the correct way to write a JavaScript array?",
+    "q": "What is used to print messages to the web console in JavaScript?",
     "options": {
-      "A": "var colors = (1:\"red\", 2:\"green\", 3:\"blue\")",
-      "B": "var colors = [\"red\", \"green\", \"blue\"]",
-      "C": "var colors = 1 = (\"red\"), 2 = (\"green\"), 3 = (\"blue\")",
-      "D": "var colors = \"red\", \"green\", \"blue\""
+      "A": "print.log()",
+      "B": "console.log()",
+      "C": "document.write()",
+      "D": "window.print()"
     },
     "answer": "B",
-    "explanation": "JavaScript arrays are written with square brackets [] and elements are separated by commas."
+    "explanation": "console.log() is used to log or print messages to the console[cite: 2]."
   },
   {
     "id": 75,
     "section": "JS",
-    "q": "Which array method removes the last element from an array and returns that element?",
+    "q": "Which keyword is used to declare a variable that cannot be re-declared or updated?",
     "options": {
-      "A": "shift()",
-      "B": "unshift()",
-      "C": "pop()",
-      "D": "push()"
+      "A": "var",
+      "B": "let",
+      "C": "const",
+      "D": "static"
     },
     "answer": "C",
-    "explanation": "pop() removes the last element of an array and returns it. shift() removes the first element, unshift() adds to the beginning, and push() adds to the end."
+    "explanation": "const is a block-scoped variable that cannot be re-declared or updated[cite: 2]."
   },
   {
     "id": 76,
     "section": "JS",
-    "q": "Which of the following is NOT a JavaScript data type?",
+    "q": "Which of the following is a primitive data type in JavaScript?",
     "options": {
-      "A": "Undefined",
-      "B": "Number",
+      "A": "Array",
+      "B": "Object",
       "C": "Boolean",
-      "D": "Float"
+      "D": "Function"
     },
-    "answer": "D",
-    "explanation": "JavaScript has Number type which covers both integers and floating-point numbers. There is no separate Float data type in standard JavaScript types."
+    "answer": "C",
+    "explanation": "Primitive types in JavaScript include Number, String, Boolean, Undefined, Null, BigInt, and Symbol[cite: 2]."
   },
   {
     "id": 77,
     "section": "JS",
-    "q": "What is the output of console.log(typeof null)?",
+    "q": "Which symbol is used for single-line comments in JavaScript?",
     "options": {
-      "A": "\"null\"",
-      "B": "\"object\"",
-      "C": "\"undefined\"",
-      "D": "\"string\""
+      "A": "<!--",
+      "B": "/*",
+      "C": "//",
+      "D": "#"
     },
-    "answer": "B",
-    "explanation": "In JavaScript, typeof null is \"object\". This is a well-known bug in the initial implementation of JavaScript that has been preserved for backward compatibility."
+    "answer": "C",
+    "explanation": "// is used to write a single-line comment in JavaScript[cite: 3]."
   },
   {
     "id": 78,
     "section": "JS",
-    "q": "Which operator is used to compare both value and type in JavaScript?",
+    "q": "What is the exponentiation operator in JavaScript?",
     "options": {
-      "A": "==",
-      "B": "===",
-      "C": "=",
-      "D": "!="
+      "A": "^",
+      "B": "**",
+      "C": "^^",
+      "D": "pow()"
     },
     "answer": "B",
-    "explanation": "=== is the strict equality operator. It returns true only if both the value and the type of the two operands are the same."
+    "explanation": "** is used as the exponentiation operator in JavaScript[cite: 3]."
   },
   {
     "id": 79,
     "section": "JS",
-    "q": "What is the output of console.log(2 + \"2\")?",
+    "q": "Which operator returns true if two values are equal and of the same type?",
     "options": {
-      "A": "4",
-      "B": "\"22\"",
-      "C": "NaN",
-      "D": "Error"
+      "A": "==",
+      "B": "=",
+      "C": "===",
+      "D": "!="
     },
-    "answer": "B",
-    "explanation": "When a number is added to a string, JavaScript converts the number to a string and concatenates them, resulting in \"22\"."
+    "answer": "C",
+    "explanation": "=== checks for both equal value and equal type[cite: 3]."
   },
   {
     "id": 80,
     "section": "JS",
-    "q": "Which of the following is used to declare a block-scoped variable that can be reassigned?",
+    "q": "What does the ternary operator syntax look like in JavaScript?",
     "options": {
-      "A": "var",
-      "B": "const",
-      "C": "let",
-      "D": "define"
+      "A": "condition ? true : false",
+      "B": "if condition ? true",
+      "C": "condition : true ? false",
+      "D": "condition -> true : false"
     },
-    "answer": "C",
-    "explanation": "let declares a block-scoped local variable, optionally initializing it to a value. It can be reassigned, unlike const which is read-only. var is function-scoped."
+    "answer": "A",
+    "explanation": "The ternary operator uses the syntax condition ? true output : false output[cite: 3]."
   },
   {
     "id": 81,
     "section": "JS",
-    "q": "How do you write a conditional statement for executing some code if \"i\" is NOT equal to 5?",
+    "q": "Which loop checks the condition after executing the code block at least once?",
     "options": {
-      "A": "if (i <> 5)",
-      "B": "if (i != 5)",
-      "C": "if i =! 5 then",
-      "D": "if i <> 5 then"
+      "A": "for loop",
+      "B": "while loop",
+      "C": "do-while loop",
+      "D": "for-of loop"
     },
-    "answer": "B",
-    "explanation": "In JavaScript, != or !== is used to check inequality. The syntax is wrapped in parentheses, so if (i != 5) is correct."
+    "answer": "C",
+    "explanation": "A do-while loop executes the code block first and then checks the condition[cite: 4]."
   },
   {
     "id": 82,
     "section": "JS",
-    "q": "Which method converts a JSON string into a JavaScript object?",
+    "q": "What property is used to find the length of a string in JavaScript?",
     "options": {
-      "A": "JSON.stringify()",
-      "B": "JSON.parse()",
-      "C": "JSON.object()",
-      "D": "JSON.convert()"
+      "A": "size",
+      "B": "length",
+      "C": "count",
+      "D": "index"
     },
     "answer": "B",
-    "explanation": "JSON.parse() converts a JSON-formatted string into a corresponding JavaScript object/value. JSON.stringify() does the opposite (object to string)."
+    "explanation": "The length property returns the number of characters in a string[cite: 4]."
   },
   {
     "id": 83,
     "section": "JS",
-    "q": "What is the primary purpose of a Promise in JavaScript?",
+    "q": "Which string method removes whitespaces from both ends of a string?",
     "options": {
-      "A": "To create a new function scope",
-      "B": "To handle asynchronous operations",
-      "C": "To loop through array elements",
-      "D": "To store global configuration"
+      "A": "strip()",
+      "B": "trim()",
+      "C": "cut()",
+      "D": "clean()"
     },
     "answer": "B",
-    "explanation": "Promises are used to handle asynchronous operations in JavaScript, representing a value that may be available now, in the future, or never."
+    "explanation": "str.trim() is used to remove whitespaces from both ends of a string[cite: 4]."
   },
   {
     "id": 84,
     "section": "JS",
-    "q": "What is the output of console.log(0.1 + 0.2 === 0.3)?",
+    "q": "What is a sequence of characters used to represent text in JavaScript called?",
     "options": {
-      "A": "true",
-      "B": "false",
-      "C": "undefined",
-      "D": "NaN"
+      "A": "Array",
+      "B": "String",
+      "C": "Function",
+      "D": "Object"
     },
     "answer": "B",
-    "explanation": "Due to binary floating-point representation of decimals, 0.1 + 0.2 results in 0.30000000000000004, which is not strictly equal to 0.3."
+    "explanation": "A string is a sequence of characters used to represent text[cite: 4]."
   },
   {
     "id": 85,
     "section": "JS",
-    "q": "What does NaN stand for in JavaScript?",
+    "q": "Which array method adds an element to the end of an array?",
     "options": {
-      "A": "Null and None",
-      "B": "Not a Number",
-      "C": "Number Aux Null",
-      "D": "Negative and Null"
+      "A": "pop()",
+      "B": "push()",
+      "C": "shift()",
+      "D": "unshift()"
     },
     "answer": "B",
-    "explanation": "NaN stands for \"Not a Number\". It represents a computational error or undefined mathematical operation in JavaScript."
+    "explanation": "push() is used to add new elements to the end of an array[cite: 5]."
   },
   {
     "id": 86,
     "section": "JS",
-    "q": "Which keyword is used to refer to the current object in JavaScript?",
+    "q": "Which array method removes the first element from an array?",
     "options": {
-      "A": "this",
-      "B": "self",
-      "C": "object",
-      "D": "current"
+      "A": "shift()",
+      "B": "unshift()",
+      "C": "pop()",
+      "D": "slice()"
     },
     "answer": "A",
-    "explanation": "The this keyword refers to the object that the function is a method of, or the context in which it's being executed."
+    "explanation": "shift() deletes an element from the start of an array and returns it[cite: 5]."
   },
   {
     "id": 87,
     "section": "JS",
-    "q": "How do you write an arrow function that returns the square of a number?",
+    "q": "What does the map() array method do?",
     "options": {
-      "A": "x => { x * x }",
-      "B": "x => x * x",
-      "C": "function(x) { return x * x; }",
-      "D": "x => return x * x"
+      "A": "Deletes elements",
+      "B": "Creates a new array with the results of an operation",
+      "C": "Sorts the array elements",
+      "D": "Finds a single value"
     },
     "answer": "B",
-    "explanation": "An arrow function with a single parameter does not need parentheses. If it is a single expression, the return keyword and curly braces can be omitted (implicit return). Thus x => x * x is correct."
+    "explanation": "map() creates a new array with the results of calling a function for every array element[cite: 6]."
   },
   {
     "id": 88,
     "section": "JS",
-    "type": "subjective",
-    "q": "What is the difference between null and undefined in JavaScript?",
-    "options": {},
-    "answer": "",
-    "explanation": "undefined means a variable has been declared but has not yet been assigned a value. null is an assignment value that represents the intentional absence of any object value."
+    "q": "Which array method reduces the array to a single value?",
+    "options": {
+      "A": "filter()",
+      "B": "map()",
+      "C": "reduce()",
+      "D": "forEach()"
+    },
+    "answer": "C",
+    "explanation": "reduce() performs operations and reduces the array to a single value[cite: 6]."
   },
   {
     "id": 89,
     "section": "JS",
-    "type": "subjective",
-    "q": "Explain closure in JavaScript with a short code example.",
-    "options": {},
-    "answer": "",
-    "explanation": "A closure is the combination of a function bundled together with references to its surrounding state (the lexical environment). In other words, a closure gives an inner function access to the outer function's scope. Example: function outer() { let x = 10; return function inner() { console.log(x); } }"
+    "q": "What does DOM stand for in web development?",
+    "options": {
+      "A": "Document Object Model",
+      "B": "Data Object Management",
+      "C": "Document Oriented Method",
+      "D": "Digital Ordinance Model"
+    },
+    "answer": "A",
+    "explanation": "DOM stands for Document Object Model, created by the browser when a web page is loaded[cite: 7]."
   },
   {
     "id": 90,
-    "section": "React",
-    "q": "What is React?",
+    "section": "JS",
+    "q": "Which method selects an HTML element by its unique ID?",
     "options": {
-      "A": "A backend database system",
-      "B": "A CSS styling framework",
-      "C": "A JavaScript library for building user interfaces",
-      "D": "An operating system for mobile apps"
+      "A": "document.getElementsByClassName()",
+      "B": "document.getElementById()",
+      "C": "document.getElementsByTagName()",
+      "D": "document.queryAll()"
     },
-    "answer": "C",
-    "explanation": "React is an open-source front-end JavaScript library developed by Facebook for building user interfaces or UI components."
+    "answer": "B",
+    "explanation": "document.getElementById() is used to select an element using its id attribute[cite: 7]."
   },
   {
     "id": 91,
-    "section": "React",
-    "q": "What is JSX?",
+    "section": "JS",
+    "q": "Which property returns the text content of an element and all its children?",
     "options": {
-      "A": "A combination of Java and XML",
-      "B": "A syntax extension for JavaScript that looks like HTML",
-      "C": "A security protocol for React APIs",
-      "D": "A state management library"
+      "A": "tagName",
+      "B": "innerText",
+      "C": "className",
+      "D": "nodeName"
     },
     "answer": "B",
-    "explanation": "JSX stands for JavaScript XML. It allows us to write HTML-like elements inside JavaScript files, which React compiles to standard JavaScript."
+    "explanation": "innerText returns the text content of the element and all its children[cite: 7]."
   },
   {
     "id": 92,
-    "section": "React",
-    "q": "Which hook is used to add state to a functional component?",
+    "section": "JS",
+    "q": "How do you remove an element from the DOM in JavaScript?",
     "options": {
-      "A": "useEffect",
-      "B": "useContext",
-      "C": "useState",
-      "D": "useReducer"
+      "A": "node.delete()",
+      "B": "node.remove()",
+      "C": "node.clear()",
+      "D": "node.drop()"
     },
-    "answer": "C",
-    "explanation": "useState is the basic hook used to declare state variables in functional React components."
+    "answer": "B",
+    "explanation": "node.remove() is used to remove a node from the DOM[cite: 7]."
   },
   {
     "id": 93,
-    "section": "React",
-    "q": "What does useEffect do in a React component?",
+    "section": "JS",
+    "q": "Which method is used to create a new element in the DOM?",
     "options": {
-      "A": "Styles the component using CSS",
-      "B": "Performs side effects like fetching data, subscriptions, or manual DOM updates",
-      "C": "Handles form submissions automatically",
-      "D": "Prevents the component from rendering"
+      "A": "document.makeElement()",
+      "B": "document.createElement()",
+      "C": "document.newElement()",
+      "D": "document.addElement()"
     },
     "answer": "B",
-    "explanation": "useEffect lets you perform side effects in function components. It serves a similar purpose as lifecycle methods in class components (componentDidMount, componentDidUpdate, etc.)."
+    "explanation": "document.createElement() is used to create a new element node[cite: 7]."
   },
   {
     "id": 94,
-    "section": "React",
-    "q": "What is the purpose of the 'key' prop in React lists?",
+    "section": "JS",
+    "q": "What is a callback function in JavaScript?",
     "options": {
-      "A": "To encrypt list items for security",
-      "B": "To help React identify which items have changed, been added, or been removed",
-      "C": "To set CSS styles for list items",
-      "D": "To store index values in local storage"
+      "A": "A function that calls itself",
+      "B": "A function passed as an argument to another function",
+      "C": "A function that returns an error",
+      "D": "A built-in math function"
     },
     "answer": "B",
-    "explanation": "Keys help React identify which items are added, updated, or deleted. They should be given to elements inside an array to give them a stable identity."
+    "explanation": "A callback function is a function passed as an argument to another function[cite: 6]."
   },
   {
     "id": 95,
-    "section": "React",
-    "q": "What is a custom hook in React?",
+    "section": "JS",
+    "q": "Which loop is specifically designed to loop over values of iterable objects like strings or arrays?",
     "options": {
-      "A": "A CSS class that starts with 'use'",
-      "B": "A JavaScript function whose name starts with 'use' and that can call other hooks",
-      "C": "A built-in React hook for drawing canvases",
-      "D": "A deprecated lifecycle method"
+      "A": "for-in loop",
+      "B": "for-of loop",
+      "C": "while loop",
+      "D": "do-while loop"
     },
     "answer": "B",
-    "explanation": "A custom Hook is a JavaScript function whose name starts with \"use\" and that can call other Hooks. It allows you to extract component logic into reusable functions."
+    "explanation": "The for-of loop is used to iterate over iterables like arrays and strings[cite: 4]."
   },
   {
     "id": 96,
-    "section": "React",
-    "q": "How do you pass data from a parent component to a child component?",
+    "section": "JS",
+    "q": "Which symbol represents template literals in JavaScript?",
     "options": {
-      "A": "Using State",
-      "B": "Using Props",
-      "C": "Using Redux only",
-      "D": "Using context API only"
+      "A": "Single quotes ''",
+      "B": "Double quotes \"\"",
+      "C": "Backticks ``",
+      "D": "Curly braces {}"
     },
-    "answer": "B",
-    "explanation": "Props (short for properties) are inputs passed into React components. Parents pass props down to children to share data."
+    "answer": "C",
+    "explanation": "Template literals are enclosed by backticks (``) to allow embedded expressions[cite: 4]."
   },
   {
     "id": 97,
-    "section": "React",
-    "q": "What is the virtual DOM?",
+    "section": "JS",
+    "q": "What is the primary function of CSS in web development?",
     "options": {
-      "A": "A browser extension for viewing React trees",
-      "B": "A direct copy of the HTML file stored on the server",
-      "C": "A lightweight representation of the real DOM kept in memory and synced via \"reconciliation\"",
-      "D": "A security sandbox in React"
+      "A": "Structure",
+      "B": "Style",
+      "C": "Logic",
+      "D": "Database"
     },
-    "answer": "C",
-    "explanation": "The virtual DOM (VDOM) is a programming concept where an ideal, or \"virtual\", representation of a UI is kept in memory and synced with the \"real\" DOM by a library such as ReactDOM. This process is called reconciliation."
+    "answer": "B",
+    "explanation": "CSS provides styling for web pages, whereas HTML provides structure and JS provides logic[cite: 7]."
   },
   {
     "id": 98,
-    "section": "React",
-    "q": "What does useMemo do?",
+    "section": "JS",
+    "q": "Which object represents an open window in a browser and is automatically created?",
     "options": {
-      "A": "Memoizes the component to prevent any renders",
-      "B": "Caches the computed value of a function between renders to optimize performance",
-      "C": "Creates a memo reference for input fields",
-      "D": "Saves state to localStorage automatically"
+      "A": "document object",
+      "B": "window object",
+      "C": "navigator object",
+      "D": "screen object"
     },
     "answer": "B",
-    "explanation": "useMemo returns a memoized value. It recalculates the value only when one of its dependencies has changed, avoiding expensive calculations on every render."
+    "explanation": "The window object represents an open window in a browser and is a global browser object[cite: 7]."
   },
   {
     "id": 99,
-    "section": "React",
-    "q": "In React, what is the default behavior when a parent component state changes?",
+    "section": "JS",
+    "q": "Which method converts an array to a string of comma-separated values?",
     "options": {
-      "A": "Only the parent component re-renders",
-      "B": "The parent component and all of its child components re-render",
-      "C": "The page is refreshed automatically",
-      "D": "Child components do not re-render unless their props change"
+      "A": "joinString()",
+      "B": "toString()",
+      "C": "parseString()",
+      "D": "concatString()"
     },
     "answer": "B",
-    "explanation": "By default, when a parent component's state changes, React recursively re-renders all of its child components, regardless of whether their props changed."
+    "explanation": "toString() converts an array to a string of comma-separated values[cite: 5]."
   },
   {
     "id": 100,
-    "section": "React",
-    "q": "Which hook is used to access a DOM element directly in React?",
+    "section": "JS",
+    "q": "Which array method returns a piece of the array without modifying the original array?",
     "options": {
-      "A": "useState",
-      "B": "useRef",
-      "C": "useDOM",
-      "D": "useContext"
+      "A": "splice()",
+      "B": "slice()",
+      "C": "cut()",
+      "D": "shift()"
     },
     "answer": "B",
-    "explanation": "useRef returns a mutable ref object whose .current property can be initialized to point to a DOM node, allowing direct DOM access."
+    "explanation": "slice() returns a piece of the array without changing the original array[cite: 5]."
   },
   {
     "id": 101,
-    "section": "React",
-    "q": "What is the rule of hooks in React?",
+    "section": "JS",
+    "q": "Which array method can be used to add, remove, or replace elements in place?",
     "options": {
-      "A": "Hooks must be defined inside standard JavaScript loops",
-      "B": "Hooks can only be called at the top level of React functions, not inside loops or conditions",
-      "C": "Hooks must start with an uppercase letter",
-      "D": "Hooks can be called inside event handler functions"
+      "A": "slice()",
+      "B": "splice()",
+      "C": "push()",
+      "D": "concat()"
     },
     "answer": "B",
-    "explanation": "Hooks must be called at the top level of React functional components (or other custom hooks). They must not be called inside loops, conditions, or nested functions to ensure consistent hook call ordering."
+    "explanation": "splice() changes the original array by adding, removing, or replacing elements[cite: 5]."
   },
   {
     "id": 102,
-    "section": "React",
-    "q": "Which Hook is used to consume values from a React Context?",
+    "section": "JS",
+    "q": "What syntax is used for arrow functions in JavaScript?",
     "options": {
-      "A": "useConsumer",
-      "B": "useContext",
-      "C": "useState",
-      "D": "useReducer"
+      "A": "() => {}",
+      "B": "function => {}",
+      "C": "-> {}",
+      "D": "=> function {}"
     },
-    "answer": "B",
-    "explanation": "useContext accepts a context object and returns the current context value for that context, allowing easy consumption of global state."
+    "answer": "A",
+    "explanation": "Arrow functions use the compact syntax with the fat arrow (=>)[cite: 6]."
   },
   {
     "id": 103,
-    "section": "React",
-    "type": "subjective",
-    "q": "What is the difference between controlled and uncontrolled components in React?",
-    "options": {},
-    "answer": "",
-    "explanation": "In a controlled component, form data is handled by a React component state (using value and onChange). In an uncontrolled component, form data is handled by the DOM itself (using refs to pull values)."
+    "section": "JS",
+    "q": "Which method is used to filter elements from an array based on a condition?",
+    "options": {
+      "A": "map()",
+      "B": "filter()",
+      "C": "reduce()",
+      "D": "forEach()"
+    },
+    "answer": "B",
+    "explanation": "filter() creates a new array of elements that pass a given condition[cite: 6]."
   },
   {
     "id": 104,
-    "section": "React",
-    "type": "subjective",
-    "q": "What is React Context, and when should you use it?",
-    "options": {},
-    "answer": "",
-    "explanation": "React Context is a way to pass data down the component tree without having to pass props down manually at every level (prop drilling). It is ideal for global state like themes, user authentication, or language preferences."
+    "section": "JS",
+    "q": "Which scope does a variable declared with 'let' have?",
+    "options": {
+      "A": "Global scope",
+      "B": "Block scope",
+      "C": "Function scope only",
+      "D": "File scope"
+    },
+    "answer": "B",
+    "explanation": "Variables declared with 'let' have block scope[cite: 2]."
   },
   {
     "id": 105,
-    "section": "Next.js",
-    "q": "What is Next.js?",
+    "section": "JS",
+    "q": "Which scope does a variable declared with 'var' traditionally have?",
     "options": {
-      "A": "A CSS framework created by Vercel",
-      "B": "A React framework for building server-side rendered and static web applications",
-      "C": "A database query builder for SQL databases",
-      "D": "A browser extension for testing APIs"
+      "A": "Block scope",
+      "B": "Global or function scope",
+      "C": "Local block scope",
+      "D": "Constant scope"
     },
     "answer": "B",
-    "explanation": "Next.js is a React framework created by Vercel that offers building blocks like routing, rendering methods (SSR, SSG, ISR), optimization features, and API routes."
+    "explanation": "Variables declared with 'var' have global scope or function scope[cite: 2]."
   },
   {
     "id": 106,
-    "section": "Next.js",
-    "q": "What is the difference between Server Components and Client Components in Next.js App Router?",
+    "section": "JS",
+    "q": "What are containers for storing data in JavaScript called?",
     "options": {
-      "A": "Server Components cannot render HTML",
-      "B": "Server Components render on the server and do not ship JS to the browser, while Client Components are hydrated on the client",
-      "C": "Client Components can only be written in vanilla JavaScript, not JSX",
-      "D": "Next.js only supports Client Components since version 13"
+      "A": "Functions",
+      "B": "Variables",
+      "C": "Objects",
+      "D": "Methods"
     },
     "answer": "B",
-    "explanation": "In Next.js App Router, components are Server Components by default. They execute on the server, producing static HTML, saving client-side JavaScript bundle size. Client Components use 'use client' and run on the client for interactivity."
+    "explanation": "Variables are containers for data in JavaScript[cite: 2]."
   },
   {
     "id": 107,
-    "section": "Next.js",
-    "q": "Which file is used to define a route page in the App Router?",
+    "section": "JS",
+    "q": "Which of the following characters is allowed to be the first character of a variable name?",
     "options": {
-      "A": "route.js",
-      "B": "index.js",
-      "C": "page.tsx or \"page.js\"",
-      "D": "layout.tsx"
+      "A": "A number like 9",
+      "B": "An underscore (_)",
+      "C": "A hyphen (-)",
+      "D": "An asterisk (*)"
     },
-    "answer": "C",
-    "explanation": "In the App Router, files named page.js, page.jsx, or page.tsx are used to define the UI for a specific route."
+    "answer": "B",
+    "explanation": "Variable names can start with a letter, an underscore (_), or a dollar sign ($)[cite: 2]."
   },
   {
     "id": 108,
-    "section": "Next.js",
-    "q": "How do you mark a component as a Client Component in Next.js?",
+    "section": "JS",
+    "q": "Which arithmetic operator represents the remainder after division?",
     "options": {
-      "A": "Name the file with .client.js",
-      "B": "Put 'use client' directive at the very top of the file",
-      "C": "Wrap the component in a ClientSide wrapper",
-      "D": "Extend React.ClientComponent"
+      "A": "Division (/)",
+      "B": "Modulus (%)",
+      "C": "Exponentiation (**)",
+      "D": "Increment (++)"
     },
     "answer": "B",
-    "explanation": "The 'use client' directive is a convention to declare a boundary between Server and Client Component modules. It is placed at the top of a file, before imports."
+    "explanation": "The modulus operator (%) returns the division remainder[cite: 3]."
   },
   {
     "id": 109,
-    "section": "Next.js",
-    "q": "What is SSR (Server-Side Rendering) in Next.js?",
+    "section": "JS",
+    "q": "Which assignment operator adds a value to a variable and assigns the result to it?",
     "options": {
-      "A": "The browser compiles all React code into HTML on the fly",
-      "B": "Pages are rendered on the server for each user request, returning HTML and JSON data",
-      "C": "Next.js builds the entire site into static files during compilation time only",
-      "D": "A rendering method where CSS is loaded before JavaScript"
+      "A": "-=",
+      "B": "+=",
+      "C": "*=",
+      "D": "/="
     },
     "answer": "B",
-    "explanation": "Server-Side Rendering (SSR) means rendering components on the server for every incoming request. The server responds with dynamic HTML, which is then hydrated in the browser."
+    "explanation": "The += assignment operator adds the right operand to the left variable[cite: 3]."
   },
   {
     "id": 110,
-    "section": "Next.js",
-    "q": "What is the role of layout.js in Next.js?",
+    "section": "JS",
+    "q": "What is the logical operator for 'Logical AND'?",
     "options": {
-      "A": "It defines the layout styles in Tailwind CSS",
-      "B": "It is a file to define shared UI that is preserved across navigations and does not re-render",
-      "C": "It is a script for database migrations",
-      "D": "It redirects users to different routes"
+      "A": "&&",
+      "B": "||",
+      "C": "!",
+      "D": "&"
     },
-    "answer": "B",
-    "explanation": "A layout is UI shared between multiple routes. Layouts preserve state, remain interactive, and do not re-render during navigation."
+    "answer": "A",
+    "explanation": "&& represents Logical AND in JavaScript[cite: 3]."
   },
   {
     "id": 111,
-    "section": "Next.js",
-    "q": "Which component is used in Next.js for optimized client-side navigation?",
+    "section": "JS",
+    "q": "What is the logical operator for 'Logical NOT'?",
     "options": {
-      "A": "<a>",
-      "B": "<Link> from next/link",
-      "C": "<Navigation>",
-      "D": "<Route>"
+      "A": "&",
+      "B": "|",
+      "C": "!",
+      "D": "~"
     },
-    "answer": "B",
-    "explanation": "<Link> is a React component that extends the HTML <a> element to provide prefetching and client-side navigation between routes."
+    "answer": "C",
+    "explanation": "! represents Logical NOT in JavaScript[cite: 3]."
   },
   {
     "id": 112,
-    "section": "Next.js",
-    "q": "How do you create dynamic routes in the Next.js App Router?",
+    "section": "JS",
+    "q": "Which conditional statement is used to test multiple conditions sequentially after an 'if' statement?",
     "options": {
-      "A": "By defining a wildcard in routes.json",
-      "B": "By wrapping a folder name in square brackets, e.g., [id]",
-      "C": "By using query parameters like ?id=123",
-      "D": "By calling router.push('/dynamic')"
+      "A": "else if",
+      "B": "switch if",
+      "C": "then if",
+      "D": "case if"
     },
-    "answer": "B",
-    "explanation": "Dynamic segments can be created by wrapping a folder's name in square brackets: [folderName]. For example, [id] or [slug]."
+    "answer": "A",
+    "explanation": "else-if statements are used to test multiple conditions sequentially[cite: 3]."
   },
   {
     "id": 113,
-    "section": "Next.js",
-    "q": "What is the purpose of the next/image component?",
+    "section": "JS",
+    "q": "Which method converts a string to uppercase letters?",
     "options": {
-      "A": "To apply filters to images automatically",
-      "B": "To optimize images with automatic resizing, modern formats (WebP/AVIF), and lazy loading",
-      "C": "To host images on Vercel's database",
-      "D": "To display SVGs as inline code"
+      "A": "toUpperCase()",
+      "B": "toUpper()",
+      "C": "capsLock()",
+      "D": "upperCase()"
     },
-    "answer": "B",
-    "explanation": "The Next.js Image component extends the HTML <img> element with features for automatic image optimization (correct sizing, preventing layout shifts, modern formats, and lazy loading)."
+    "answer": "A",
+    "explanation": "toUpperCase() is a built-in string method used to convert text to uppercase[cite: 4]."
   },
   {
     "id": 114,
-    "section": "Next.js",
-    "q": "Which Next.js feature allows you to update static pages in the background without rebuilding the entire site?",
+    "section": "JS",
+    "q": "Which method joins two strings together?",
     "options": {
-      "A": "Server-Side Rendering (SSR)",
-      "B": "Incremental Static Regeneration (ISR)",
-      "C": "Client-Side Hydration (CSH)",
-      "D": "Hot Module Replacement (HMR)"
+      "A": "append()",
+      "B": "concat()",
+      "C": "join()",
+      "D": "merge()"
     },
     "answer": "B",
-    "explanation": "Incremental Static Regeneration (ISR) enables you to use static generation on a per-page basis, without needing to rebuild the entire site. Pages can be regenerated in the background as traffic comes in."
+    "explanation": "str1.concat(str2) joins strings together[cite: 4]."
   },
   {
     "id": 115,
-    "section": "Next.js",
-    "q": "How do you fetch data on the server in Next.js App Router?",
+    "section": "JS",
+    "q": "How do you access the first element of an array named 'marks'?",
     "options": {
-      "A": "Using getStaticProps inside the component",
-      "B": "Using standard async/await directly in Server Components",
-      "C": "Calling useFetch inside useEffect",
-      "D": "Using getServerSideProps only"
+      "A": "marks[1]",
+      "B": "marks[0]",
+      "C": "marks.first()",
+      "D": "marks.get(0)"
     },
     "answer": "B",
-    "explanation": "Since Next.js App Router uses React Server Components, you can fetch data directly in Server Components by making them async functions and using await fetch()."
+    "explanation": "Array indices start at 0, so marks[0] accesses the first element[cite: 5]."
   },
   {
     "id": 116,
-    "section": "Next.js",
-    "q": "What does the file route.js (or route.ts) do in Next.js?",
+    "section": "JS",
+    "q": "Which method adds one or more elements to the beginning of an array?",
     "options": {
-      "A": "Defines page styling rules",
-      "B": "Defines custom API endpoints using Route Handlers",
-      "C": "Configures routing redirects",
-      "D": "Runs client-side service workers"
+      "A": "push()",
+      "B": "unshift()",
+      "C": "shift()",
+      "D": "pop()"
     },
     "answer": "B",
-    "explanation": "Route Handlers allow you to create custom request handlers for a given route using the Web Request and Response APIs. They are defined in route.js files."
+    "explanation": "unshift() adds elements to the start of an array[cite: 5]."
   },
   {
     "id": 117,
-    "section": "Next.js",
-    "q": "What is the default port for Next.js when running next dev?",
+    "section": "JS",
+    "q": "Which loop method executes a callback function for each element in an array without returning a new array?",
     "options": {
-      "A": "8080",
-      "B": "5000",
-      "C": "3000",
-      "D": "8000"
+      "A": "map()",
+      "B": "filter()",
+      "C": "forEach()",
+      "D": "reduce()"
     },
     "answer": "C",
-    "explanation": "Next.js uses port 3000 by default when running in development mode."
+    "explanation": "arr.forEach() executes a callback function for each element in an array[cite: 6]."
   },
   {
     "id": 118,
-    "section": "Next.js",
-    "type": "subjective",
-    "q": "What is the difference between next dev and next build?",
-    "options": {},
-    "answer": "",
-    "explanation": "next dev starts Next.js in development mode with hot-code reloading, error reporting, and fast refresh. next build compiles and builds the application for production, optimizing code and generating static pages."
+    "section": "JS",
+    "q": "Which HTML tag is used to write JavaScript code directly inside an HTML file?",
+    "options": {
+      "A": "<js>",
+      "B": "<script>",
+      "C": "<code>",
+      "D": "<javascript>"
+    },
+    "answer": "B",
+    "explanation": "The <script> tag connects HTML with JavaScript code[cite: 7]."
   },
   {
     "id": 119,
-    "section": "Next.js",
-    "type": "subjective",
-    "q": "What is hydration in the context of React and Next.js?",
-    "options": {},
-    "answer": "",
-    "explanation": "Hydration is the process of attaching event listeners and React state to the server-rendered static HTML that was sent to the browser. This makes the static page fully interactive."
+    "section": "JS",
+    "q": "Which method selects multiple elements matching a CSS selector as a NodeList?",
+    "options": {
+      "A": "document.querySelector()",
+      "B": "document.querySelectorAll()",
+      "C": "document.getElementList()",
+      "D": "document.findElementsByClass()"
+    },
+    "answer": "B",
+    "explanation": "document.querySelectorAll() returns all matching elements as a NodeList[cite: 7]."
   },
   {
     "id": 120,
-    "section": "HTML",
-    "type": "drag-and-drop",
-    "q": "Complete the anchor tag to make the link open in a new tab.",
-    "code": "<a href=\"https://google.com\" target=\"[BLANK]\">Visit Google</a>",
-    "options": ["_self", "_blank", "_parent", "_top"],
-    "answer": "_blank",
-    "explanation": "The target=\"_blank\" attribute opens the linked document in a new window or tab."
+    "section": "JS",
+    "q": "Which method adds an element at the end of a node inside it?",
+    "options": {
+      "A": "node.prepend()",
+      "B": "node.append()",
+      "C": "node.before()",
+      "D": "node.after()"
+    },
+    "answer": "B",
+    "explanation": "node.append() adds an element at the end of a node from the inside[cite: 7]."
   },
   {
     "id": 121,
-    "section": "HTML",
-    "type": "drag-and-drop",
-    "q": "Complete the image tag to specify the image source file path.",
-    "code": "<img [BLANK]=\"logo.png\" alt=\"Logo\">",
-    "options": ["href", "src", "link", "source"],
-    "answer": "src",
-    "explanation": "The src (source) attribute specifies the path to the image to be displayed."
+    "section": "JS",
+    "q": "Which method adds an element right before a node from the outside?",
+    "options": {
+      "A": "node.before()",
+      "B": "node.append()",
+      "C": "node.prepend()",
+      "D": "node.after()"
+    },
+    "answer": "A",
+    "explanation": "node.before() adds an element before the node from the outside[cite: 7]."
   },
   {
     "id": 122,
-    "section": "CSS",
-    "type": "drag-and-drop",
-    "q": "Complete the CSS rule to align flex items horizontally in the center.",
-    "code": ".container {\n  display: flex;\n  [BLANK]: center;\n}",
-    "options": ["align-items", "justify-content", "flex-direction", "align-content"],
-    "answer": "justify-content",
-    "explanation": "justify-content is used to align flex items along the main axis (horizontally by default)."
+    "section": "JS",
+    "q": "What does the 'typeof' operator do in JavaScript?",
+    "options": {
+      "A": "Checks variable name",
+      "B": "Returns the data type of a value or variable",
+      "C": "Changes the data type",
+      "D": "Deletes the variable type"
+    },
+    "answer": "B",
+    "explanation": "The typeof operator evaluates and returns the data type of its operand."
   },
   {
     "id": 123,
-    "section": "CSS",
-    "type": "drag-and-drop",
-    "q": "Complete the CSS rule to make the border corners rounded by 8 pixels.",
-    "code": ".box {\n  border-[BLANK]: 8px;\n}",
-    "options": ["radius", "corner", "round", "radius-corner"],
-    "answer": "radius",
-    "explanation": "The border-radius CSS property rounds the corners of an element's outer border edge."
-  },
-  {
-    "id": 124,
     "section": "JS",
-    "type": "drag-and-drop",
-    "q": "Complete the code to import a default export from a module named 'utils'.",
-    "code": "[BLANK] formatName from './utils';",
-    "options": ["import", "require", "export", "include"],
-    "answer": "import",
-    "explanation": "The 'import' statement is used to import read-only live bindings which are exported by another module."
-  },
-  {
-    "id": 125,
-    "section": "JS",
-    "type": "drag-and-drop",
-    "q": "Complete the promise chain to convert the fetch response to a JavaScript object.",
-    "code": "fetch('/api/users')\n  .then(res => res.[BLANK]())\n  .then(data => console.log(data));",
-    "options": ["json", "text", "parse", "object"],
-    "answer": "json",
-    "explanation": "The Response.json() method of the Fetch API takes a Response stream and reads it to completion, returning a promise that resolves with the result of parsing the body text as JSON."
-  },
-  {
-    "id": 126,
-    "section": "React",
-    "type": "drag-and-drop",
-    "q": "Complete the hook to run a side-effect only once when the component mounts.",
-    "code": "useEffect(() => {\n  console.log('Mounted!');\n}, [BLANK]);",
-    "options": ["[]", "[props]", "null", "undefined"],
-    "answer": "[]",
-    "explanation": "An empty dependency array [] tells React to execute the effect function only once when the component mounts."
-  },
-  {
-    "id": 127,
-    "section": "React",
-    "type": "drag-and-drop",
-    "q": "Complete the code to create a mutable reference to hold a DOM node.",
-    "code": "const inputRef = [BLANK](null);\n\nreturn <input ref={inputRef} />;",
-    "options": ["useState", "useRef", "useMemo", "useCallback"],
-    "answer": "useRef",
-    "explanation": "useRef returns a mutable ref object whose .current property is initialized to the passed argument (null). It persists across renders."
-  },
-  {
-    "id": 128,
-    "section": "Next.js",
-    "type": "drag-and-drop",
-    "q": "Add the correct directive to mark a file as a Client Component in Next.js.",
-    "code": "'[BLANK]';\n\nimport { useState } from 'react';",
-    "options": ["use client", "use server", "client side", "use static"],
-    "answer": "use client",
-    "explanation": "The 'use client' directive is placed at the top of a file to declare a boundary between Server and Client Component modules."
-  },
-  {
-    "id": 129,
-    "section": "Next.js",
-    "type": "drag-and-drop",
-    "q": "Identify the file name inside the app router to define a route layout.",
-    "code": "app/dashboard/[BLANK].tsx",
-    "options": ["page", "layout", "template", "route"],
-    "answer": "layout",
-    "explanation": "A layout.js/layout.tsx file defines UI that is shared between multiple pages in Next.js App Router."
+    "q": "Which function is used to get input from a user via a popup dialog in browser JavaScript?",
+    "options": {
+      "A": "alert()",
+      "B": "prompt()",
+      "C": "input()",
+      "D": "scan()"
+    },
+    "answer": "B",
+    "explanation": "prompt() is used to get input from a user using a dialog box[cite: 4]."
   }
+]
 ]
