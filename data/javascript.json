@@ -1,0 +1,376 @@
+[
+  {
+    "id": 1,
+    "section": "JS",
+    "type": "quiz",
+    "q": "Which keyword is used to declare a block-scoped variable that can be updated but not re-declared?",
+    "options": {
+      "A": "var",
+      "B": "let",
+      "C": "const",
+      "D": "static"
+    },
+    "answer": "B",
+    "explanation": "let is block-scoped and allows updates but prevents re-declaration in the same scope."
+  },
+  {
+    "id": 2,
+    "section": "JS",
+    "type": "quiz",
+    "q": "What data type is returned by JavaScript when a variable is declared using 'let x;' but no value is assigned yet?",
+    "options": {
+      "A": "null",
+      "B": "undefined",
+      "C": "NaN",
+      "D": "object"
+    },
+    "answer": "B",
+    "explanation": "An uninitialized variable automatically holds the default value of undefined."
+  },
+  {
+    "id": 3,
+    "section": "JS",
+    "type": "quiz",
+    "q": "Which arithmetic operator calculates the remainder in JavaScript division?",
+    "options": {
+      "A": "/",
+      "B": "%",
+      "C": "**",
+      "D": "++"
+    },
+    "answer": "B",
+    "explanation": "The modulus operator (%) returns the division remainder."
+  },
+  {
+    "id": 4,
+    "section": "JS",
+    "type": "quiz",
+    "q": "Which operator is used for exponentiation (raising a number to a power)?",
+    "options": {
+      "A": "^",
+      "B": "**",
+      "C": "pow()",
+      "D": "exp()"
+    },
+    "answer": "B",
+    "explanation": "** is the official exponentiation operator in JavaScript."
+  },
+  {
+    "id": 5,
+    "section": "JS",
+    "type": "quiz",
+    "q": "What does the strict equality operator (===) check?",
+    "options": {
+      "A": "Only value equality",
+      "B": "Only data type equality",
+      "C": "Both equal value and equal data type",
+      "D": "Memory address equality"
+    },
+    "answer": "C",
+    "explanation": "=== checks that both the value and the data type match without type conversion."
+  },
+  {
+    "id": 6,
+    "section": "JS",
+    "type": "quiz",
+    "q": "Which assignment operator is shorthand for `x = x + 5`?",
+    "options": {
+      "A": "x += 5",
+      "B": "x =+ 5",
+      "C": "x ++ 5",
+      "D": "x + 5"
+    },
+    "answer": "A",
+    "explanation": "The compound assignment operator += adds the right value to the variable and assigns it."
+  },
+  {
+    "id": 7,
+    "section": "JS",
+    "type": "quiz",
+    "q": "What is the primary difference between `let` and `const`?",
+    "options": {
+      "A": "const variables can be re-assigned, let cannot",
+      "B": "let variables can be re-assigned, const cannot be re-assigned",
+      "C": "const is used for numbers only, let for strings",
+      "D": "There is no difference"
+    },
+    "answer": "B",
+    "explanation": "const creates a fixed constant reference that cannot be changed after assignment."
+  },
+  {
+    "id": 8,
+    "section": "JS",
+    "type": "quiz",
+    "q": "Which comparison operator means 'strictly not equal to' (checking both value and type)?",
+    "options": {
+      "A": "!=",
+      "B": "!==",
+      "C": "<>",
+      "D": "!==="
+    },
+    "answer": "B",
+    "explanation": "!== ensures that either the values are different or their data types differ."
+  },
+  {
+    "id": 9,
+    "section": "JS",
+    "type": "quiz",
+    "q": "Which of the following is a valid boolean value in JavaScript?",
+    "options": {
+      "A": "\"true\"",
+      "B": "True",
+      "C": "true",
+      "D": "1"
+    },
+    "answer": "C",
+    "explanation": "true (lowercase without quotes) is a primitive boolean value."
+  },
+  {
+    "id": 10,
+    "section": "JS",
+    "type": "quiz",
+    "q": "What will `typeof 42` evaluate to in JavaScript?",
+    "options": {
+      "A": "integer",
+      "B": "number",
+      "C": "float",
+      "D": "string"
+    },
+    "answer": "B",
+    "explanation": "JavaScript groups all numbers (integers and decimals) under the 'number' data type."
+  },
+  {
+    "id": 11,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Write code in the editor to declare a constant variable named `score` with value `100` and print it using `console.log(score);`.",
+    "starterCode": "// Type your code here\n",
+    "answer": "const score = 100;\nconsole.log(score);",
+    "explanation": "Declares a constant and logs it to the console."
+  },
+  {
+    "id": 12,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Write code using compound assignment to subtract `15` from an existing variable named `balance`.",
+    "starterCode": "let balance = 100;\n// Subtract 15 using assignment operator\n",
+    "answer": "balance -= 15;",
+    "explanation": "The `-=` operator subtracts and updates the variable value."
+  },
+  {
+    "id": 13,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Write code to perform a post-increment operation on variable `x` (initialized to 10) and store the result in `y`.",
+    "starterCode": "let x = 10;\nlet y = \n",
+    "answer": "x++",
+    "explanation": "Post-increment `x++` assigns value first then increments."
+  },
+  {
+    "id": 14,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Write a pre-increment statement to increase variable `count` by 1 before using its value.",
+    "starterCode": "let count = 5;\nlet total = \n",
+    "answer": "++count",
+    "explanation": "Pre-increment `++count` increments the value before evaluation."
+  },
+  {
+    "id": 15,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Write code to calculate 2 raised to the power of 4 using the exponentiation operator and log it.",
+    "starterCode": "// Use exponentiation operator\n",
+    "answer": "console.log(2 ** 4);",
+    "explanation": "The `**` operator handles exponentiation."
+  },
+  {
+    "id": 16,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Write code to check if `age` (value 20) is greater than or equal to 18, storing the boolean in `isAdult`.",
+    "starterCode": "let age = 20;\n",
+    "answer": "let isAdult = age >= 18;",
+    "explanation": "Comparison operator `>=` checks greater or equal."
+  },
+  {
+    "id": 17,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Write code to find the remainder when 17 is divided by 5 and store it in `remainder`.",
+    "starterCode": "let remainder = \n",
+    "answer": "17 % 5",
+    "explanation": "Modulus operator `%` returns division remainder."
+  },
+  {
+    "id": 18,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Write code to multiply a variable `price` (value 50) by 2 using a compound assignment operator.",
+    "starterCode": "let price = 50;\n",
+    "answer": "price *= 2;",
+    "explanation": "Compound assignment `*=` multiplies and assigns."
+  },
+  {
+    "id": 19,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Write a strict equality comparison check between number `10` and string `\"10\"` inside a console log.",
+    "starterCode": "// Write console.log with strict equality\n",
+    "answer": "console.log(10 === \"10\");",
+    "explanation": "Strict equality `===` checks both value and type."
+  },
+  {
+    "id": 20,
+    "section": "JS",
+    "type": "short_code",
+    "q": "Write code using the decrement operator to reduce variable `lives` by 1.",
+    "starterCode": "let lives = 3;\n",
+    "answer": "lives--;",
+    "explanation": "Decrement operator `--` decreases value by 1."
+  },
+  {
+    "id": 21,
+    "section": "JS",
+    "type": "drag_drop",
+    "q": "Match the arithmetic operation with its correct symbol.",
+    "dragItems": ["Addition", "Modulus", "Exponentiation", "Decrement"],
+    "dropZones": ["+", "%", "**", "--"],
+    "answer": {
+      "Addition": "+",
+      "Modulus": "%",
+      "Exponentiation": "**",
+      "Decrement": "--"
+    },
+    "explanation": "Correct mapping of operators to their functional names."
+  },
+  {
+    "id": 22,
+    "section": "JS",
+    "type": "drag_drop",
+    "q": "Match the variable declaration keywords with their characteristics.",
+    "dragItems": ["const", "let", "var"],
+    "dropZones": ["Block-scoped, immutable reference", "Block-scoped, mutable", "Function/Global scoped, mutable"],
+    "answer": {
+      "const": "Block-scoped, immutable reference",
+      "let": "Block-scoped, mutable",
+      "var": "Function/Global scoped, mutable"
+    },
+    "explanation": "Matching keywords to their scope and assignment rules."
+  },
+  {
+    "id": 23,
+    "section": "JS",
+    "type": "drag_drop",
+    "q": "Match the assignment shortcuts with their expanded expressions.",
+    "dragItems": ["x += 5", "x -= 3", "x *= 2", "x /= 4"],
+    "dropZones": ["x = x + 5", "x = x - 3", "x = x * 2", "x = x / 4"],
+    "answer": "x += 5 -> x = x + 5, x -= 3 -> x = x - 3, x *= 2 -> x = x * 2, x /= 4 -> x = x / 4",
+    "explanation": "Assignment operators mapped to their expanded arithmetic form."
+  },
+  {
+    "id": 24,
+    "section": "JS",
+    "type": "drag_drop",
+    "q": "Match the comparison operators with their definitions.",
+    "dragItems": ["===", "!==", ">=", "<="],
+    "dropZones": ["Strict Equal", "Strict Not Equal", "Greater than or equal", "Less than or equal"],
+    "answer": {
+      "===": "Strict Equal",
+      "!==": "Strict Not Equal",
+      ">=": "Greater than or equal",
+      "<=": "Less than or equal"
+    },
+    "explanation": "Comparison operators matched with textual logic descriptions."
+  },
+  {
+    "id": 25,
+    "section": "JS",
+    "type": "drag_drop",
+    "q": "Match the primitive data types with valid sample values.",
+    "dragItems": ["Number", "String", "Boolean", "Undefined"],
+    "dropZones": ["42", "\"Hello JS\"", "true", "unassigned variable value"],
+    "answer": {
+      "Number": "42",
+      "String": "\"Hello JS\"",
+      "Boolean": "true",
+      "Undefined": "unassigned variable value"
+    },
+    "explanation": "Mapping primitive types to their standard representation."
+  },
+  {
+    "id": 26,
+    "section": "JS",
+    "type": "drag_drop",
+    "q": "Match the increment and decrement types correctly.",
+    "dragItems": ["++x", "x++", "--x", "x--"],
+    "dropZones": ["Pre-increment", "Post-increment", "Pre-decrement", "Post-decrement"],
+    "answer": {
+      "++x": "Pre-increment",
+      "x++": "Post-increment",
+      "--x": "Pre-decrement",
+      "x--": "Post-decrement"
+    },
+    "explanation": "Differentiating pre and post order execution styles."
+  },
+  {
+    "id": 27,
+    "section": "JS",
+    "type": "drag_drop",
+    "q": "Match the logical/comparison terms with their evaluation types.",
+    "dragItems": ["Loose Equality", "Strict Equality", "Modulus", "Exponent"],
+    "dropZones": ["==", "===", "%", "**"],
+    "answer": {
+      "Loose Equality": "==",
+      "Strict Equality": "===",
+      "Modulus": "%",
+      "Exponent": "**"
+    },
+    "explanation": "Matching conceptual descriptions to exact operator tokens."
+  },
+  {
+    "id": 28,
+    "section": "JS",
+    "type": "drag_drop",
+    "q": "Match the code action with the correct operator keyword or symbol.",
+    "dragItems": ["Add and assign", "Subtract and assign", "Multiply and assign", "Power calculation"],
+    "dropZones": ["+=", "-=", "*=", "**="],
+    "answer": {
+      "Add and assign": "+=",
+      "Subtract and assign": "-=",
+      "Multiply and assign": "*=",
+      "Power calculation": "**="
+    },
+    "explanation": "Linking assignment actions to compound assignment symbols."
+  },
+  {
+    "id": 29,
+    "section": "JS",
+    "type": "drag_drop",
+    "q": "Match the data type concept with its description.",
+    "dragItems": ["typeof operator", "Boolean values", "Undefined type", "Number type"],
+    "dropZones": ["Returns type string", "true or false", "Declared but unassigned", "Integers & floats"],
+    "answer": {
+      "typeof operator": "Returns type string",
+      "Boolean values": "true or false",
+      "Undefined type": "Declared but unassigned",
+      "Number type": "Integers & floats"
+    },
+    "explanation": "Core data type concepts matched with accurate definitions."
+  },
+  {
+    "id": 30,
+    "section": "JS",
+    "type": "drag_drop",
+    "q": "Match the basic JavaScript syntax tokens.",
+    "dragItems": ["Single-line comment", "Variable declaration keyword", "Strict check", "Not equal check"],
+    "dropZones": ["//", "let", "===", "!=="],
+    "answer": {
+      "Single-line comment": "//",
+      "Variable declaration keyword": "let",
+      "Strict check": "===",
+      "Not equal check": "!=="
+    },
+    "explanation": "Basic JS syntax elements mapped correctly."
+  }
+]

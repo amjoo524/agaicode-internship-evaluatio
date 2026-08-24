@@ -16,8 +16,15 @@ const categories = [
 
 export default function StartScreen({
   studentName, setStudentName, selectedCategory, setSelectedCategory,
-  questionLimit, setQuestionLimit, selfRating, setSelfRating, onStart
+  questionLimit, setQuestionLimit, selfRating, setSelfRating, onStart, onStartQuiz
 }) {
+  const handleStartSubmit = (e) => {
+    e.preventDefault();
+    const startFn = onStart || onStartQuiz;
+    if (typeof startFn === 'function') {
+      startFn();
+    }
+  };
   return (
     <div className="min-h-screen w-full bg-[#020617] text-slate-200 flex flex-col lg:flex-row m-0 p-0">
       
@@ -57,7 +64,7 @@ export default function StartScreen({
 
       {/* right side - form full height */}
       <div className="w-full lg:w-1/2 p-8 lg:p-20 flex flex-col justify-center bg-[#020617]">
-        <form onSubmit={(e) => { e.preventDefault(); onStart(); }} className="space-y-8 max-w-2xl w-full mx-auto">
+        <form onSubmit={handleStartSubmit} className="space-y-8 max-w-2xl w-full mx-auto">
           
           {/* New Header for the form side */}
           <div className="mb-2">

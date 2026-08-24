@@ -925,7 +925,6 @@
     "answer": "C",
     "explanation": "The 'gap' property manages gutters between layout cells or items efficiently."
   },
-[
   {
     "id": 74,
     "section": "JS",
@@ -1576,5 +1575,4 @@
     "answer": "B",
     "explanation": "prompt() is used to get input from a user using a dialog box[cite: 4]."
   }
-]
 ]

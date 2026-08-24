@@ -112,12 +112,33 @@ export default function TeacherDashboard({ userProfile }: { userProfile: any }) 
     setQuestionsBreakdown([]);
 
     try {
-      const res = await fetch('/api/questions');
-      if (!res.ok) throw new Error('Failed to fetch questions');
-      const questionsData = await res.json();
+      let questionsData: any[] = [];
+      if (submission.category === 'JS') {
+        const res = await fetch('/api/javascriptQuestions');
+        if (!res.ok) throw new Error('Failed to fetch JS questions');
+        questionsData = await res.json();
+      } else if (submission.category === 'English') {
+        const res = await fetch('/api/englishQuestions');
+        if (!res.ok) throw new Error('Failed to fetch English questions');
+        questionsData = await res.json();
+      } else if (submission.category === 'ALL') {
+        const [qRes, engRes, jsRes] = await Promise.all([
+          fetch('/api/questions'),
+          fetch('/api/englishQuestions'),
+          fetch('/api/javascriptQuestions'),
+        ]);
+        const q = qRes.ok ? await qRes.json() : [];
+        const eng = engRes.ok ? await engRes.json() : [];
+        const js = jsRes.ok ? await jsRes.json() : [];
+        questionsData = [...q, ...eng, ...js];
+      } else {
+        const res = await fetch('/api/questions');
+        if (!res.ok) throw new Error('Failed to fetch questions');
+        questionsData = await res.json();
+      }
 
       const categoryQuestions = (questionsData || []).filter(
-        (q: any) => q.section === submission.category
+        (q: any) => submission.category === 'ALL' ? true : q.section === submission.category || (submission.category === 'JS' && (!q.section || q.section === 'JS'))
       );
 
       const limited = categoryQuestions.slice(0, submission.total_questions);

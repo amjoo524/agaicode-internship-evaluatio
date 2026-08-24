@@ -10,8 +10,6 @@ import ResultScreen from '../components/ResultScreen';
 import LockScreen from '../components/LockScreen';
 import TeacherDashboard from '../components/TeacherDashboard';
 
-const MAX_WARNINGS = 5;
-
 export default function Home() {
   const [user, setUser] = useState<any>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
@@ -40,11 +38,6 @@ export default function Home() {
     submissionSavedRef.current = false;
   };
 
-  const [tabSwitchCount, setTabSwitchCount] = useState(0);
-  const [showWarning, setShowWarning] = useState(false);
-  const [warningMessage, setWarningMessage] = useState('');
-  const [isExamLocked, setIsExamLocked] = useState(false);
-
   const checkUserStatus = useCallback(async (currentUser: any) => {
     if (!currentUser) {
       setUserProfile(null);
@@ -53,9 +46,7 @@ export default function Home() {
     }
 
     const adminEmail = (process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'sahkoo524@gmail.com').toLowerCase();
-    const isTeacher = currentUser.email?.toLowerCase() === adminEmail || currentUser.user_metadata?.role === 'teacher';
 
-    // Synchronously set initial profile state so the correct role component mounts immediately with 0ms delay!
     const initialProfile = {
       id: currentUser.id,
       email: currentUser.email,
@@ -141,26 +132,43 @@ export default function Home() {
     return () => subscription.unsubscribe();
   }, [checkUserStatus]);
 
+  const fetchCategoryQuestions = useCallback(async (category: string) => {
+    if (category === 'JS') {
+      const res = await fetch('/api/javascriptQuestions');
+      if (!res.ok) throw new Error('Could not establish connection to JavaScript Questions API.');
+      return await res.json();
+    } else if (category === 'English') {
+      const res = await fetch('/api/englishQuestions');
+      if (!res.ok) throw new Error('Could not establish connection to English Questions API.');
+      return await res.json();
+    } else if (category === 'ALL') {
+      const [techRes, engRes, jsRes] = await Promise.all([
+        fetch('/api/questions'),
+        fetch('/api/englishQuestions'),
+        fetch('/api/javascriptQuestions'),
+      ]);
+      const tech = techRes.ok ? await techRes.json() : [];
+      const eng = engRes.ok ? await engRes.json() : [];
+      const js = jsRes.ok ? await jsRes.json() : [];
+      return [...tech, ...eng, ...js];
+    } else {
+      const res = await fetch('/api/questions');
+      if (!res.ok) throw new Error('Could not establish connection to Academy Questions API.');
+      return await res.json();
+    }
+  }, []);
+
   useEffect(() => {
-    Promise.all([
-      fetch('/api/questions').then((res) => {
-        if (!res.ok) throw new Error('Could not establish connection to the Academy API.');
-        return res.json();
-      }),
-      fetch('/api/englishQuestions').then((res) => {
-        if (!res.ok) throw new Error('Could not establish connection to the English Questions API.');
-        return res.json();
-      }),
-    ])
-      .then(([techQuestions, englishQuestions]) => {
-        setQuizQuestions([...techQuestions, ...englishQuestions]);
+    fetchCategoryQuestions('ALL')
+      .then((allQuestions) => {
+        setQuizQuestions(allQuestions);
         setLoading(false);
       })
       .catch((err) => {
         setError(err.message || 'An unexpected error occurred.');
         setLoading(false);
       });
-  }, []);
+  }, [fetchCategoryQuestions]);
 
   const shuffleArray = (array: any[]) => {
     const arr = [...array];
@@ -171,15 +179,18 @@ export default function Home() {
     return arr;
   };
 
-  const quizData = activeQuizQuestions;
+  const isTeacher = userProfile?.role === 'teacher';
+
+  const quizData = activeQuizQuestions.length > 0 ? activeQuizQuestions : quizQuestions;
 
   const saveSubmissionToSupabase = useCallback(
     async (finalScore: number, questionsCount: number) => {
-      if (!user) return;
       if (submissionSavedRef.current) return;
-      submissionSavedRef.current = true;
+      if (!user || userProfile?.role === 'teacher') return;
 
+      submissionSavedRef.current = true;
       const nowISO = new Date().toISOString();
+
       const payload = {
         user_id: user.id,
         score: finalScore,
@@ -188,7 +199,7 @@ export default function Home() {
         student_name: studentName || userProfile?.full_name || user.email,
         category: selectedCategory,
         self_rating: selfRating,
-        tab_switch_count: tabSwitchCount,
+        tab_switch_count: 0,
       };
 
       try {
@@ -211,7 +222,7 @@ export default function Home() {
         console.error('Failed to record test submission:', err);
       }
     },
-    [user, studentName, userProfile, selectedCategory, selfRating, tabSwitchCount]
+    [user, studentName, userProfile, selectedCategory, selfRating]
   );
 
   const handleFinalSubmit = useCallback(() => {
@@ -219,8 +230,18 @@ export default function Home() {
     setStep('start');
   }, [saveSubmissionToSupabase, score, quizData]);
 
-  const checkIsAnswerCorrect = (q: any, selected: string) => {
-    if (!q || !selected) return false;
+  const checkIsAnswerCorrect = (q: any, selected: any) => {
+    if (!q || selected === undefined || selected === null) return false;
+    if (q.type === 'short_code' || q.type === 'subjective') {
+      if (typeof selected === 'string' && typeof q.answer === 'string') {
+        const normalize = (str: string) => str.trim().replace(/\s+/g, ' ').replace(/;$/, '');
+        return normalize(selected) === normalize(q.answer) || selected.includes(q.answer.trim());
+      }
+      return false;
+    }
+    if (q.type === 'drag_drop') {
+      return typeof selected === 'object' && selected !== null && Object.keys(selected).length > 0;
+    }
     if (q.answer === selected) return true;
     if (q.options && typeof q.options === 'object' && !Array.isArray(q.options)) {
       if (q.options[q.answer] === selected) return true;
@@ -228,85 +249,25 @@ export default function Home() {
     return false;
   };
 
-  const handleAutoSubmit = useCallback(() => {
-    let finalScore = 0;
-    quizData.forEach((q, index) => {
-      if (q.type !== 'subjective' && checkIsAnswerCorrect(q, selectedAnswers[index])) {
-        finalScore += 1;
-      }
-    });
-    setScore(finalScore);
-    saveSubmissionToSupabase(finalScore, quizData.length);
-    setStep('result');
-    setShowWarning(false);
-  }, [quizData, selectedAnswers, saveSubmissionToSupabase]);
+  const handleSelectOption = useCallback((optionKey: any) => {
+    setSelectedAnswers((prev) => ({ ...prev, [currentQIndex]: optionKey }));
+  }, [currentQIndex]);
 
-  const handleCheatAttempt = useCallback(
-    (reason: string) => {
-      if (step !== 'quiz') return;
+  const handleSubjectiveAnswer = useCallback((text: string) => {
+    setSubjectiveAnswers((prev) => ({ ...prev, [currentQIndex]: text }));
+  }, [currentQIndex]);
 
-      setTabSwitchCount((prev) => {
-        const nextCount = prev + 1;
-        if (nextCount >= MAX_WARNINGS) {
-          setWarningMessage(
-            `🚨 FINAL WARNING! Cheat attempt detected: ${reason}. Auto-submitting in 5 seconds...`
-          );
-          setShowWarning(true);
-          setIsExamLocked(true);
-          setTimeout(() => {
-            handleAutoSubmit();
-          }, 5000);
-        } else {
-          setWarningMessage(
-            `⚠️ Cheat attempt detected! Warning ${nextCount} of ${MAX_WARNINGS}: ${reason}.`
-          );
-          setShowWarning(true);
-          setTimeout(() => setShowWarning(false), 5000);
-        }
-        return nextCount;
-      });
-    },
-    [step, handleAutoSubmit]
-  );
-
-  // ==========================================
-  // ONLY TAB SWITCH & MINIMIZE DETECTION ACTIVE (Copy/Paste & Shortcuts removed)
-  // ==========================================
-  useEffect(() => {
-    if (step !== 'quiz') return;
-
-    const handleBlur = () => handleCheatAttempt('Tab switched or browser lost focus');
-    const handleVisibility = () => {
-      if (document.hidden) handleCheatAttempt('Tab switched or browser minimized');
-    };
-
-    window.addEventListener('blur', handleBlur);
-    document.addEventListener('visibilitychange', handleVisibility);
-
-    return () => {
-      window.removeEventListener('blur', handleBlur);
-      document.removeEventListener('visibilitychange', handleVisibility);
-    };
-  }, [step, handleCheatAttempt]);
-
-  const handleSelectOption = (optionKey: string) => {
-    setSelectedAnswers({ ...selectedAnswers, [currentQIndex]: optionKey });
-  };
-
-  const handleSubjectiveAnswer = (text: string) => {
-    setSubjectiveAnswers({ ...subjectiveAnswers, [currentQIndex]: text });
-  };
-
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     const currentQ = quizData[currentQIndex];
 
-    if (currentQ.type !== 'subjective' && !selectedAnswers[currentQIndex]) {
+    const isSubjectiveType = currentQ?.type === 'subjective' || currentQ?.type === 'short_code';
+    if (!isSubjectiveType && !selectedAnswers[currentQIndex]) {
       alert('Please select an answer before moving next!');
       return;
     }
 
     if (currentQIndex < quizData.length - 1) {
-      setCurrentQIndex(currentQIndex + 1);
+      setCurrentQIndex((prev) => prev + 1);
     } else {
       let finalScore = 0;
       quizData.forEach((q, index) => {
@@ -318,9 +279,9 @@ export default function Home() {
       saveSubmissionToSupabase(finalScore, quizData.length);
       setStep('result');
     }
-  };
+  }, [quizData, currentQIndex, selectedAnswers, saveSubmissionToSupabase]);
 
-  const handleTimeUp = () => {
+  const handleTimeUp = useCallback(() => {
     let finalScore = 0;
     quizData.forEach((q, index) => {
       if (q.type !== 'subjective' && checkIsAnswerCorrect(q, selectedAnswers[index])) {
@@ -330,23 +291,21 @@ export default function Home() {
     setScore(finalScore);
     saveSubmissionToSupabase(finalScore, quizData.length);
     setStep('result');
-  };
+  }, [quizData, selectedAnswers, saveSubmissionToSupabase]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
     setUserProfile(null);
-    resetSubmissionRef();
     setStep('start');
   };
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl shadow-gray-100/70 p-10 border border-gray-100 text-center animate-fadeIn">
-          <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-          <h2 className="text-xl font-bold text-gray-800 mb-2">Initializing Academy Portal...</h2>
-          <p className="text-gray-500 text-sm">Verifying authentication & question bank...</p>
+      <div className="min-h-screen bg-[#020617] text-slate-200 flex flex-col justify-center items-center font-sans">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+          <span className="text-indigo-400 font-mono text-sm font-bold">Loading Portal...</span>
         </div>
       </div>
     );
@@ -354,16 +313,15 @@ export default function Home() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl shadow-gray-100/70 p-10 border border-gray-100 text-center animate-fadeIn">
-          <div className="text-5xl mb-4">⚠️</div>
-          <h2 className="text-xl font-bold text-red-600 mb-2">API Connection Failed</h2>
-          <p className="text-gray-600 text-sm mb-6">{error}</p>
+      <div className="min-h-screen bg-[#020617] text-slate-200 flex flex-col justify-center items-center font-sans p-4">
+        <div className="bg-rose-950/60 border border-rose-500/40 p-6 rounded-2xl max-w-md text-center">
+          <p className="text-rose-400 font-bold mb-2">System Error</p>
+          <p className="text-xs text-slate-300 mb-4">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="px-6 py-2.5 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition-all cursor-pointer shadow-md hover:shadow-indigo-100"
+            className="px-4 py-2 bg-rose-600 text-white font-bold text-xs rounded-xl hover:bg-rose-500 transition-colors"
           >
-            Retry Connection
+            Reload Test Portal
           </button>
         </div>
       </div>
@@ -371,98 +329,127 @@ export default function Home() {
   }
 
   if (!user) {
-    return (
-      <AuthScreen
-        onAuthSuccess={(authUser: any) => {
-          setUser(authUser);
-          checkUserStatus(authUser);
-        }}
-      />
-    );
+    return <AuthScreen onLoginSuccess={() => checkUserStatus(user)} />;
   }
 
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-100 flex flex-col font-sans w-full">
-      {user && <Header userProfile={userProfile} onSignOut={handleSignOut} />}
+    <div className="min-h-screen bg-[#020617] text-slate-200 flex flex-col justify-between font-sans selection:bg-indigo-500 selection:text-white">
+      <Header
+        studentName={studentName}
+        isTeacher={isTeacher}
+        onSignOut={handleSignOut}
+      />
 
-      <main className="w-full flex-1 flex flex-col">
-        
-        {showWarning && (
-          <div className={`fixed top-0 left-0 right-0 z-50 px-6 py-4 text-white font-bold text-center text-sm shadow-lg ${isExamLocked ? 'bg-red-600' : 'bg-orange-500'}`}>
-            {warningMessage}
-            {!isExamLocked && (
-              <button onClick={() => setShowWarning(false)} className="ml-4 underline text-white/80 font-normal text-xs">
-                Dismiss
-              </button>
-            )}
-          </div>
-        )}
-
-        {step === 'quiz' && tabSwitchCount > 0 && (
-          <div className="fixed top-4 right-4 z-40 bg-red-100 border border-red-300 text-red-700 text-xs font-bold px-3 py-1.5 rounded-full">
-            ⚠️ Warnings: {tabSwitchCount} / {MAX_WARNINGS}
-          </div>
-        )}
-
-        {userProfile?.role === 'teacher' ? (
-          <TeacherDashboard userProfile={userProfile} />
-        ) : isAttemptLocked && step === 'start' ? (
-          <LockScreen lastSubmittedAt={lastSubmittedAt} userProfile={userProfile} checkingLock={checkingLock} onRefreshCheck={() => checkUserStatus(user)} />
+      <main className="flex-1 flex flex-col justify-center items-center">
+        {isTeacher ? (
+          <TeacherDashboard />
         ) : (
           <>
-            {step === 'start' && (
+            {isAttemptLocked && step === 'start' && (
+              <LockScreen
+                studentName={studentName || userProfile?.full_name || 'Student'}
+                lastSubmittedAt={lastSubmittedAt}
+                onSignOut={handleSignOut}
+              />
+            )}
+
+            {!isAttemptLocked && step === 'start' && (
               <StartScreen
                 studentName={studentName}
                 setStudentName={setStudentName}
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
-                questionLimit={questionLimit}
-                setQuestionLimit={setQuestionLimit}
                 selfRating={selfRating}
                 setSelfRating={setSelfRating}
-                onStart={() => {
-                  if (isAttemptLocked) return;
-                  const categoryQuestions = selectedCategory === 'ALL' ? quizQuestions : quizQuestions.filter((q) => q.section === selectedCategory);
-                  const shuffled = shuffleArray(categoryQuestions);
-                  const limitNum = questionLimit === 'ALL' ? shuffled.length : Number(questionLimit);
-                  const subset = shuffled.slice(0, Math.min(limitNum, shuffled.length));
-                  setActiveQuizQuestions(subset);
-                  setTabSwitchCount(0);
-                  setIsExamLocked(false);
-                  setShowWarning(false);
-                  setSelectedAnswers({});
-                  setSubjectiveAnswers({});
-                  setCurrentQIndex(0);
-                  setScore(0);
-                  resetSubmissionRef();
-                  setStep('quiz');
+                questionLimit={questionLimit}
+                setQuestionLimit={setQuestionLimit}
+                totalAvailableQuestions={quizQuestions.length}
+                onStart={async () => {
+                  if (!studentName.trim()) {
+                    alert('Please enter your full name before starting the test.');
+                    return;
+                  }
+
+                  try {
+                    let loadedCategoryQuestions = quizQuestions;
+                    if (selectedCategory !== 'ALL') {
+                      loadedCategoryQuestions = await fetchCategoryQuestions(selectedCategory);
+                    }
+
+                    const shuffled = shuffleArray(loadedCategoryQuestions);
+
+                    let limitNum = shuffled.length;
+                    if (questionLimit !== 'ALL') {
+                      limitNum = Number(questionLimit);
+                    }
+
+                    const subset = shuffled.slice(0, Math.min(limitNum, shuffled.length));
+                    setActiveQuizQuestions(subset);
+                    setSelectedAnswers({});
+                    setSubjectiveAnswers({});
+                    setCurrentQIndex(0);
+                    setScore(0);
+                    resetSubmissionRef();
+                    setStep('quiz');
+                  } catch (err: any) {
+                    alert(err.message || 'Failed to load test questions.');
+                  }
+                }}
+                onStartQuiz={async () => {
+                  if (!studentName.trim()) {
+                    alert('Please enter your full name before starting the test.');
+                    return;
+                  }
+
+                  try {
+                    let loadedCategoryQuestions = quizQuestions;
+                    if (selectedCategory !== 'ALL') {
+                      loadedCategoryQuestions = await fetchCategoryQuestions(selectedCategory);
+                    }
+
+                    const shuffled = shuffleArray(loadedCategoryQuestions);
+
+                    let limitNum = shuffled.length;
+                    if (questionLimit !== 'ALL') {
+                      limitNum = Number(questionLimit);
+                    }
+
+                    const subset = shuffled.slice(0, Math.min(limitNum, shuffled.length));
+                    setActiveQuizQuestions(subset);
+                    setSelectedAnswers({});
+                    setSubjectiveAnswers({});
+                    setCurrentQIndex(0);
+                    setScore(0);
+                    resetSubmissionRef();
+                    setStep('quiz');
+                  } catch (err: any) {
+                    alert(err.message || 'Failed to load test questions.');
+                  }
                 }}
               />
             )}
 
-             {step === 'quiz' && (
-               <QuizScreen
-                 currentQuestion={quizData[currentQIndex]}
-                 totalQuestions={quizData.length}
-                 currentIndex={currentQIndex}
-                 selectedAnswer={selectedAnswers[currentQIndex]}
-                 subjectiveAnswer={subjectiveAnswers[currentQIndex] || ''}
-                 onSelectOption={handleSelectOption}
-                 onSubjectiveAnswer={handleSubjectiveAnswer}
-                 onNext={handleNext}
-                 onTimeUp={handleTimeUp}
-                 isLocked={isExamLocked}
-                 tabSwitchCount={tabSwitchCount}
-                 maxWarnings={MAX_WARNINGS}
-               />
-             )}
+            {step === 'quiz' && (
+              <QuizScreen
+                currentQuestion={quizData[currentQIndex]}
+                totalQuestions={quizData.length}
+                currentIndex={currentQIndex}
+                selectedAnswer={selectedAnswers[currentQIndex]}
+                subjectiveAnswer={subjectiveAnswers[currentQIndex] || ''}
+                onSelectOption={handleSelectOption}
+                onSubjectiveAnswer={handleSubjectiveAnswer}
+                onNext={handleNext}
+                onTimeUp={handleTimeUp}
+                isLocked={false}
+              />
+            )}
 
-             {step === 'result' && (
-               <ResultScreen
-                 studentName={studentName || userProfile?.full_name || 'Student'}
-                 onSubmitFinal={handleFinalSubmit}
-               />
-             )}
+            {step === 'result' && (
+              <ResultScreen
+                studentName={studentName || userProfile?.full_name || 'Student'}
+                onSubmitFinal={handleFinalSubmit}
+              />
+            )}
           </>
         )}
       </main>
