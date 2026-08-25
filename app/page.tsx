@@ -1,14 +1,31 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 
-import Header from '../components/Header';
-import AuthScreen from '../components/AuthScreen';
-import StartScreen from '../components/StartScreen';
-import QuizScreen from '../components/QuizScreen';
-import ResultScreen from '../components/ResultScreen';
-import LockScreen from '../components/LockScreen';
+import HeaderImport from '../components/Header';
+import AuthScreenImport from '../components/AuthScreen';
+import StartScreenImport from '../components/StartScreen';
+import QuizScreenImport from '../components/QuizScreen';
+import ResultScreenImport from '../components/ResultScreen';
+import LockScreenImport from '../components/LockScreen';
 import TeacherDashboard from '../components/TeacherDashboard';
+
+const Header = HeaderImport as any;
+const AuthScreen = AuthScreenImport as any;
+const StartScreen = StartScreenImport as any;
+const QuizScreen = QuizScreenImport as any;
+const ResultScreen = ResultScreenImport as any;
+const LockScreen = LockScreenImport as any;
+
+const shuffleArray = (array: any[]) => {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
 
 export default function Home() {
   const [user, setUser] = useState<any>(null);
@@ -46,6 +63,7 @@ export default function Home() {
     }
 
     const adminEmail = (process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'sahkoo524@gmail.com').toLowerCase();
+    const isTeacher = currentUser.email?.toLowerCase() === adminEmail || currentUser.user_metadata?.role === 'teacher';
 
     const initialProfile = {
       id: currentUser.id,
@@ -170,14 +188,6 @@ export default function Home() {
       });
   }, [fetchCategoryQuestions]);
 
-  const shuffleArray = (array: any[]) => {
-    const arr = [...array];
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  };
 
   const isTeacher = userProfile?.role === 'teacher';
 
@@ -239,7 +249,7 @@ export default function Home() {
       }
       return false;
     }
-    if (q.type === 'drag_drop') {
+    if (q.type === 'drag_drop' || q.type === 'drag-and-drop') {
       return typeof selected === 'object' && selected !== null && Object.keys(selected).length > 0;
     }
     if (q.answer === selected) return true;
@@ -271,7 +281,7 @@ export default function Home() {
     } else {
       let finalScore = 0;
       quizData.forEach((q, index) => {
-        if (q.type !== 'subjective' && checkIsAnswerCorrect(q, selectedAnswers[index])) {
+        if ((q.type !== 'subjective' && q.type !== 'short_code') && checkIsAnswerCorrect(q, selectedAnswers[index])) {
           finalScore += 1;
         }
       });
@@ -299,6 +309,38 @@ export default function Home() {
     setUserProfile(null);
     setStep('start');
   };
+
+  const handleStart = useCallback(async () => {
+    if (!studentName.trim()) {
+      alert('Please enter your full name before starting the test.');
+      return;
+    }
+
+    try {
+      let loadedCategoryQuestions = quizQuestions;
+      if (selectedCategory !== 'ALL') {
+        loadedCategoryQuestions = await fetchCategoryQuestions(selectedCategory);
+      }
+
+      const shuffled = shuffleArray(loadedCategoryQuestions);
+
+      let limitNum = shuffled.length;
+      if (questionLimit !== 'ALL') {
+        limitNum = Number(questionLimit);
+      }
+
+      const subset = shuffled.slice(0, Math.min(limitNum, shuffled.length));
+      setActiveQuizQuestions(subset);
+      setSelectedAnswers({});
+      setSubjectiveAnswers({});
+      setCurrentQIndex(0);
+      setScore(0);
+      resetSubmissionRef();
+      setStep('quiz');
+    } catch (err: any) {
+      alert(err.message || 'Failed to load test questions.');
+    }
+  }, [studentName, quizQuestions, selectedCategory, questionLimit, fetchCategoryQuestions]);
 
   if (authLoading || loading) {
     return (
@@ -329,27 +371,27 @@ export default function Home() {
   }
 
   if (!user) {
-    return <AuthScreen onLoginSuccess={() => checkUserStatus(user)} />;
+    return <AuthScreen onAuthSuccess={(authUser: any) => { setUser(authUser); checkUserStatus(authUser); }} />;
   }
 
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200 flex flex-col justify-between font-sans selection:bg-indigo-500 selection:text-white">
       <Header
-        studentName={studentName}
-        isTeacher={isTeacher}
+        userProfile={userProfile}
         onSignOut={handleSignOut}
       />
 
       <main className="flex-1 flex flex-col justify-center items-center">
         {isTeacher ? (
-          <TeacherDashboard />
+          <TeacherDashboard userProfile={userProfile} />
         ) : (
           <>
             {isAttemptLocked && step === 'start' && (
               <LockScreen
-                studentName={studentName || userProfile?.full_name || 'Student'}
+                userProfile={userProfile}
                 lastSubmittedAt={lastSubmittedAt}
-                onSignOut={handleSignOut}
+                checkingLock={checkingLock}
+                onRefreshCheck={() => checkUserStatus(user)}
               />
             )}
 
@@ -363,69 +405,8 @@ export default function Home() {
                 setSelfRating={setSelfRating}
                 questionLimit={questionLimit}
                 setQuestionLimit={setQuestionLimit}
-                totalAvailableQuestions={quizQuestions.length}
-                onStart={async () => {
-                  if (!studentName.trim()) {
-                    alert('Please enter your full name before starting the test.');
-                    return;
-                  }
-
-                  try {
-                    let loadedCategoryQuestions = quizQuestions;
-                    if (selectedCategory !== 'ALL') {
-                      loadedCategoryQuestions = await fetchCategoryQuestions(selectedCategory);
-                    }
-
-                    const shuffled = shuffleArray(loadedCategoryQuestions);
-
-                    let limitNum = shuffled.length;
-                    if (questionLimit !== 'ALL') {
-                      limitNum = Number(questionLimit);
-                    }
-
-                    const subset = shuffled.slice(0, Math.min(limitNum, shuffled.length));
-                    setActiveQuizQuestions(subset);
-                    setSelectedAnswers({});
-                    setSubjectiveAnswers({});
-                    setCurrentQIndex(0);
-                    setScore(0);
-                    resetSubmissionRef();
-                    setStep('quiz');
-                  } catch (err: any) {
-                    alert(err.message || 'Failed to load test questions.');
-                  }
-                }}
-                onStartQuiz={async () => {
-                  if (!studentName.trim()) {
-                    alert('Please enter your full name before starting the test.');
-                    return;
-                  }
-
-                  try {
-                    let loadedCategoryQuestions = quizQuestions;
-                    if (selectedCategory !== 'ALL') {
-                      loadedCategoryQuestions = await fetchCategoryQuestions(selectedCategory);
-                    }
-
-                    const shuffled = shuffleArray(loadedCategoryQuestions);
-
-                    let limitNum = shuffled.length;
-                    if (questionLimit !== 'ALL') {
-                      limitNum = Number(questionLimit);
-                    }
-
-                    const subset = shuffled.slice(0, Math.min(limitNum, shuffled.length));
-                    setActiveQuizQuestions(subset);
-                    setSelectedAnswers({});
-                    setSubjectiveAnswers({});
-                    setCurrentQIndex(0);
-                    setScore(0);
-                    resetSubmissionRef();
-                    setStep('quiz');
-                  } catch (err: any) {
-                    alert(err.message || 'Failed to load test questions.');
-                  }
-                }}
+                onStart={handleStart}
+                onStartQuiz={handleStart}
               />
             )}
 
