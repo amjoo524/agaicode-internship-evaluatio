@@ -152,9 +152,18 @@ export default function Home() {
 
   const fetchCategoryQuestions = useCallback(async (category: string) => {
     if (category === 'JS') {
-      const res = await fetch('/api/javascriptQuestions');
-      if (!res.ok) throw new Error('Could not establish connection to JavaScript Questions API.');
-      return await res.json();
+      // Merge dedicated JS file + section-filtered questions.json JS entries
+      const [jsRes, techRes] = await Promise.all([
+        fetch('/api/javascriptQuestions'),
+        fetch('/api/questions'),
+      ]);
+      const jsQuestions = jsRes.ok ? await jsRes.json() : [];
+      const techAll = techRes.ok ? await techRes.json() : [];
+      // Filter tech questions to only JS section, then merge (avoid duplicates by id)
+      const techJS = techAll.filter((q: any) => q.section === 'JS');
+      const existingIds = new Set(jsQuestions.map((q: any) => q.id));
+      const merged = [...jsQuestions, ...techJS.filter((q: any) => !existingIds.has(q.id))];
+      return merged;
     } else if (category === 'English') {
       const res = await fetch('/api/englishQuestions');
       if (!res.ok) throw new Error('Could not establish connection to English Questions API.');
@@ -170,9 +179,16 @@ export default function Home() {
       const js = jsRes.ok ? await jsRes.json() : [];
       return [...tech, ...eng, ...js];
     } else {
+      // HTML, CSS, React, Next.js — fetch questions.json and filter strictly by section
       const res = await fetch('/api/questions');
       if (!res.ok) throw new Error('Could not establish connection to Academy Questions API.');
-      return await res.json();
+      const all = await res.json();
+      const filtered = all.filter((q: any) => q.section === category);
+      if (filtered.length === 0) {
+        // Fallback: return all if no section match (safety net)
+        return all;
+      }
+      return filtered;
     }
   }, []);
 
@@ -317,9 +333,21 @@ export default function Home() {
     }
 
     try {
-      let loadedCategoryQuestions = quizQuestions;
-      if (selectedCategory !== 'ALL') {
+      let loadedCategoryQuestions: any[] = [];
+
+      if (selectedCategory === 'ALL') {
+        // Use cached questions if already loaded, otherwise fetch fresh
+        loadedCategoryQuestions = quizQuestions.length > 0
+          ? quizQuestions
+          : await fetchCategoryQuestions('ALL');
+      } else {
+        // Always fetch fresh for specific category (ensures correct section filtering)
         loadedCategoryQuestions = await fetchCategoryQuestions(selectedCategory);
+      }
+
+      if (!loadedCategoryQuestions || loadedCategoryQuestions.length === 0) {
+        alert('No questions available for the selected subject. Please try again or choose a different subject.');
+        return;
       }
 
       const shuffled = shuffleArray(loadedCategoryQuestions);
@@ -338,7 +366,8 @@ export default function Home() {
       resetSubmissionRef();
       setStep('quiz');
     } catch (err: any) {
-      alert(err.message || 'Failed to load test questions.');
+      console.error('handleStart error:', err);
+      alert(err.message || 'Failed to load test questions. Please check your internet connection and try again.');
     }
   }, [studentName, quizQuestions, selectedCategory, questionLimit, fetchCategoryQuestions]);
 

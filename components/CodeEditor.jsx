@@ -80,7 +80,11 @@ const CodeEditor = memo(
       });
 
       // BULLETPROOF EMMET SHORTCUTS EXPANDER
+      // ⚠️ ONLY runs in HTML mode — CSS/JS editors must NOT trigger Emmet
       const runEmmetExpansion = () => {
+        // Guard: skip Emmet entirely for CSS and JS languages
+        if (language !== 'html') return false;
+
         const model = editor.getModel();
         if (!model) return false;
 
