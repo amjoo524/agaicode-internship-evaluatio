@@ -152,18 +152,10 @@ export default function Home() {
 
   const fetchCategoryQuestions = useCallback(async (category: string) => {
     if (category === 'JS') {
-      // Merge dedicated JS file + section-filtered questions.json JS entries
-      const [jsRes, techRes] = await Promise.all([
-        fetch('/api/javascriptQuestions'),
-        fetch('/api/questions'),
-      ]);
-      const jsQuestions = jsRes.ok ? await jsRes.json() : [];
-      const techAll = techRes.ok ? await techRes.json() : [];
-      // Filter tech questions to only JS section, then merge (avoid duplicates by id)
-      const techJS = techAll.filter((q: any) => q.section === 'JS');
-      const existingIds = new Set(jsQuestions.map((q: any) => q.id));
-      const merged = [...jsQuestions, ...techJS.filter((q: any) => !existingIds.has(q.id))];
-      return merged;
+      // Fetch EXCLUSIVELY from javascript.json — never from questions.json
+      const jsRes = await fetch('/api/javascriptQuestions');
+      if (!jsRes.ok) throw new Error('Could not establish connection to JavaScript Questions API.');
+      return await jsRes.json();
     } else if (category === 'English') {
       const res = await fetch('/api/englishQuestions');
       if (!res.ok) throw new Error('Could not establish connection to English Questions API.');
