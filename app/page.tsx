@@ -10,6 +10,7 @@ import QuizScreenImport from '../components/QuizScreen';
 import ResultScreenImport from '../components/ResultScreen';
 import LockScreenImport from '../components/LockScreen';
 import TeacherDashboard from '../components/TeacherDashboard';
+import StudentDashboard, { StudentSubmissionRecord } from '../components/StudentDashboard';
 
 const Header = HeaderImport as any;
 const AuthScreen = AuthScreenImport as any;
@@ -32,9 +33,10 @@ export default function Home() {
   const [userProfile, setUserProfile] = useState<any>(null);
   const [authLoading, setAuthLoading] = useState(true);
 
-  const [step, setStep] = useState<'start' | 'quiz' | 'result'>('start');
+  const [step, setStep] = useState<'dashboard' | 'start' | 'quiz' | 'result'>('dashboard');
   const [studentName, setStudentName] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('ALL');
+  const [selectedCategory, setSelectedCategory] = useState('HTML');
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [selfRating, setSelfRating] = useState(50);
   const [currentQIndex, setCurrentQIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -46,10 +48,38 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const [studentSubmissions, setStudentSubmissions] = useState<StudentSubmissionRecord[]>([]);
   const [lastSubmittedAt, setLastSubmittedAt] = useState<string | null>(null);
   const [isAttemptLocked, setIsAttemptLocked] = useState(false);
   const [checkingLock, setCheckingLock] = useState(false);
   const submissionSavedRef = useRef(false);
+
+  // Notification System State & Session Persistence
+  const [notifications, setNotifications] = useState<any[]>(() => {
+    try {
+      const saved = typeof window !== 'undefined' ? localStorage.getItem('portal_notifications') : null;
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+  const [submissionToastMsg, setSubmissionToastMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('portal_notifications', JSON.stringify(notifications));
+      }
+    } catch (e) {}
+  }, [notifications]);
+
+  const handleMarkAllRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  };
+
+  const handleClearNotifications = () => {
+    setNotifications([]);
+  };
 
   const resetSubmissionRef = () => {
     submissionSavedRef.current = false;
@@ -102,15 +132,15 @@ export default function Home() {
       if (profileData.role === 'student') {
         const { data: submissions, error: subErr } = await supabase
           .from('test_submissions')
-          .select('submitted_at')
+          .select('*')
           .eq('user_id', currentUser.id)
-          .order('submitted_at', { ascending: false })
-          .limit(1);
+          .order('submitted_at', { ascending: false });
 
         if (!subErr && submissions && submissions.length > 0) {
+          setStudentSubmissions(submissions);
           const lastTime = submissions[0].submitted_at;
           setLastSubmittedAt(lastTime);
-          const lockDuration = 24 * 60 * 60 * 1000;
+          const lockDuration = 12 * 60 * 60 * 1000;
           const timePassed = Date.now() - new Date(lastTime).getTime();
 
           if (timePassed < lockDuration) {
@@ -119,6 +149,7 @@ export default function Home() {
             setIsAttemptLocked(false);
           }
         } else if (!subErr) {
+          setStudentSubmissions([]);
           setLastSubmittedAt(null);
           setIsAttemptLocked(false);
         } else {
@@ -177,7 +208,6 @@ export default function Home() {
       const all = await res.json();
       const filtered = all.filter((q: any) => q.section === category);
       if (filtered.length === 0) {
-        // Fallback: return all if no section match (safety net)
         return all;
       }
       return filtered;
@@ -187,18 +217,62 @@ export default function Home() {
   useEffect(() => {
     fetchCategoryQuestions('ALL')
       .then((allQuestions) => {
-        setQuizQuestions(allQuestions);
+        setQuizQuestions(allQuestions || []);
         setLoading(false);
       })
       .catch((err) => {
-        setError(err.message || 'An unexpected error occurred.');
+        console.warn('Initial fetch warning, using fallback:', err);
+        setQuizQuestions([]);
         setLoading(false);
       });
   }, [fetchCategoryQuestions]);
 
+  // Session state persistence helpers to survive browser reloads on review/result screen
+  useEffect(() => {
+    try {
+      const savedState = sessionStorage.getItem('portal_quiz_state');
+      if (savedState) {
+        const parsed = JSON.parse(savedState);
+        if (parsed.step && parsed.step !== 'dashboard') {
+          setStep(parsed.step);
+          if (parsed.activeQuizQuestions) setActiveQuizQuestions(parsed.activeQuizQuestions);
+          if (parsed.currentQIndex !== undefined) setCurrentQIndex(parsed.currentQIndex);
+          if (parsed.selectedAnswers) setSelectedAnswers(parsed.selectedAnswers);
+          if (parsed.subjectiveAnswers) setSubjectiveAnswers(parsed.subjectiveAnswers);
+          if (parsed.score !== undefined) setScore(parsed.score);
+          if (parsed.studentName) setStudentName(parsed.studentName);
+          if (parsed.selectedCategory) setSelectedCategory(parsed.selectedCategory);
+          if (parsed.selectedTopics) setSelectedTopics(parsed.selectedTopics);
+        }
+      }
+    } catch (e) {
+      console.warn('Session restoration notice:', e);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      if (step === 'quiz' || step === 'result') {
+        sessionStorage.setItem('portal_quiz_state', JSON.stringify({
+          step,
+          activeQuizQuestions,
+          currentQIndex,
+          selectedAnswers,
+          subjectiveAnswers,
+          score,
+          studentName,
+          selectedCategory,
+          selectedTopics,
+        }));
+      } else if (step === 'dashboard') {
+        sessionStorage.removeItem('portal_quiz_state');
+      }
+    } catch (e) {
+      // Storage quota or restriction ignored
+    }
+  }, [step, activeQuizQuestions, currentQIndex, selectedAnswers, subjectiveAnswers, score, studentName, selectedCategory, selectedTopics]);
 
   const isTeacher = userProfile?.role === 'teacher';
-
   const quizData = activeQuizQuestions.length > 0 ? activeQuizQuestions : quizQuestions;
 
   const saveSubmissionToSupabase = useCallback(
@@ -209,19 +283,28 @@ export default function Home() {
       submissionSavedRef.current = true;
       const nowISO = new Date().toISOString();
 
-      const payload = {
-        user_id: user.id,
-        score: finalScore,
-        total_questions: questionsCount,
+      const payload: StudentSubmissionRecord = {
         submitted_at: nowISO,
         student_name: studentName || userProfile?.full_name || user.email,
         category: selectedCategory,
+        score: finalScore,
+        total_questions: questionsCount,
         self_rating: selfRating,
-        tab_switch_count: 0,
       };
 
       try {
-        const { error } = await supabase.from('test_submissions').insert([payload]);
+        const { error } = await supabase.from('test_submissions').insert([
+          {
+            user_id: user.id,
+            score: finalScore,
+            total_questions: questionsCount,
+            submitted_at: nowISO,
+            student_name: payload.student_name,
+            category: selectedCategory,
+            self_rating: selfRating,
+            tab_switch_count: 0,
+          },
+        ]);
         if (error) {
           await supabase.from('test_submissions').insert([
             {
@@ -229,13 +312,47 @@ export default function Home() {
               score: finalScore,
               total_questions: questionsCount,
               submitted_at: nowISO,
-              student_name: studentName || userProfile?.full_name || user.email,
+              student_name: payload.student_name,
               category: selectedCategory,
             },
           ]);
         }
         setLastSubmittedAt(nowISO);
         setIsAttemptLocked(true);
+        setStudentSubmissions((prev) => [payload, ...prev]);
+
+        // Generate Real-time Session Notifications strictly separated by target role
+        const timeStr = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        
+        const adminNotif = {
+          id: Date.now(),
+          type: 'submission',
+          targetRole: 'admin',
+          title: 'New Student Submission',
+          message: `${payload.student_name} has completed their ${selectedCategory} evaluation test successfully!`,
+          studentName: payload.student_name,
+          category: selectedCategory,
+          timestamp: timeStr,
+          read: false,
+        };
+
+        const studentNotif = {
+          id: Date.now() + 1,
+          type: 'submission',
+          targetRole: 'student',
+          targetUserId: user.id,
+          title: 'Evaluation Confirmed',
+          message: `Thank you for completing your ${selectedCategory} test! Your evaluation score (${finalScore}/${questionsCount}) has been saved. Review your performance breakdown on your dashboard.`,
+          studentName: payload.student_name,
+          category: selectedCategory,
+          timestamp: timeStr,
+          read: false,
+        };
+
+        setNotifications((prev) => [adminNotif, studentNotif, ...prev]);
+        setSubmissionToastMsg(
+          `Great job completing your ${selectedCategory} evaluation! Your results are now available on your dashboard.`
+        );
       } catch (err) {
         console.error('Failed to record test submission:', err);
       }
@@ -245,20 +362,51 @@ export default function Home() {
 
   const handleFinalSubmit = useCallback(() => {
     saveSubmissionToSupabase(score, quizData.length);
-    setStep('start');
+    try { sessionStorage.removeItem('portal_quiz_state'); } catch (e) {}
+    setStep('dashboard');
   }, [saveSubmissionToSupabase, score, quizData]);
 
   const checkIsAnswerCorrect = (q: any, selected: any) => {
     if (!q || selected === undefined || selected === null) return false;
     if (q.type === 'short_code' || q.type === 'subjective') {
       if (typeof selected === 'string' && typeof q.answer === 'string') {
-        const normalize = (str: string) => str.trim().replace(/\s+/g, ' ').replace(/;$/, '');
-        return normalize(selected) === normalize(q.answer) || selected.includes(q.answer.trim());
+        const normalize = (str: string) =>
+          str
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, ' ')
+            .replace(/["']/g, "'")
+            .replace(/;\s*/g, ';')
+            .replace(/;$/, '');
+
+        const normSel = normalize(selected);
+        const normAns = normalize(q.answer);
+
+        if (normSel === normAns) return true;
+        if (normSel.includes(normAns) || normAns.includes(normSel)) return true;
+
+        const keyKeywords = q.answer
+          .toLowerCase()
+          .split(/[\s;{}<>]+/)
+          .filter((k: string) => k.length > 2);
+        if (keyKeywords.length > 0 && keyKeywords.every((kw: string) => normSel.includes(kw))) {
+          return true;
+        }
       }
       return false;
     }
     if (q.type === 'drag_drop' || q.type === 'drag-and-drop') {
-      return typeof selected === 'object' && selected !== null && Object.keys(selected).length > 0;
+      if (typeof selected !== 'object' || selected === null) return false;
+      const targetZones = q.dropZones || [];
+      if (targetZones.length === 0) return Object.keys(selected).length > 0;
+
+      if (q.answer && typeof q.answer === 'object') {
+        return Object.entries(q.answer).every(([zIdx, expectedItem]) => selected[zIdx] === expectedItem);
+      }
+      if (Array.isArray(q.dragItems) && q.dragItems.length >= targetZones.length) {
+        return targetZones.every((_: any, idx: number) => selected[idx] === q.dragItems[idx]);
+      }
+      return Object.keys(selected).length >= targetZones.length;
     }
     if (q.answer === selected) return true;
     if (q.options && typeof q.options === 'object' && !Array.isArray(q.options)) {
@@ -289,7 +437,8 @@ export default function Home() {
     } else {
       let finalScore = 0;
       quizData.forEach((q, index) => {
-        if ((q.type !== 'subjective' && q.type !== 'short_code') && checkIsAnswerCorrect(q, selectedAnswers[index])) {
+        const userAns = q.type === 'subjective' || q.type === 'short_code' ? subjectiveAnswers[index] : selectedAnswers[index];
+        if (checkIsAnswerCorrect(q, userAns)) {
           finalScore += 1;
         }
       });
@@ -297,49 +446,114 @@ export default function Home() {
       saveSubmissionToSupabase(finalScore, quizData.length);
       setStep('result');
     }
-  }, [quizData, currentQIndex, selectedAnswers, saveSubmissionToSupabase]);
+  }, [quizData, currentQIndex, selectedAnswers, subjectiveAnswers, saveSubmissionToSupabase]);
 
   const handleTimeUp = useCallback(() => {
     let finalScore = 0;
     quizData.forEach((q, index) => {
-      if (q.type !== 'subjective' && checkIsAnswerCorrect(q, selectedAnswers[index])) {
+      const userAns = q.type === 'subjective' || q.type === 'short_code' ? subjectiveAnswers[index] : selectedAnswers[index];
+      if (checkIsAnswerCorrect(q, userAns)) {
         finalScore += 1;
       }
     });
     setScore(finalScore);
     saveSubmissionToSupabase(finalScore, quizData.length);
     setStep('result');
-  }, [quizData, selectedAnswers, saveSubmissionToSupabase]);
+  }, [quizData, selectedAnswers, subjectiveAnswers, saveSubmissionToSupabase]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
     setUserProfile(null);
-    setStep('start');
+    setStep('dashboard');
   };
 
-  const handleStart = useCallback(async () => {
-    if (!studentName.trim()) {
-      alert('Please enter your full name before starting the test.');
-      return;
-    }
+  const handleSelectSubjectFromDashboard = useCallback((subject: string, topics: string[]) => {
+    setSelectedCategory(subject);
+    setSelectedTopics(topics);
+    setStep('start');
+  }, []);
 
+  const handleStart = useCallback(async () => {
     try {
       let loadedCategoryQuestions: any[] = [];
 
-      if (selectedCategory === 'ALL') {
-        // Use cached questions if already loaded, otherwise fetch fresh
-        loadedCategoryQuestions = quizQuestions.length > 0
-          ? quizQuestions
-          : await fetchCategoryQuestions('ALL');
-      } else {
-        // Always fetch fresh for specific category (ensures correct section filtering)
-        loadedCategoryQuestions = await fetchCategoryQuestions(selectedCategory);
-      }
+      loadedCategoryQuestions = await fetchCategoryQuestions(selectedCategory);
 
       if (!loadedCategoryQuestions || loadedCategoryQuestions.length === 0) {
         alert('No questions available for the selected subject. Please try again or choose a different subject.');
         return;
+      }
+
+      // Strict Topic-Based Question Filtering
+      if (selectedTopics && selectedTopics.length > 0) {
+        const TOPIC_KEYWORD_MAP: Record<string, string[]> = {
+          // HTML
+          'HTML Elements & Attributes': ['element', 'attribute', 'tag', 'h1', 'p', 'head', 'body', 'doctype', 'html', 'id', 'class', 'title', 'heading'],
+          'Forms & Input Validation': ['form', 'input', 'button', 'label', 'select', 'textarea', 'placeholder', 'required', 'validation', 'submit', 'type', 'value', 'method', 'action'],
+          'Semantic Layouts & Headings': ['semantic', 'header', 'footer', 'nav', 'main', 'article', 'section', 'aside', 'heading', 'h1', 'h2', 'h3', 'structure', 'layout'],
+          'Tables, Lists & Media': ['table', 'tr', 'td', 'th', 'ul', 'ol', 'li', 'img', 'video', 'audio', 'src', 'alt', 'caption', 'list', 'media'],
+          'Links, Iframes & Metadata': ['link', 'a', 'href', 'target', 'iframe', 'meta', 'charset', 'viewport', 'head', 'anchor', 'metadata'],
+
+          // CSS
+          'Selectors, Specificity & Cascade': ['selector', 'specificity', 'cascade', 'class', 'id', 'pseudo', 'hover', 'active', 'focus', 'element'],
+          'Box Model, Margins & Padding': ['box model', 'margin', 'padding', 'border', 'content-box', 'border-box', 'width', 'height', 'box-sizing'],
+          'Flexbox Layouts': ['flex', 'flexbox', 'justify-content', 'align-items', 'flex-direction', 'flex-wrap', 'flex-grow'],
+          'CSS Grid Systems': ['grid', 'grid-template', 'grid-column', 'gap', 'fr', 'grid-row', 'grid-area'],
+          'Colors, Gradients & Typography': ['color', 'background', 'font', 'gradient', 'text-align', 'line-height', 'font-family', 'font-size'],
+          'Transitions & Animations': ['transition', 'animation', '@keyframes', 'transform', 'duration', 'ease', 'rotate', 'scale'],
+
+          // JS
+          'Variables, Data Types & Operators': ['var', 'let', 'const', 'data type', 'primitive', 'operator', 'typeof', 'string', 'number', 'boolean', 'null', 'undefined', 'remainder', '%'],
+          'ES6+ Functions, Arrow & Scope': ['function', 'arrow', 'scope', 'closure', 'default parameter', 'this', 'return', 'block-scoped'],
+          'DOM Selection & Event Handling': ['dom', 'querySelector', 'getElementById', 'addEventListener', 'event', 'click', 'target', 'element', 'document'],
+          'Arrays, Objects & Destructuring': ['array', 'object', 'destructuring', 'map', 'filter', 'reduce', 'push', 'pop', 'keys', 'values', 'spread', '...'],
+          'Async JS, Promises & Fetch API': ['async', 'await', 'promise', 'fetch', 'then', 'catch', 'resolve', 'reject', 'api', 'json'],
+
+          // React
+          'JSX Syntax & Rendering Rules': ['jsx', 'rendering', 'element', 'expression', 'fragment', 'react'],
+          'Components, Props & State': ['component', 'props', 'state', 'functional', 'parent', 'child', 'children'],
+          'useState & useEffect Hooks': ['usestate', 'useeffect', 'hook', 'side effect', 'dependency', 'state update'],
+          'Event Handling & Form State': ['onclick', 'onchange', 'onsubmit', 'event', 'controlled', 'uncontrolled', 'handler'],
+          'Conditional & List Rendering': ['conditional', 'ternary', '&&', 'map', 'key', 'list', 'render'],
+
+          // Next.js
+          'App Router & Routing': ['app router', 'route', 'page', 'layout', 'params', 'searchparams', 'navigation'],
+          'Server & Client Components': ['server component', 'client component', 'use client', 'ssr', 'csr', 'rsc'],
+          'Data Fetching & Revalidation': ['fetch', 'revalidate', 'cache', 'isr', 'ssg'],
+          'API Routes & Server Actions': ['api route', 'route.ts', 'server action', 'post', 'get', 'response'],
+          'Metadata & SEO Optimization': ['metadata', 'seo', 'opengraph', 'head', 'generatemetadata'],
+        };
+
+        const activeKeywords = selectedTopics.flatMap((t) => TOPIC_KEYWORD_MAP[t] || [t.toLowerCase()]);
+
+        const filteredByTopics = loadedCategoryQuestions.filter((q: any) => {
+          const qTopic = (q.topic || q.subtopic || q.category || q.section || '').toLowerCase();
+          const qText = (q.q || q.question || q.code || '').toLowerCase();
+          const qExpl = (q.explanation || '').toLowerCase();
+          const qTags = Array.isArray(q.tags) ? q.tags.map((t: any) => String(t).toLowerCase()) : [];
+
+          const directTitleMatch = selectedTopics.some((t) => {
+            const lowT = t.toLowerCase();
+            return qTopic.includes(lowT) || lowT.includes(qTopic);
+          });
+
+          if (directTitleMatch) return true;
+
+          return activeKeywords.some((kw) => {
+            const lowKw = kw.toLowerCase();
+            return (
+              qTopic.includes(lowKw) ||
+              qText.includes(lowKw) ||
+              qExpl.includes(lowKw) ||
+              qTags.some((tag: string) => tag.includes(lowKw))
+            );
+          });
+        });
+
+        if (filteredByTopics.length > 0) {
+          loadedCategoryQuestions = filteredByTopics;
+        }
       }
 
       const shuffled = shuffleArray(loadedCategoryQuestions);
@@ -361,7 +575,7 @@ export default function Home() {
       console.error('handleStart error:', err);
       alert(err.message || 'Failed to load test questions. Please check your internet connection and try again.');
     }
-  }, [studentName, quizQuestions, selectedCategory, questionLimit, fetchCategoryQuestions]);
+  }, [selectedCategory, selectedTopics, questionLimit, fetchCategoryQuestions]);
 
   if (authLoading || loading) {
     return (
@@ -395,18 +609,46 @@ export default function Home() {
     return <AuthScreen onAuthSuccess={(authUser: any) => { setUser(authUser); checkUserStatus(authUser); }} />;
   }
 
+  // Filter notifications strictly by recipient role
+  const adminNotifications = notifications.filter(
+    (n) => n.targetRole === 'admin' || (!n.targetRole && isTeacher)
+  );
+
+  const studentNotifications = notifications.filter(
+    (n) => (n.targetRole === 'student' && (!n.targetUserId || n.targetUserId === user?.id)) || (!n.targetRole && !isTeacher)
+  );
+
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200 flex flex-col justify-between font-sans selection:bg-indigo-500 selection:text-white">
-      <Header
-        userProfile={userProfile}
-        onSignOut={handleSignOut}
-      />
+      {(isTeacher || step !== 'dashboard') && (
+        <Header
+          userProfile={userProfile}
+          onSignOut={handleSignOut}
+          notifications={isTeacher ? adminNotifications : studentNotifications}
+          onMarkAllRead={handleMarkAllRead}
+          onClearNotifications={handleClearNotifications}
+        />
+      )}
 
-      <main className="flex-1 flex flex-col justify-center items-center">
+      <main className="flex-1 flex flex-col justify-center items-center w-full">
         {isTeacher ? (
           <TeacherDashboard userProfile={userProfile} />
         ) : (
           <>
+            {step === 'dashboard' && (
+              <StudentDashboard
+                userProfile={userProfile}
+                submissions={studentSubmissions}
+                onSelectSubject={handleSelectSubjectFromDashboard}
+                onSignOut={handleSignOut}
+                notifications={studentNotifications}
+                onMarkAllRead={handleMarkAllRead}
+                onClearNotifications={handleClearNotifications}
+                submissionToastMsg={submissionToastMsg}
+                onDismissToast={() => setSubmissionToastMsg(null)}
+              />
+            )}
+
             {isAttemptLocked && step === 'start' && (
               <LockScreen
                 userProfile={userProfile}
@@ -418,16 +660,15 @@ export default function Home() {
 
             {!isAttemptLocked && step === 'start' && (
               <StartScreen
-                studentName={studentName}
-                setStudentName={setStudentName}
                 selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-                selfRating={selfRating}
-                setSelfRating={setSelfRating}
+                selectedTopics={selectedTopics}
                 questionLimit={questionLimit}
                 setQuestionLimit={setQuestionLimit}
+                selfRating={selfRating}
+                setSelfRating={setSelfRating}
                 onStart={handleStart}
                 onStartQuiz={handleStart}
+                onBackToDashboard={() => setStep('dashboard')}
               />
             )}
 

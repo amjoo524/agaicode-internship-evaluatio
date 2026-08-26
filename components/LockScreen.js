@@ -7,7 +7,7 @@ export default function LockScreen({ lastSubmittedAt, userProfile, checkingLock,
   useEffect(() => {
     if (!lastSubmittedAt) return;
 
-    const lockDuration = 24 * 60 * 60 * 1000; // 24 Hours in milliseconds
+    const lockDuration = 12 * 60 * 60 * 1000; // 12 Hours in milliseconds
     const unlockTime = new Date(lastSubmittedAt).getTime() + lockDuration;
 
     const updateTimer = () => {
@@ -56,7 +56,7 @@ export default function LockScreen({ lastSubmittedAt, userProfile, checkingLock,
           Evaluation Lock Active
         </h2>
         <p className="text-slate-300 text-sm lg:text-base font-medium mb-8 px-4 leading-relaxed">
-          Hello <span className="font-bold text-white">{userProfile?.full_name || 'Student'}</span>! You have already completed an evaluation test within the last 24 hours. Per company policy, candidates are allowed strictly <span className="font-bold text-indigo-400">one attempt per 24 hours</span>.
+          Hello <span className="font-bold text-white">{userProfile?.full_name || 'Student'}</span>! You have already completed an evaluation test within the last 12 hours. Per company policy, candidates are allowed strictly <span className="font-bold text-indigo-400">one attempt per 12 hours</span>.
         </p>
 
         {/* Countdown Timer Display */}
@@ -95,7 +95,7 @@ export default function LockScreen({ lastSubmittedAt, userProfile, checkingLock,
           </div>
           <div className="flex justify-between">
             <span className="font-semibold text-slate-400">Attempt Policy:</span>
-            <span className="font-bold text-indigo-400">Strict 24-Hour Cooldown</span>
+            <span className="font-bold text-indigo-400">Strict 12-Hour Cooldown</span>
           </div>
         </div>
 

@@ -75,8 +75,8 @@ const TimerBadge = memo(function TimerBadge({ totalQuestions, onTimeUp }) {
 
   return (
     <div className={`flex items-center gap-2 font-mono text-sm font-bold px-3.5 py-1.5 rounded-xl border transition-all gpu-accelerated ${isTimeLow
-        ? 'bg-rose-500/10 text-rose-400 border-rose-500/40 animate-pulse'
-        : 'bg-slate-800/80 text-slate-200 border-slate-700/80'
+      ? 'bg-rose-500/10 text-rose-400 border-rose-500/40 animate-pulse'
+      : 'bg-slate-800/80 text-slate-200 border-slate-700/80'
       }`}>
       <span>⏱️</span>
       <span>{formatTime(timeLeft)}</span>
@@ -100,14 +100,14 @@ const OptionButton = memo(function OptionButton({
       onClick={() => onSelect(optionKey)}
       disabled={isLocked}
       className={`w-full p-3.5 rounded-xl border text-left flex items-start gap-3 transition-all cursor-pointer gpu-accelerated ${isSelected
-          ? 'border-indigo-500 bg-indigo-500/15 font-semibold text-white ring-2 ring-indigo-500/30 shadow-md'
-          : 'border-slate-800 bg-slate-900/50 hover:bg-slate-900 text-slate-300 hover:border-slate-700'
+        ? 'border-indigo-500 bg-indigo-500/15 font-semibold text-white ring-2 ring-indigo-500/30 shadow-md'
+        : 'border-slate-800 bg-slate-900/50 hover:bg-slate-900 text-slate-300 hover:border-slate-700'
         }`}
     >
       <span
         className={`w-6 h-6 rounded-lg border text-xs font-extrabold flex items-center justify-center flex-shrink-0 transition-colors ${isSelected
-            ? 'bg-indigo-600 text-white border-indigo-500'
-            : 'border-slate-700 text-slate-400 bg-slate-800/60'
+          ? 'bg-indigo-600 text-white border-indigo-500'
+          : 'border-slate-700 text-slate-400 bg-slate-800/60'
           }`}
       >
         {optionKey}
@@ -118,6 +118,45 @@ const OptionButton = memo(function OptionButton({
 });
 
 // ==========================================
+// DISTRACTOR OPTION GENERATOR FOR DRAG & DROP
+// ==========================================
+const DISTRACTOR_BANKS = {
+  HTML: ["<div>", "<span>", "<p>", "<header>", "<footer>", "<nav>", "<section>", "<article>", "<aside>", "<main>", "<button>", "<input>", "<a>", "<img>", "<ul>", "<li>", "<table>", "<form>", "<script>", "<style>"],
+  CSS: ["display: flex;", "display: grid;", "position: absolute;", "position: relative;", "margin: auto;", "padding: 10px;", "color: #fff;", "background: #000;", "border-radius: 8px;", "z-index: 10;", "opacity: 0.8;", "align-items: center;", "justify-content: center;", "flex-direction: column;", "overflow: hidden;"],
+  JS: ["let", "var", "const", "=== ", "!==", "async", "await", "Promise.resolve()", ".map()", ".filter()", ".reduce()", "typeof", "instanceof", "try / catch", "return", "export default", "useCallback", "useEffect"],
+  English: ["is", "are", "was", "were", "been", "being", "has", "have", "had", "does", "did", "going", "gone", "went", "speak", "spoken", "wrote", "written"],
+  GENERAL: ["block", "inline", "true", "false", "null", "undefined", "function", "class", "import", "export", "async", "await", "flex", "grid", "relative", "absolute"]
+};
+
+function getAugmentedOptions(baseItems = [], section = 'JS', seed = 0) {
+  if (!Array.isArray(baseItems) || baseItems.length === 0) return [];
+  const bank = DISTRACTOR_BANKS[section] || DISTRACTOR_BANKS.GENERAL;
+  const set = new Set(baseItems);
+  const distractors = bank.filter(item => !set.has(item));
+
+  const targetTotal = Math.max(8, Math.min(16, baseItems.length + 6));
+  const needed = targetTotal - set.size;
+
+  const selectedDistractors = [];
+  let s = (seed || 1) + 13;
+  for (let i = 0; i < distractors.length && selectedDistractors.length < needed; i++) {
+    s = (s * 9301 + 49297) % 233280;
+    const idx = Math.floor((s / 233280) * distractors.length);
+    const candidate = distractors[idx];
+    if (candidate && !set.has(candidate) && !selectedDistractors.includes(candidate)) {
+      selectedDistractors.push(candidate);
+    }
+  }
+
+  const combined = [...baseItems, ...selectedDistractors];
+  return combined.sort((a, b) => {
+    const hashA = (a.charCodeAt(0) || 0) + (a.charCodeAt(a.length - 1) || 0) + (seed || 1);
+    const hashB = (b.charCodeAt(0) || 0) + (b.charCodeAt(b.length - 1) || 0) + (seed || 1);
+    return hashA - hashB;
+  });
+}
+
+// ==========================================
 // ULTRA-COMPACT SCROLL-FREE DRAG & DROP MATCHER UI
 // ==========================================
 const DragDropMatcher = memo(function DragDropMatcher({
@@ -126,10 +165,16 @@ const DragDropMatcher = memo(function DragDropMatcher({
   matchingMapping = {},
   activeDragItem,
   isLocked,
+  section = 'JS',
+  questionId = 1,
   onMatchZone,
   onUnmatchZone,
   onSelectActiveItem,
 }) {
+  const augmentedPool = useMemo(() => {
+    return getAugmentedOptions(dragItems, section, Number(questionId) || 1);
+  }, [dragItems, section, questionId]);
+
   return (
     <div className="w-full space-y-3 bg-gradient-to-b from-slate-950 via-slate-900/90 to-slate-950 border border-indigo-500/30 p-3.5 sm:p-4 rounded-2xl shadow-xl gpu-accelerated">
       {/* Top Banner / Instruction Bar */}
@@ -139,7 +184,7 @@ const DragDropMatcher = memo(function DragDropMatcher({
             <span>🎯</span> Instructions:
           </span>
           <span className="text-slate-400 text-[11px] hidden sm:inline">
-            Drag option into matching target zone or click option first then click target box.
+            Select the correct items from the pool of options ({augmentedPool.length} choices) to match all target zones.
           </span>
           <span className="text-slate-400 text-[11px] sm:hidden">
             Click option then click target.
@@ -189,10 +234,10 @@ const DragDropMatcher = memo(function DragDropMatcher({
                     }
                   }}
                   className={`flex items-center justify-between gap-2 p-2.5 rounded-xl border transition-all ${matchedItem
-                      ? 'bg-indigo-950/40 border-indigo-500/60 shadow'
-                      : activeDragItem
-                        ? 'bg-slate-900 border-indigo-400/80 ring-2 ring-indigo-500/30 cursor-pointer animate-pulse'
-                        : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
+                    ? 'bg-indigo-950/40 border-indigo-500/60 shadow'
+                    : activeDragItem
+                      ? 'bg-slate-900 border-indigo-400/80 ring-2 ring-indigo-500/30 cursor-pointer animate-pulse'
+                      : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
                     }`}
                 >
                   <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -223,8 +268,8 @@ const DragDropMatcher = memo(function DragDropMatcher({
                     ) : (
                       <div
                         className={`px-2.5 py-1 rounded-lg border border-dashed flex items-center justify-center text-[11px] font-mono font-medium transition-all ${activeDragItem
-                            ? 'border-indigo-400 text-indigo-300 bg-indigo-500/10 cursor-pointer'
-                            : 'border-slate-800 text-slate-500'
+                          ? 'border-indigo-400 text-indigo-300 bg-indigo-500/10 cursor-pointer'
+                          : 'border-slate-800 text-slate-500'
                           }`}
                       >
                         {activeDragItem ? '👉 Click to Place' : 'Drop / Click'}
@@ -241,12 +286,12 @@ const DragDropMatcher = memo(function DragDropMatcher({
         <div className="space-y-2">
           <div className="flex items-center justify-between px-1">
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-400 flex items-center gap-1">
-              📦 Available Options ({dragItems.length})
+              📦 Available Options ({augmentedPool.length} choices)
             </span>
           </div>
 
-          <div className="flex flex-wrap gap-2 p-2.5 bg-slate-900/60 border border-slate-800 rounded-xl min-h-[140px] items-start align-content-start">
-            {dragItems.map((item, idx) => {
+          <div className="flex flex-wrap gap-2 p-2.5 bg-slate-900/60 border border-slate-800 rounded-xl min-h-[140px] max-h-[220px] overflow-y-auto items-start align-content-start">
+            {augmentedPool.map((item, idx) => {
               const isPlaced = Object.values(matchingMapping).includes(item);
               const isActive = activeDragItem === item;
 
@@ -265,10 +310,10 @@ const DragDropMatcher = memo(function DragDropMatcher({
                     onSelectActiveItem(isActive ? null : item);
                   }}
                   className={`px-3 py-1.5 rounded-lg font-mono text-xs font-bold transition-all border flex items-center gap-1.5 cursor-grab active:cursor-grabbing ${isPlaced
-                      ? 'bg-slate-900/40 text-slate-600 border-slate-800/80 line-through opacity-40 cursor-not-allowed'
-                      : isActive
-                        ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white border-emerald-400 ring-2 ring-emerald-500/40 shadow'
-                        : 'bg-slate-900 text-indigo-300 border-slate-800 hover:border-indigo-500/50 hover:bg-slate-850 hover:text-white'
+                    ? 'bg-slate-900/40 text-slate-600 border-slate-800/80 line-through opacity-40 cursor-not-allowed'
+                    : isActive
+                      ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white border-emerald-400 ring-2 ring-emerald-500/40 shadow'
+                      : 'bg-slate-900 text-indigo-300 border-slate-800 hover:border-indigo-500/50 hover:bg-slate-850 hover:text-white'
                     }`}
                 >
                   <span>{item}</span>
@@ -345,34 +390,74 @@ function QuizScreen({
     [isSubjective, isDragDropMatching, isDragAndDropFillBlank]
   );
 
-  // FIX 2: Helper function to generate clean white (#ffffff) iframe preview source
-  const getPreviewSource = useCallback((userCode = '', section = 'JS') => {
-    const code = userCode || '';
+  // Task-based Editor Mode Selection
+  const editorLanguageMode = useMemo(() => {
+    const section = (currentQuestion?.section || '').toUpperCase();
+    const qText = (currentQuestion?.q || '').toLowerCase();
 
-    if (section === 'HTML') {
-      return `<!DOCTYPE html>
-<html>
-  <head>
-    <style>
-      body { margin: 0; padding: 12px; background: #ffffff; }
-    </style>
-  </head>
-  <body>
-    ${code}
-  </body>
-</html>`;
+    if (section === 'JS' || section === 'JAVASCRIPT') return 'javascript';
+
+    // Pure CSS tasks open CSS editor; HTML tasks or tasks asking to write HTML elements open HTML editor
+    if (section === 'CSS') {
+      if (qText.includes('<') || qText.includes('html') || qText.includes('button') || qText.includes('element') || qText.includes('inline')) {
+        return 'html';
+      }
+      return 'css';
     }
 
-    if (section === 'CSS') {
-      return `<!DOCTYPE html>
+    return 'html';
+  }, [currentQuestion?.section, currentQuestion?.q]);
+
+  // Helper function to generate clean iframe preview source supporting HTML + CSS + internal/inline styling
+  const getPreviewSource = useCallback((userCode = '', section = 'JS') => {
+    const code = (userCode || '').trim();
+
+    if (section === 'HTML' || section === 'CSS') {
+      if (code.toLowerCase().includes('<!doctype') || code.toLowerCase().includes('<html')) {
+        return code;
+      }
+
+      const hasStyleTag = /<style[\s>]/i.test(code);
+      const hasHtmlTags = /<[a-z][\s\S]*>/i.test(code);
+
+      if (section === 'CSS' && !hasHtmlTags && !hasStyleTag) {
+        return `<!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
     <style>
-      body { margin: 0; padding: 12px; background: #ffffff; }
+      body { margin: 0; padding: 16px; font-family: system-ui, -apple-system, sans-serif; background: #ffffff; color: #1e293b; }
       ${code}
     </style>
   </head>
-  <body></body>
+  <body>
+    <div class="preview-wrap">
+      <h1>Heading Preview</h1>
+      <p>Paragraph text preview for styling.</p>
+      <button>Button Preview</button>
+      <div class="box">Box container preview</div>
+    </div>
+  </body>
+</html>`;
+      }
+
+      let finalHead = `<style>body { margin: 0; padding: 16px; font-family: system-ui, -apple-system, sans-serif; background: #ffffff; color: #1e293b; }</style>`;
+      let finalBody = code;
+
+      if (hasStyleTag && !hasHtmlTags) {
+        finalHead += code;
+        finalBody = `<h1>Styled Element Preview</h1><p>Sample paragraph styled by custom CSS.</p><button>Styled Button</button>`;
+      }
+
+      return `<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    ${finalHead}
+  </head>
+  <body>
+    ${finalBody}
+  </body>
 </html>`;
     }
 
@@ -713,6 +798,8 @@ function QuizScreen({
               matchingMapping={matchingMapping}
               activeDragItem={activeDragItem}
               isLocked={isLocked}
+              section={currentQuestion?.section || 'JS'}
+              questionId={questionId}
               onMatchZone={handleMatchZone}
               onUnmatchZone={handleUnmatchZone}
               onSelectActiveItem={setActiveDragItem}
@@ -732,25 +819,29 @@ function QuizScreen({
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 block">
                   Available Code Snippets:
                 </span>
-                <div className="flex flex-wrap gap-2">
-                  {formattedOptions && Object.entries(formattedOptions).map(([key, val]) => (
-                    <button
-                      key={key}
-                      type="button"
-                      draggable={!isLocked}
-                      onDragStart={(e) => {
-                        if (isLocked) return;
-                        e.dataTransfer.setData('text/plain', val);
-                      }}
-                      onClick={() => onSelectOption(val)}
-                      className={`px-3.5 py-2 rounded-xl font-mono text-xs font-bold transition-all cursor-grab active:cursor-grabbing border gpu-accelerated ${selectedAnswer === val
+                <div className="flex flex-wrap gap-2 max-h-[180px] overflow-y-auto">
+                  {(() => {
+                    const rawValues = formattedOptions ? Object.values(formattedOptions) : [];
+                    const augmentedValues = getAugmentedOptions(rawValues, currentQuestion?.section || 'JS', Number(questionId) || 1);
+                    return augmentedValues.map((val, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        draggable={!isLocked}
+                        onDragStart={(e) => {
+                          if (isLocked) return;
+                          e.dataTransfer.setData('text/plain', val);
+                        }}
+                        onClick={() => onSelectOption(val)}
+                        className={`px-3.5 py-2 rounded-xl font-mono text-xs font-bold transition-all cursor-grab active:cursor-grabbing border gpu-accelerated ${selectedAnswer === val
                           ? 'bg-indigo-600 text-white border-indigo-400 shadow-md shadow-indigo-900/50'
                           : 'bg-slate-900 text-indigo-300 border-slate-800 hover:border-indigo-500/50 hover:bg-slate-850'
-                        }`}
-                    >
-                      {val}
-                    </button>
-                  ))}
+                          }`}
+                      >
+                        {val}
+                      </button>
+                    ));
+                  })()}
                 </div>
               </div>
             </div>
@@ -924,12 +1015,12 @@ function QuizScreen({
                 {(activeTab === 'split' || activeTab === 'code') && (
                   <div className={`flex flex-col rounded-xl overflow-hidden border border-slate-800 bg-slate-950 ${activeTab === 'code' ? 'lg:col-span-2' : ''}`}>
                     <div className="bg-slate-900 px-3 py-1.5 border-b border-slate-800 flex justify-between items-center text-[11px] font-mono text-slate-400">
-                      <span>Code Workspace ({currentQuestion?.section || 'JS'})</span>
+                      <span>Code Workspace ({editorLanguageMode.toUpperCase()})</span>
                       <span>Monaco Editor + Emmet</span>
                     </div>
                     <div className="flex-1 relative min-h-[220px]">
                       <MonacoEditorContainer
-                        language={currentQuestion?.section === 'CSS' ? 'css' : currentQuestion?.section === 'HTML' ? 'html' : 'javascript'}
+                        language={editorLanguageMode}
                         theme="vs-dark"
                         initialValue={subjectiveAnswer || currentQuestion?.starterCode || ''}
                         fontSize={editorFontSize}
@@ -995,14 +1086,14 @@ function QuizScreen({
                                 <div
                                   key={idx}
                                   className={`p-2.5 rounded-lg border text-xs leading-relaxed transition-all ${isError
-                                      ? 'bg-rose-950/40 border-rose-500/40 text-rose-300'
-                                      : isWarn
-                                        ? 'bg-amber-950/40 border-amber-500/40 text-amber-300'
-                                        : isResult
-                                          ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300'
-                                          : isInfo
-                                            ? 'bg-cyan-950/40 border-cyan-500/40 text-cyan-300'
-                                            : 'bg-slate-900/80 border-slate-800 text-slate-200'
+                                    ? 'bg-rose-950/40 border-rose-500/40 text-rose-300'
+                                    : isWarn
+                                      ? 'bg-amber-950/40 border-amber-500/40 text-amber-300'
+                                      : isResult
+                                        ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300'
+                                        : isInfo
+                                          ? 'bg-cyan-950/40 border-cyan-500/40 text-cyan-300'
+                                          : 'bg-slate-900/80 border-slate-800 text-slate-200'
                                     }`}
                                 >
                                   <div className="flex items-center justify-between text-[10px] opacity-70 mb-1">
