@@ -44,7 +44,7 @@ export default function ResultScreen({ studentName, onSubmitFinal }) {
 
         <div className="mt-4 pt-4 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400 font-medium">
           <span>Instant Analytics Ready</span>
-          <span className="text-emerald-400 font-bold">100% Score Generated</span>
+          <span className="text-emerald-400 font-bold">Evaluation Report Ready</span>
         </div>
       </div>
 

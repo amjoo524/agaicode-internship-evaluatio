@@ -28,6 +28,7 @@ import {
   Clock,
   Trash2
 } from 'lucide-react';
+import StudentNavbar from './StudentNavbar';
 import TopicSelectionModal from './TopicSelectionModal';
 import UserAnalyticsReport from './UserAnalyticsReport';
 
@@ -208,176 +209,16 @@ export default function StudentDashboard({
       )}
 
       {/* Top Navigation Bar */}
-      <header className="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80 px-4 sm:px-8 py-3.5 flex items-center justify-between">
-        {/* Left Side: Brand Logo */}
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-400 flex items-center justify-center text-white shadow-lg shadow-indigo-950/50">
-              <Zap className="w-5 h-5 fill-white" />
-            </div>
-            <div>
-              <span className="font-extrabold text-white text-base tracking-tight block leading-tight">
-                SkillPortal <span className="text-indigo-400 text-xs font-semibold px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20">STUDENT</span>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Center: Navigation Links */}
-        <nav className="hidden md:flex items-center gap-2 bg-slate-900/60 border border-slate-800 rounded-xl p-1.5 shadow-inner">
-          <button
-            type="button"
-            onClick={() => setActiveTab('dashboard')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'dashboard'
-                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-950/50'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-            }`}
-          >
-            <LayoutDashboard className="w-4 h-4" />
-            <span>Dashboard</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('history')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'history'
-                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-950/50'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-            }`}
-          >
-            <History className="w-4 h-4" />
-            <span>Test History</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('analytics')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'analytics'
-                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-950/50'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-            }`}
-          >
-            <BarChart3 className="w-4 h-4" />
-            <span>Analytics</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('resources')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              activeTab === 'resources'
-                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-950/50'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-            }`}
-          >
-            <BookOpen className="w-4 h-4" />
-            <span>Resources</span>
-          </button>
-        </nav>
-
-        {/* Right Side: Active Streak, Notifications & Logout Button */}
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs">
-            <Flame className="w-4 h-4 text-amber-400 animate-pulse" />
-            <span className="font-bold text-amber-300">5 Day Streak</span>
-          </div>
-
-          {/* Student Notification Bell */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => {
-                setShowNotifDropdown(!showNotifDropdown);
-                if (!showNotifDropdown && onMarkAllRead) onMarkAllRead();
-              }}
-              className="p-2.5 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-indigo-400 rounded-xl border border-slate-800 transition-all cursor-pointer relative"
-              title="Notifications"
-            >
-              <Bell className="w-4 h-4" />
-              {unreadCount > 0 ? (
-                <span className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1.5 bg-rose-600 text-white font-black text-[10px] rounded-full flex items-center justify-center border-2 border-slate-950 animate-bounce shadow-md">
-                  {unreadCount}
-                </span>
-              ) : (
-                <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
-              )}
-            </button>
-
-            {/* Notification Dropdown Panel */}
-            {showNotifDropdown && (
-              <div className="absolute right-0 mt-3 w-80 sm:w-96 bg-slate-900 border border-indigo-500/30 rounded-2xl shadow-2xl z-50 overflow-hidden animate-fadeIn backdrop-blur-xl">
-                <div className="p-4 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Bell className="w-4 h-4 text-indigo-400" />
-                    <h4 className="text-xs font-black text-white uppercase tracking-wider">Evaluation Alerts</h4>
-                  </div>
-                  {notifications.length > 0 && (
-                    <button
-                      type="button"
-                      onClick={onClearNotifications}
-                      className="text-[10px] font-bold text-slate-400 hover:text-rose-400 flex items-center gap-1 cursor-pointer transition-colors"
-                    >
-                      <Trash2 className="w-3 h-3" />
-                      <span>Clear</span>
-                    </button>
-                  )}
-                </div>
-
-                <div className="max-h-80 overflow-y-auto divide-y divide-slate-800/60">
-                  {notifications.length === 0 ? (
-                    <div className="p-8 text-center text-slate-400 text-xs">
-                      <CheckCircle2 className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-                      <p className="font-bold text-slate-300">No new notifications</p>
-                      <p className="text-[11px] text-slate-500 mt-0.5">Test submission confirmations will be logged here.</p>
-                    </div>
-                  ) : (
-                    notifications.map((item) => (
-                      <div
-                        key={item.id}
-                        className={`p-3.5 transition-colors ${
-                          !item.read ? 'bg-indigo-500/5' : 'bg-slate-900/40'
-                        }`}
-                      >
-                        <div className="flex items-start justify-between gap-2 mb-1">
-                          <span className="text-[10px] font-black px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider">
-                            {item.category || 'Submission Confirmation'}
-                          </span>
-                          <span className="text-[10px] font-bold text-slate-500 flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            {item.timestamp}
-                          </span>
-                        </div>
-                        <p className="text-xs font-bold text-slate-200 leading-snug">
-                          {item.message}
-                        </p>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="flex items-center gap-3 pl-2 border-l border-slate-800">
-            <div className="text-right hidden sm:block">
-              <span className="block text-xs font-bold text-white">{userProfile?.full_name || 'Student User'}</span>
-              <span className="block text-[10px] text-slate-400">{userProfile?.email || 'student@portal.com'}</span>
-            </div>
-
-            <button
-              type="button"
-              onClick={onSignOut}
-              className="p-2.5 bg-slate-900 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 rounded-xl border border-slate-800 transition-all cursor-pointer"
-              title="Sign Out"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </header>
+      <StudentNavbar
+        userProfile={userProfile}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        onSignOut={onSignOut}
+        notifications={notifications}
+        onMarkAllRead={onMarkAllRead}
+        onClearNotifications={onClearNotifications}
+        inQuiz={false}
+      />
 
       {/* Dashboard Main Content area - Rendered based on activeTab */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-8">

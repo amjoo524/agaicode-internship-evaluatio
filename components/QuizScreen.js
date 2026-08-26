@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
 import MonacoEditorContainer from './MonacoEditorContainer';
+import StudentNavbar from './StudentNavbar';
 import {
   Code2,
   Eye,
@@ -339,6 +340,12 @@ function QuizScreen({
   onNext,
   onTimeUp,
   isLocked = false,
+  userProfile,
+  onSignOut,
+  notifications = [],
+  onMarkAllRead,
+  onClearNotifications,
+  renderNavbar = false,
 }) {
   if (!currentQuestion) {
     return (
@@ -740,8 +747,19 @@ function QuizScreen({
   );
 
   return (
-    <div className="min-h-screen w-full bg-[#020617] text-slate-200 p-3 lg:p-6 flex flex-col justify-center items-center overflow-hidden">
-      <div className="w-full max-w-[1100px] h-[92vh] max-h-[780px] bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 lg:p-6 shadow-2xl relative backdrop-blur-xl flex flex-col justify-between overflow-hidden gpu-accelerated">
+    <div className="min-h-screen w-full bg-[#020617] text-slate-200 flex flex-col items-center overflow-hidden">
+      {(renderNavbar || onSignOut) && (
+        <StudentNavbar
+          userProfile={userProfile}
+          onSignOut={onSignOut}
+          notifications={notifications}
+          onMarkAllRead={onMarkAllRead}
+          onClearNotifications={onClearNotifications}
+          inQuiz={true}
+        />
+      )}
+      <div className="w-full flex-1 flex flex-col justify-center items-center p-3 lg:p-6">
+        <div className="w-full max-w-[1100px] h-[92vh] max-h-[780px] bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 lg:p-6 shadow-2xl relative backdrop-blur-xl flex flex-col justify-between overflow-hidden gpu-accelerated">
 
         {/* HEADER BAR */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
@@ -1164,6 +1182,7 @@ function QuizScreen({
           </button>
         </div>
 
+        </div>
       </div>
     </div>
   );

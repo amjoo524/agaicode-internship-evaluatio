@@ -11,6 +11,7 @@ import ResultScreenImport from '../components/ResultScreen';
 import LockScreenImport from '../components/LockScreen';
 import TeacherDashboard from '../components/TeacherDashboard';
 import StudentDashboard, { StudentSubmissionRecord } from '../components/StudentDashboard';
+import StudentNavbar from '../components/StudentNavbar';
 
 const Header = HeaderImport as any;
 const AuthScreen = AuthScreenImport as any;
@@ -172,10 +173,12 @@ export default function Home() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      const currentUser = session?.user || null;
-      setUser(currentUser);
-      checkUserStatus(currentUser);
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+        const currentUser = session?.user || null;
+        setUser(currentUser);
+        checkUserStatus(currentUser);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -336,13 +339,15 @@ export default function Home() {
           read: false,
         };
 
+        const genericConfirmationMsg = `Your ${selectedCategory} test has been submitted successfully! Head over to your dashboard to view your detailed performance breakdown and review answers.`;
+
         const studentNotif = {
           id: Date.now() + 1,
           type: 'submission',
           targetRole: 'student',
           targetUserId: user.id,
           title: 'Evaluation Confirmed',
-          message: `Thank you for completing your ${selectedCategory} test! Your evaluation score (${finalScore}/${questionsCount}) has been saved. Review your performance breakdown on your dashboard.`,
+          message: genericConfirmationMsg,
           studentName: payload.student_name,
           category: selectedCategory,
           timestamp: timeStr,
@@ -350,9 +355,7 @@ export default function Home() {
         };
 
         setNotifications((prev) => [adminNotif, studentNotif, ...prev]);
-        setSubmissionToastMsg(
-          `Great job completing your ${selectedCategory} evaluation! Your results are now available on your dashboard.`
-        );
+        setSubmissionToastMsg(genericConfirmationMsg);
       } catch (err) {
         console.error('Failed to record test submission:', err);
       }
@@ -620,14 +623,25 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200 flex flex-col justify-between font-sans selection:bg-indigo-500 selection:text-white">
-      {(isTeacher || step !== 'dashboard') && (
+      {isTeacher ? (
         <Header
           userProfile={userProfile}
           onSignOut={handleSignOut}
-          notifications={isTeacher ? adminNotifications : studentNotifications}
+          notifications={adminNotifications}
           onMarkAllRead={handleMarkAllRead}
           onClearNotifications={handleClearNotifications}
         />
+      ) : (
+        step !== 'dashboard' && (
+          <StudentNavbar
+            userProfile={userProfile}
+            onSignOut={handleSignOut}
+            notifications={studentNotifications}
+            onMarkAllRead={handleMarkAllRead}
+            onClearNotifications={handleClearNotifications}
+            inQuiz={true}
+          />
+        )
       )}
 
       <main className="flex-1 flex flex-col justify-center items-center w-full">

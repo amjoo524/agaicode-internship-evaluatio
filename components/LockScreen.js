@@ -9,6 +9,7 @@ export default function LockScreen({ lastSubmittedAt, userProfile, checkingLock,
 
     const lockDuration = 12 * 60 * 60 * 1000; // 12 Hours in milliseconds
     const unlockTime = new Date(lastSubmittedAt).getTime() + lockDuration;
+    let hasRefreshed = false;
 
     const updateTimer = () => {
       const now = Date.now();
@@ -16,7 +17,11 @@ export default function LockScreen({ lastSubmittedAt, userProfile, checkingLock,
 
       if (diff <= 0) {
         setTimeLeft({ hours: 0, minutes: 0, seconds: 0, totalMs: 0 });
-        if (onRefreshCheck) onRefreshCheck();
+        if (interval) clearInterval(interval);
+        if (!hasRefreshed) {
+          hasRefreshed = true;
+          if (onRefreshCheck) onRefreshCheck();
+        }
       } else {
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));

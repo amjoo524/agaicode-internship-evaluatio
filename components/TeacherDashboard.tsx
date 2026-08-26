@@ -253,13 +253,14 @@ export default function TeacherDashboard({ userProfile }: { userProfile: any }) 
     fetchSubmissions();
   }, []);
 
-  useEffect(() => {
-    if (selectedSubmission) {
-      fetchQuestionBreakdown(selectedSubmission);
-      setShowBreakdown(true);
-      setExpandedQuestion(null);
-    }
-  }, [selectedSubmission]);
+useEffect(() => {
+  if (selectedSubmission?.id) {
+    // Check if we already fetched or if it's a duplicate trigger
+    fetchQuestionBreakdown(selectedSubmission);
+    setShowBreakdown(true);
+    setExpandedQuestion(null);
+  }
+}, [selectedSubmission?.id]);
 
   const handleAddStudent = async (e: React.FormEvent) => {
     e.preventDefault();

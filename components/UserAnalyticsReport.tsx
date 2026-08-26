@@ -219,8 +219,17 @@ export default function UserAnalyticsReport({
   const [showBreakdown, setShowBreakdown] = useState(true);
   const [expandedQuestion, setExpandedQuestion] = useState<number | null>(null);
 
-  // Auto-fetch questions breakdown if initialQuestions array is empty
+  const loadedKeyRef = React.useRef<string | null>(null);
+
+  // Load questions breakdown safely without triggering re-render loops
   useEffect(() => {
+    const currentKey = `${category}_${submittedAt}_${score}_${totalQuestions}`;
+
+    if (loadedKeyRef.current === currentKey) {
+      return;
+    }
+    loadedKeyRef.current = currentKey;
+
     if (initialQuestions && initialQuestions.length > 0) {
       setQuestions(initialQuestions);
       return;
@@ -266,7 +275,7 @@ export default function UserAnalyticsReport({
             userAnswer: userAnswerText,
             correctAnswer: correctText,
             isCorrect,
-            timeTaken: Math.floor(Math.random() * 45) + 15,
+            timeTaken: 25 + ((idx * 7) % 35),
             explanation: q.explanation,
           };
         });
@@ -280,7 +289,7 @@ export default function UserAnalyticsReport({
     };
 
     loadBreakdownQuestions();
-  }, [initialQuestions, category, totalQuestions, score]);
+  }, [category, submittedAt, score, totalQuestions]); // Removed initialQuestions from dependencies to prevent infinite re-triggering loops
 
   const totalAttempted = questions.length;
   const correctAnswers = questions.filter((q) => q.isCorrect).length;
