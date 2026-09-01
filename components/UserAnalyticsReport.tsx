@@ -23,6 +23,7 @@ import {
   Check,
   HelpCircle
 } from 'lucide-react';
+import { CodeBox, QuestionTextRenderer } from './CodeBox';
 
 type Difficulty = 'Easy' | 'Medium' | 'Hard';
 
@@ -547,9 +548,7 @@ export default function UserAnalyticsReport({
                               </span>
                             )}
                           </div>
-                          <p className="text-sm font-semibold text-slate-200 leading-snug">
-                            {formatQuestionText(q.text)}
-                          </p>
+                          <QuestionTextRenderer text={formatQuestionText(q.text)} />
                         </div>
 
                         <div className="flex items-center gap-2 flex-shrink-0">
@@ -577,7 +576,7 @@ export default function UserAnalyticsReport({
                               Your Submitted Answer
                             </p>
                             <div
-                              className={`text-sm font-bold ${
+                              className={`text-sm font-bold whitespace-pre-wrap font-mono ${
                                 q.isCorrect ? 'text-emerald-400' : 'text-rose-400'
                               }`}
                             >
@@ -588,7 +587,7 @@ export default function UserAnalyticsReport({
                             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
                               Canonical Correct Answer
                             </p>
-                            <div className="text-sm font-bold text-emerald-400">
+                            <div className="text-sm font-bold text-emerald-400 whitespace-pre-wrap font-mono">
                               {renderAnswerValue(q.correctAnswer)}
                             </div>
                           </div>
@@ -621,8 +620,8 @@ export default function UserAnalyticsReport({
                                   <h5 className="text-xs font-bold text-slate-200 mb-1">{appr.title}</h5>
                                   <p className="text-[11px] text-slate-400 leading-relaxed">{appr.desc}</p>
                                 </div>
-                                <div className="mt-3 pt-2 border-t border-slate-800 font-mono text-[10px] text-indigo-300 bg-slate-950 p-2 rounded border border-slate-800/60 overflow-x-auto">
-                                  <pre>{appr.code}</pre>
+                                <div className="mt-2">
+                                  <CodeBox code={appr.code} filename={`approach_${aIdx + 1}.js`} />
                                 </div>
                               </div>
                             ))}

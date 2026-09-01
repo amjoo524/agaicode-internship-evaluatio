@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
 import MonacoEditorContainer from './MonacoEditorContainer';
 import StudentNavbar from './StudentNavbar';
+import { CodeBox, QuestionTextRenderer } from './CodeBox';
 import {
   Code2,
   Eye,
@@ -113,7 +114,7 @@ const OptionButton = memo(function OptionButton({
       >
         {optionKey}
       </span>
-      <span className="text-xs lg:text-sm font-medium">{optionValue}</span>
+      <span className="text-xs lg:text-sm font-medium whitespace-pre-wrap font-mono">{optionValue}</span>
     </button>
   );
 });
@@ -667,12 +668,12 @@ function QuizScreen({
     };
 
     return (
-      <div className="inline-flex flex-wrap items-center leading-relaxed font-mono text-sm text-slate-300">
+      <div className="inline-flex flex-wrap items-center leading-relaxed font-mono text-sm text-slate-300 whitespace-pre-wrap">
         {parts.map((part, index) => {
           const isLast = index === parts.length - 1;
           return (
-            <span key={index} className="inline-flex items-center flex-wrap">
-              <span className="text-slate-300 break-all">{part}</span>
+            <span key={index} className="inline-flex items-center flex-wrap whitespace-pre-wrap font-mono">
+              <span className="text-slate-300 break-all whitespace-pre-wrap font-mono">{part}</span>
               {!isLast && (
                 <span
                   onDragOver={handleDragOver}
@@ -796,15 +797,11 @@ function QuizScreen({
         {/* QUESTION CONTENT CONTAINER */}
         <div className={`flex-1 ${isDragDropMatching ? 'flex flex-col justify-start overflow-hidden my-1 space-y-2' : 'overflow-y-auto my-2 pr-1 space-y-4'}`}>
           <div className="space-y-1">
-            <h2 className="text-sm lg:text-base font-bold text-white leading-relaxed">
-              {currentQuestion?.q}
-            </h2>
+            <QuestionTextRenderer text={currentQuestion?.q || ''} />
 
             {/* Coding snippets for standard quiz questions */}
             {currentQuestion?.code && !isDragAndDropFillBlank && !isSubjective && !isDragDropMatching && (
-              <pre className="bg-slate-950 border border-slate-800 p-4 rounded-xl font-mono text-xs text-indigo-300 overflow-x-auto">
-                <code>{currentQuestion.code}</code>
-              </pre>
+              <CodeBox code={currentQuestion.code} showLineNumbers={true} />
             )}
           </div>
 

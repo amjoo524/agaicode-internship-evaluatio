@@ -130,31 +130,38 @@ export default function Home() {
       setUserProfile(profileData);
       setStudentName(profileData.full_name || '');
 
-      if (profileData.role === 'student') {
-        const { data: submissions, error: subErr } = await supabase
-          .from('test_submissions')
-          .select('*')
-          .eq('user_id', currentUser.id)
-          .order('submitted_at', { ascending: false });
+      if (profileData.role === 'student' && currentUser?.id) {
+        try {
+          const { data: submissions, error: subErr } = await supabase
+            .from('test_submissions')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .order('submitted_at', { ascending: false });
 
-        if (!subErr && submissions && submissions.length > 0) {
-          setStudentSubmissions(submissions);
-          const lastTime = submissions[0].submitted_at;
-          setLastSubmittedAt(lastTime);
-          const lockDuration = 12 * 60 * 60 * 1000;
-          const timePassed = Date.now() - new Date(lastTime).getTime();
+          if (!subErr && submissions && submissions.length > 0) {
+            setStudentSubmissions(submissions);
+            const lastTime = submissions[0].submitted_at;
+            setLastSubmittedAt(lastTime);
+            const lockDuration = 12 * 60 * 60 * 1000;
+            const timePassed = Date.now() - new Date(lastTime).getTime();
 
-          if (timePassed < lockDuration) {
-            setIsAttemptLocked(true);
+            if (timePassed < lockDuration) {
+              setIsAttemptLocked(true);
+            } else {
+              setIsAttemptLocked(false);
+            }
           } else {
+            setStudentSubmissions(submissions || []);
+            setLastSubmittedAt(null);
             setIsAttemptLocked(false);
+            if (subErr && subErr.message) {
+              console.warn('Submissions query note:', subErr.message);
+            }
           }
-        } else if (!subErr) {
+        } catch (e) {
           setStudentSubmissions([]);
           setLastSubmittedAt(null);
           setIsAttemptLocked(false);
-        } else {
-          console.error('Failed to check submissions:', subErr);
         }
       }
     } catch (err) {
@@ -404,12 +411,30 @@ export default function Home() {
       if (targetZones.length === 0) return Object.keys(selected).length > 0;
 
       if (q.answer && typeof q.answer === 'object') {
-        return Object.entries(q.answer).every(([zIdx, expectedItem]) => selected[zIdx] === expectedItem);
+        const entries = Object.entries(q.answer);
+        if (entries.length === 0) return false;
+        let correctCount = 0;
+        entries.forEach(([zKey, expectedItem]) => {
+          if (selected[zKey] === expectedItem || selected[Number(zKey)] === expectedItem) {
+            correctCount++;
+          } else if (selected[expectedItem as string] === zKey) {
+            correctCount++;
+          }
+        });
+        // 4 zones => min 2 correct; 2 or 3 zones => min 1 correct
+        const requiredMin = entries.length >= 4 ? 2 : Math.max(1, Math.floor(entries.length / 2));
+        return correctCount >= requiredMin;
       }
       if (Array.isArray(q.dragItems) && q.dragItems.length >= targetZones.length) {
-        return targetZones.every((_: any, idx: number) => selected[idx] === q.dragItems[idx]);
+        let correctCount = 0;
+        targetZones.forEach((_: any, idx: number) => {
+          if (selected[idx] === q.dragItems[idx]) correctCount++;
+        });
+        const requiredMin = targetZones.length >= 4 ? 2 : Math.max(1, Math.floor(targetZones.length / 2));
+        return correctCount >= requiredMin;
       }
-      return Object.keys(selected).length >= targetZones.length;
+      const requiredMin = targetZones.length >= 4 ? 2 : Math.max(1, Math.floor(targetZones.length / 2));
+      return Object.keys(selected).length >= requiredMin;
     }
     if (q.answer === selected) return true;
     if (q.options && typeof q.options === 'object' && !Array.isArray(q.options)) {
@@ -555,7 +580,15 @@ export default function Home() {
         });
 
         if (filteredByTopics.length > 0) {
-          loadedCategoryQuestions = filteredByTopics;
+          const targetLimit = questionLimit === 'ALL' ? loadedCategoryQuestions.length : Number(questionLimit);
+          if (filteredByTopics.length < targetLimit) {
+            const remainingPool = loadedCategoryQuestions.filter((q: any) => !filteredByTopics.includes(q));
+            const shuffledRemaining = shuffleArray(remainingPool);
+            const needed = targetLimit - filteredByTopics.length;
+            loadedCategoryQuestions = [...filteredByTopics, ...shuffledRemaining.slice(0, needed)];
+          } else {
+            loadedCategoryQuestions = filteredByTopics;
+          }
         }
       }
 
