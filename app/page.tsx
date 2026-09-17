@@ -531,12 +531,22 @@ export default function Home() {
           'Colors, Gradients & Typography': ['color', 'background', 'font', 'gradient', 'text-align', 'line-height', 'font-family', 'font-size'],
           'Transitions & Animations': ['transition', 'animation', '@keyframes', 'transform', 'duration', 'ease', 'rotate', 'scale'],
 
-          // JS
-          'Variables, Data Types & Operators': ['var', 'let', 'const', 'data type', 'primitive', 'operator', 'typeof', 'string', 'number', 'boolean', 'null', 'undefined', 'remainder', '%'],
-          'ES6+ Functions, Arrow & Scope': ['function', 'arrow', 'scope', 'closure', 'default parameter', 'this', 'return', 'block-scoped'],
-          'DOM Selection & Event Handling': ['dom', 'querySelector', 'getElementById', 'addEventListener', 'event', 'click', 'target', 'element', 'document'],
-          'Arrays, Objects & Destructuring': ['array', 'object', 'destructuring', 'map', 'filter', 'reduce', 'push', 'pop', 'keys', 'values', 'spread', '...'],
-          'Async JS, Promises & Fetch API': ['async', 'await', 'promise', 'fetch', 'then', 'catch', 'resolve', 'reject', 'api', 'json'],
+          // JS - 15 Granular Topics
+          'Variables (let, const, var & Scope)': ['var', 'let', 'const', 'scope', 'hoisting', 'temporal dead zone', 'tdz', 'block-scoped', 'function-scoped', 'redeclaration'],
+          'Primitive Data Types & Type Conversion': ['typeof', 'primitive', 'type conversion', 'coercion', 'isnan', 'symbol', 'bigint', 'null', 'undefined', 'boolean', 'truthy', 'falsy'],
+          'Operators & Arithmetic Operators': ['+', '-', '*', '/', '%', '**', '++', '--', 'arithmetic', 'modulus', 'exponentiation', 'increment', 'decrement', 'precedence'],
+          'Assignment Operators & Comparison Operators': ['=', '+=', '-=', '*=', '/=', '%=', '==', '===', '!=', '!==', '>', '<', '>=', '<=', 'comparison', 'assignment', 'strict equality', 'loose equality', 'relational'],
+          'Logical Operators & Ternary Operators': ['&&', '||', '!', '?', ':', 'logical and', 'logical or', 'logical not', 'short-circuit', 'short circuit', 'ternary', 'conditional operator', 'inline condition'],
+          'Conditional Statements (if-else, switch)': ['if', 'else', 'else if', 'switch', 'case', 'break', 'conditional statement'],
+          'Loops (for, while, do-while, for...of, for...in)': ['for', 'while', 'do-while', 'do...while', 'for...of', 'for...in', 'loop', 'iteration', 'continue', 'break', 'iterable'],
+          'Arrays & Array Methods (map, filter, reduce, indexOf)': ['array', 'map', 'filter', 'reduce', 'indexof', 'push', 'pop', 'shift', 'unshift', 'slice', 'splice', 'spread', 'arr'],
+          'Template Literals & String Concatenation': ['template literal', 'template string', 'backtick', 'interpolation', '${', 'string concatenation', 'concat', 'multiline'],
+          'Basic Functions & Arrow Functions': ['function', 'arrow', 'parameter', 'argument', 'return', '=>', 'rest parameter', 'default parameter'],
+          'Objects & Object Methods': ['object', 'object.keys', 'object.values', 'object.entries', 'destructuring', 'this', 'json.stringify', 'localstorage', 'properties'],
+          'DOM Selection & Manipulation': ['dom', 'queryselector', 'queryselectorall', 'getelementbyid', 'innerhtml', 'textcontent', 'createelement', 'appendchild', 'style', 'manipulation'],
+          'DOM Event Handling & Listeners': ['event', 'addeventlistener', 'removeeventlistener', 'preventdefault', 'stoppropagation', 'click', 'bubbling', 'delegation', 'listener'],
+          'Asynchronous JavaScript (Promises, Async/Await)': ['async', 'await', 'promise', 'settimeout', 'try...catch', 'fetch', 'resolve', 'reject', 'then', 'catch', 'pending', 'fulfilled'],
+          'Closures & Advanced Scope': ['closure', 'closures', 'lexical scope', 'lexical scoping', 'inner function', 'outer function', 'private variable', 'scope chain'],
 
           // React
           'JSX Syntax & Rendering Rules': ['jsx', 'rendering', 'element', 'expression', 'fragment', 'react'],
@@ -553,42 +563,128 @@ export default function Home() {
           'Metadata & SEO Optimization': ['metadata', 'seo', 'opengraph', 'head', 'generatemetadata'],
         };
 
-        const activeKeywords = selectedTopics.flatMap((t) => TOPIC_KEYWORD_MAP[t] || [t.toLowerCase()]);
-
-        const filteredByTopics = loadedCategoryQuestions.filter((q: any) => {
-          const qTopic = (q.topic || q.subtopic || q.category || q.section || '').toLowerCase();
-          const qText = (q.q || q.question || q.code || '').toLowerCase();
-          const qExpl = (q.explanation || '').toLowerCase();
-          const qTags = Array.isArray(q.tags) ? q.tags.map((t: any) => String(t).toLowerCase()) : [];
-
-          const directTitleMatch = selectedTopics.some((t) => {
-            const lowT = t.toLowerCase();
-            return qTopic.includes(lowT) || lowT.includes(qTopic);
-          });
-
-          if (directTitleMatch) return true;
-
-          return activeKeywords.some((kw) => {
-            const lowKw = kw.toLowerCase();
-            return (
-              qTopic.includes(lowKw) ||
-              qText.includes(lowKw) ||
-              qExpl.includes(lowKw) ||
-              qTags.some((tag: string) => tag.includes(lowKw))
-            );
-          });
+        // 1. Group questions strictly by selected topic
+        const questionsByTopic: Record<string, any[]> = {};
+        selectedTopics.forEach((topic) => {
+          questionsByTopic[topic] = [];
         });
 
-        if (filteredByTopics.length > 0) {
-          const targetLimit = questionLimit === 'ALL' ? loadedCategoryQuestions.length : Number(questionLimit);
-          if (filteredByTopics.length < targetLimit) {
-            const remainingPool = loadedCategoryQuestions.filter((q: any) => !filteredByTopics.includes(q));
-            const shuffledRemaining = shuffleArray(remainingPool);
-            const needed = targetLimit - filteredByTopics.length;
-            loadedCategoryQuestions = [...filteredByTopics, ...shuffledRemaining.slice(0, needed)];
-          } else {
-            loadedCategoryQuestions = filteredByTopics;
+        loadedCategoryQuestions.forEach((q: any) => {
+          // If question has an explicit topic property, strictly match it
+          if (q.topic) {
+            if (selectedTopics.includes(q.topic)) {
+              questionsByTopic[q.topic].push(q);
+            }
+            return;
           }
+
+          // Fallback matching for questions without an explicit topic property (e.g., HTML/CSS/React)
+          const qTopic = (q.subtopic || q.category || q.section || '').toLowerCase();
+          const qText = (q.q || q.question || q.code || q.explanation || '').toLowerCase();
+          const qTags = Array.isArray(q.tags) ? q.tags.map((t: any) => String(t).toLowerCase()) : [];
+
+          const matchedTopic = selectedTopics.find((t) => {
+            const lowT = t.toLowerCase();
+            if (qTopic.includes(lowT) || lowT.includes(qTopic)) return true;
+            const kws = TOPIC_KEYWORD_MAP[t] || [lowT];
+            return kws.some((kw) => {
+              const lowKw = kw.toLowerCase();
+              return qText.includes(lowKw) || qTags.some((tag: string) => tag.includes(lowKw));
+            });
+          });
+
+          if (matchedTopic) {
+            questionsByTopic[matchedTopic].push(q);
+          }
+        });
+
+        // 2. Determine target total questions across selected topics
+        const totalAvailableAcrossSelected = Object.values(questionsByTopic).reduce(
+          (sum, arr) => sum + arr.length,
+          0
+        );
+
+        if (totalAvailableAcrossSelected > 0) {
+          const targetTotal =
+            questionLimit === 'ALL'
+              ? totalAvailableAcrossSelected
+              : Math.min(Number(questionLimit), totalAvailableAcrossSelected);
+
+          // 3. Calculate fair and equal quota per selected topic
+          const topicQuotas: Record<string, number> = {};
+          selectedTopics.forEach((t) => (topicQuotas[t] = 0));
+
+          let remainingToAssign = targetTotal;
+          const activeTopicSet = new Set(selectedTopics.filter((t) => (questionsByTopic[t]?.length || 0) > 0));
+
+          while (remainingToAssign > 0 && activeTopicSet.size > 0) {
+            const share = Math.max(1, Math.floor(remainingToAssign / activeTopicSet.size));
+            let assignedInRound = 0;
+
+            for (const topic of Array.from(activeTopicSet)) {
+              const currentQuota = topicQuotas[topic];
+              const available = questionsByTopic[topic]?.length || 0;
+              const canTake = Math.min(share, available - currentQuota, remainingToAssign);
+
+              if (canTake > 0) {
+                topicQuotas[topic] += canTake;
+                remainingToAssign -= canTake;
+                assignedInRound += canTake;
+              }
+
+              if (topicQuotas[topic] >= available) {
+                activeTopicSet.delete(topic);
+              }
+
+              if (remainingToAssign <= 0) break;
+            }
+
+            if (assignedInRound === 0) break;
+          }
+
+          // 4. Select balanced question types (quiz, short_code, drag_drop) inside each topic
+          const balancedPickedQuestions: any[] = [];
+
+          selectedTopics.forEach((topic) => {
+            const quota = topicQuotas[topic];
+            if (!quota || quota <= 0) return;
+
+            const pool = questionsByTopic[topic] || [];
+            // Group pool by question type (e.g. quiz, short_code, drag_drop)
+            const byType: Record<string, any[]> = {};
+            pool.forEach((q) => {
+              const type = q.type || 'quiz';
+              if (!byType[type]) byType[type] = [];
+              byType[type].push(q);
+            });
+
+            // Randomize questions within each type bucket
+            Object.keys(byType).forEach((typeKey) => {
+              byType[typeKey] = shuffleArray(byType[typeKey]);
+            });
+
+            const availableTypes = Object.keys(byType);
+            const topicSelection: any[] = [];
+
+            // Round-robin pick across available types to ensure balanced variety
+            let typeIndex = 0;
+            while (topicSelection.length < quota) {
+              let foundInCycle = false;
+              for (let i = 0; i < availableTypes.length; i++) {
+                const type = availableTypes[(typeIndex + i) % availableTypes.length];
+                if (byType[type].length > 0 && topicSelection.length < quota) {
+                  topicSelection.push(byType[type].pop());
+                  foundInCycle = true;
+                }
+              }
+              typeIndex++;
+              if (!foundInCycle) break;
+            }
+
+            balancedPickedQuestions.push(...topicSelection);
+          });
+
+          loadedCategoryQuestions = balancedPickedQuestions;
         }
       }
 
@@ -596,10 +692,10 @@ export default function Home() {
 
       let limitNum = shuffled.length;
       if (questionLimit !== 'ALL') {
-        limitNum = Number(questionLimit);
+        limitNum = Math.min(Number(questionLimit), shuffled.length);
       }
 
-      const subset = shuffled.slice(0, Math.min(limitNum, shuffled.length));
+      const subset = shuffled.slice(0, limitNum);
       setActiveQuizQuestions(subset);
       setSelectedAnswers({});
       setSubjectiveAnswers({});

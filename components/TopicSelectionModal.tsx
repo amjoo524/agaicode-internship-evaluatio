@@ -19,11 +19,66 @@ export const SUBJECT_TOPICS: Record<string, { title: string; desc: string }[]> =
     { title: 'Transitions & Animations', desc: 'transform, transition, @keyframes' },
   ],
   JS: [
-    { title: 'Variables, Data Types & Operators', desc: 'let, const, primitives, objects' },
-    { title: 'ES6+ Functions, Arrow & Scope', desc: 'functions, arrow syntax, closures' },
-    { title: 'DOM Selection & Event Handling', desc: 'querySelector, addEventListener' },
-    { title: 'Arrays, Objects & Destructuring', desc: 'map, filter, reduce, spread' },
-    { title: 'Async JS, Promises & Fetch API', desc: 'async/await, promises, fetch' },
+    {
+      title: 'Variables (let, const, var & Scope)',
+      desc: 'Variable declarations, functional vs block scope, TDZ & hoisting',
+    },
+    {
+      title: 'Primitive Data Types & Type Conversion',
+      desc: 'String, Number, Boolean, null, undefined, BigInt, Symbol & coercion',
+    },
+    {
+      title: 'Operators & Arithmetic Operators',
+      desc: 'Addition (+), subtraction (-), multiplication (*), division (/), modulus (%), exponentiation (**), increment & decrement',
+    },
+    {
+      title: 'Assignment Operators & Comparison Operators',
+      desc: 'Assignment (=, +=, -=), strict (===) vs loose (==) equality, relational checks (>, <, >=, <=)',
+    },
+    {
+      title: 'Logical Operators & Ternary Operators',
+      desc: 'Logical AND (&&), OR (||), NOT (!), short-circuit evaluation, and ternary expressions (? :)',
+    },
+    {
+      title: 'Conditional Statements (if-else, switch)',
+      desc: 'if, else if, else branching logic, nested conditionals & switch cases',
+    },
+    {
+      title: 'Loops (for, while, do-while, for...of, for...in)',
+      desc: 'for loop, while, do-while, break, continue, for...of (iterables) & for...in (object keys)',
+    },
+    {
+      title: 'Arrays & Array Methods (map, filter, reduce, indexOf)',
+      desc: 'Array manipulation, mutation vs immutability, iteration & higher-order methods',
+    },
+    {
+      title: 'Template Literals & String Concatenation',
+      desc: 'Backticks (` `), string interpolation (${expression}), multiline strings & string concatenation (+)',
+    },
+    {
+      title: 'Basic Functions & Arrow Functions',
+      desc: 'Function declarations, expressions, arrow syntax, parameters & return values',
+    },
+    {
+      title: 'Objects & Object Methods',
+      desc: 'Object literals, properties, key-value iteration, destructuring & `this` context',
+    },
+    {
+      title: 'DOM Selection & Manipulation',
+      desc: 'querySelector, getElementById, innerHTML, textContent & style manipulation',
+    },
+    {
+      title: 'DOM Event Handling & Listeners',
+      desc: 'addEventListener, event objects, click handling, bubbling & delegation',
+    },
+    {
+      title: 'Asynchronous JavaScript (Promises, Async/Await)',
+      desc: 'Callbacks, Promises, async/await syntax, setTimeout & error handling',
+    },
+    {
+      title: 'Closures & Advanced Scope',
+      desc: 'Lexical scoping, closure generation, private variables & scope chains',
+    },
   ],
   React: [
     { title: 'JSX Syntax & Rendering Rules', desc: 'JSX elements, embedding expressions' },
@@ -60,9 +115,10 @@ export default function TopicSelectionModal({
   useEffect(() => {
     if (isOpen) {
       // Default to all topics selected
-      setSelectedTopics(topics.map((t) => t.title));
+      const currentTopics = SUBJECT_TOPICS[subject] || SUBJECT_TOPICS['HTML'];
+      setSelectedTopics(currentTopics.map((t) => t.title));
     }
-  }, [isOpen, subject, topics]);
+  }, [isOpen, subject]);
 
   if (!isOpen) return null;
 
@@ -93,7 +149,7 @@ export default function TopicSelectionModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fadeIn">
       <div className="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
         {/* Modal Header */}
         <div className="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
@@ -119,11 +175,18 @@ export default function TopicSelectionModal({
 
         {/* Modal Body */}
         <div className="p-6 overflow-y-auto space-y-4 flex-1">
-          {/* Select All Toggle */}
-          <div className="flex items-center justify-between p-3 bg-slate-950/40 border border-slate-800/80 rounded-xl">
-            <span className="text-xs font-semibold text-slate-300">
-              Selected ({selectedTopics.length} / {topics.length} topics)
-            </span>
+          {/* Select All Toggle & Selection Counter */}
+          <div className="flex items-center justify-between p-3 bg-slate-950/50 border border-slate-800 rounded-xl">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-slate-200">
+                Selected ({selectedTopics.length} / {topics.length} topics)
+              </span>
+              {selectedTopics.length === 1 && (
+                <span className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                  Single Topic Mode
+                </span>
+              )}
+            </div>
             <button
               type="button"
               onClick={toggleSelectAll}
@@ -143,20 +206,25 @@ export default function TopicSelectionModal({
 
           {/* Topic Checkboxes */}
           <div className="space-y-2.5">
-            {topics.map((t) => {
+            {topics.map((t, idx) => {
               const isChecked = selectedTopics.includes(t.title);
+              const itemNum = String(idx + 1).padStart(2, '0');
               return (
                 <div
                   key={t.title}
                   onClick={() => toggleTopic(t.title)}
-                  className={`flex items-start gap-3.5 p-4 rounded-xl border cursor-pointer transition-all ${
+                  className={`flex items-start gap-3.5 p-3.5 rounded-xl border cursor-pointer transition-all ${
                     isChecked
-                      ? 'bg-indigo-600/10 border-indigo-500/40 text-white shadow-sm'
-                      : 'bg-slate-950/30 border-slate-800/60 text-slate-400 hover:bg-slate-950/60'
+                      ? 'bg-indigo-600/10 border-indigo-500/50 text-white shadow-sm ring-1 ring-indigo-500/20'
+                      : 'bg-slate-950/30 border-slate-800/70 text-slate-400 hover:bg-slate-950/60 hover:border-slate-700'
                   }`}
                 >
                   <button
                     type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleTopic(t.title);
+                    }}
                     className="mt-0.5 text-indigo-400 focus:outline-none cursor-pointer"
                   >
                     {isChecked ? (
@@ -165,15 +233,20 @@ export default function TopicSelectionModal({
                       <Square className="w-5 h-5 text-slate-600" />
                     )}
                   </button>
-                  <div className="flex-1">
-                    <h4
-                      className={`text-sm font-bold ${
-                        isChecked ? 'text-white' : 'text-slate-300'
-                      }`}
-                    >
-                      {t.title}
-                    </h4>
-                    <p className="text-xs text-slate-400 mt-0.5">{t.desc}</p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-800/80 text-slate-400 border border-slate-700/60">
+                        {itemNum}
+                      </span>
+                      <h4
+                        className={`text-sm font-bold truncate ${
+                          isChecked ? 'text-white' : 'text-slate-300'
+                        }`}
+                      >
+                        {t.title}
+                      </h4>
+                    </div>
+                    <p className="text-xs text-slate-400 mt-1 leading-relaxed">{t.desc}</p>
                   </div>
                 </div>
               );
@@ -193,7 +266,12 @@ export default function TopicSelectionModal({
           <button
             type="button"
             onClick={handleProceed}
-            className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition-all text-sm flex items-center gap-2 shadow-lg shadow-indigo-950/50 cursor-pointer"
+            disabled={selectedTopics.length === 0}
+            className={`px-6 py-3 rounded-xl font-bold transition-all text-sm flex items-center gap-2 shadow-lg shadow-indigo-950/50 ${
+              selectedTopics.length === 0
+                ? 'bg-slate-800 text-slate-500 border border-slate-700/50 cursor-not-allowed'
+                : 'bg-indigo-600 hover:bg-indigo-500 text-white cursor-pointer'
+            }`}
           >
             <span>Next: Exam Configuration</span>
             <ArrowRight className="w-4 h-4" />

@@ -64,7 +64,7 @@ export default function StartScreen({
             <BookOpen className="w-4 h-4" /> Selected Assessment Topics
           </div>
           {selectedTopics && selectedTopics.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 max-h-44 overflow-y-auto pr-1">
               {selectedTopics.map((topic, i) => (
                 <span
                   key={i}
