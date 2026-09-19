@@ -45,15 +45,15 @@ export const SUBJECT_TOPICS: Record<string, { title: string; desc: string }[]> =
     },
     {
       title: 'Loops (for, while, do-while, for...of, for...in)',
-      desc: 'for loop, while, do-while, break, continue, for...of (iterables) & for...in (object keys)',
+      desc: 'for loop, while, do-while, break, continue, for...of (arrays/iterables), nested loops & loop patterns',
     },
     {
-      title: 'Arrays & Array Methods (map, filter, reduce, indexOf)',
-      desc: 'Array manipulation, mutation vs immutability, iteration & higher-order methods',
+      title: 'Arrays & Array Methods (push, pop, shift, unshift, indexOf)',
+      desc: '1D & 2D arrays, push/pop/shift/unshift, indexOf, includes, reverse, concat & array basics',
     },
     {
       title: 'Template Literals & String Concatenation',
-      desc: 'Backticks (` `), string interpolation (${expression}), multiline strings & string concatenation (+)',
+      desc: 'Backticks, string interpolation (${expression}), multiline strings, toUpperCase/toLowerCase, trim, split, replace, includes, slice',
     },
     {
       title: 'Basic Functions & Arrow Functions',
