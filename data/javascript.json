@@ -93,36 +93,6 @@
     "id": 7,
     "section": "JS",
     "type": "quiz",
-    "q": "Which method adds one or more elements to the end of an array and returns the new length?",
-    "options": {
-      "A": "pop()",
-      "B": "push()",
-      "C": "shift()",
-      "D": "unshift()"
-    },
-    "answer": "B",
-    "explanation": "push() appends items to the end of an array.",
-    "topic": "Arrays & Array Methods (map, filter, reduce, indexOf)"
-  },
-  {
-    "id": 8,
-    "section": "JS",
-    "type": "quiz",
-    "q": "What is the primary use of the `Array.prototype.reduce()` method?",
-    "options": {
-      "A": "To filter out unwanted elements",
-      "B": "To transform array elements into a single accumulated value",
-      "C": "To loop through elements without returning anything",
-      "D": "To sort elements alphabetically"
-    },
-    "answer": "B",
-    "explanation": "reduce() reduces an array of values down to a single value using an accumulator function.",
-    "topic": "Arrays & Array Methods (map, filter, reduce, indexOf)"
-  },
-  {
-    "id": 9,
-    "section": "JS",
-    "type": "quiz",
     "q": "What does a closure give you access to?",
     "options": {
       "A": "Global variables only",
@@ -135,7 +105,7 @@
     "topic": "Closures & Advanced Scope"
   },
   {
-    "id": 10,
+    "id": 8,
     "section": "JS",
     "type": "quiz",
     "q": "What is hoisting in JavaScript?",
@@ -150,7 +120,7 @@
     "topic": "Variables (let, const, var & Scope)"
   },
   {
-    "id": 11,
+    "id": 9,
     "section": "JS",
     "type": "short_code",
     "q": "Write an arrow function syntax named `square` that takes a parameter `x` and returns its square.",
@@ -160,7 +130,7 @@
     "topic": "Basic Functions & Arrow Functions"
   },
   {
-    "id": 12,
+    "id": 10,
     "section": "JS",
     "type": "short_code",
     "q": "Use destructuring to extract `name` and `age` from an object called `user`.",
@@ -170,7 +140,7 @@
     "topic": "Objects & Object Methods"
   },
   {
-    "id": 13,
+    "id": 11,
     "section": "JS",
     "type": "short_code",
     "q": "Write a template literal statement that outputs 'Hello, [name]!' using a variable `name = 'Sara'`.",
@@ -180,27 +150,7 @@
     "topic": "Template Literals & String Concatenation"
   },
   {
-    "id": 14,
-    "section": "JS",
-    "type": "short_code",
-    "q": "Use the spread operator to combine two arrays `arr1` and `arr2` into a new array `combined`.",
-    "starterCode": "const arr1 = [1, 2];\nconst arr2 = [3, 4];\nconst combined = ",
-    "answer": "[...arr1, ...arr2];",
-    "explanation": "The spread operator (...) expands elements of an array into a new array context.",
-    "topic": "Arrays & Array Methods (map, filter, reduce, indexOf)"
-  },
-  {
-    "id": 15,
-    "section": "JS",
-    "type": "short_code",
-    "q": "Write a `filter` method call on an array `numbers` to keep only even numbers.",
-    "starterCode": "const numbers = [1, 2, 3, 4];\nconst evens = numbers.filter(n => ",
-    "answer": "n % 2 === 0);",
-    "explanation": "The filter callback must return a truthy condition to keep an element.",
-    "topic": "Arrays & Array Methods (map, filter, reduce, indexOf)"
-  },
-  {
-    "id": 16,
+    "id": 12,
     "section": "JS",
     "type": "short_code",
     "q": "Write a line of code to catch errors using a standard `try...catch` block structure.",
@@ -210,7 +160,7 @@
     "topic": "Asynchronous JavaScript (Promises, Async/Await)"
   },
   {
-    "id": 17,
+    "id": 13,
     "section": "JS",
     "type": "short_code",
     "q": "Create a Promise that immediately resolves with the string 'Success'.",
@@ -220,7 +170,7 @@
     "topic": "Asynchronous JavaScript (Promises, Async/Await)"
   },
   {
-    "id": 18,
+    "id": 14,
     "section": "JS",
     "type": "short_code",
     "q": "Use `localStorage` to save a key 'token' with value 'abc123xyz'.",
@@ -230,7 +180,7 @@
     "topic": "Objects & Object Methods"
   },
   {
-    "id": 19,
+    "id": 15,
     "section": "JS",
     "type": "short_code",
     "q": "Select an element with the id 'main-heading' using standard modern DOM selection.",
@@ -240,7 +190,7 @@
     "topic": "DOM Selection & Manipulation"
   },
   {
-    "id": 20,
+    "id": 16,
     "section": "JS",
     "type": "short_code",
     "q": "Write an asynchronous function declaration named `getData`.",
@@ -250,33 +200,7 @@
     "topic": "Asynchronous JavaScript (Promises, Async/Await)"
   },
   {
-    "id": 21,
-    "section": "JS",
-    "type": "drag_drop",
-    "q": "Match each array method with its core behavior.",
-    "dragItems": [
-      "Transforms each element and returns new array",
-      "Keeps elements matching condition",
-      "Finds first element matching condition",
-      "Checks if any element matches condition"
-    ],
-    "dropZones": [
-      "map()",
-      "filter()",
-      "find()",
-      "some()"
-    ],
-    "answer": {
-      "0": "Transforms each element and returns new array",
-      "1": "Keeps elements matching condition",
-      "2": "Finds first element matching condition",
-      "3": "Checks if any element matches condition"
-    },
-    "explanation": "Correctly matches functional array iteration utilities.",
-    "topic": "Arrays & Array Methods (map, filter, reduce, indexOf)"
-  },
-  {
-    "id": 22,
+    "id": 17,
     "section": "JS",
     "type": "drag_drop",
     "q": "Match JavaScript storage or execution concepts with their traits.",
@@ -302,7 +226,7 @@
     "topic": "Variables (let, const, var & Scope)"
   },
   {
-    "id": 23,
+    "id": 18,
     "section": "JS",
     "type": "drag_drop",
     "q": "Match these HTTP status code categories with their description.",
@@ -328,7 +252,7 @@
     "topic": "Asynchronous JavaScript (Promises, Async/Await)"
   },
   {
-    "id": 24,
+    "id": 19,
     "section": "JS",
     "type": "quiz",
     "q": "What does `Event Delegation` mean in JavaScript DOM manipulation?",
@@ -343,7 +267,7 @@
     "topic": "DOM Event Handling & Listeners"
   },
   {
-    "id": 25,
+    "id": 20,
     "section": "JS",
     "type": "quiz",
     "q": "What is the output of the following code snippet?\n\nconst obj = { \n  name: 'Code',\n  getName() { return this.name; }\n};\nconst borrow = obj.getName;\nconsole.log(borrow());",
@@ -358,7 +282,7 @@
     "topic": "Objects & Object Methods"
   },
   {
-    "id": 26,
+    "id": 21,
     "section": "JS",
     "type": "quiz",
     "q": "Which keyword is used to handle rejected Promises cleanly inside an async function?",
@@ -373,7 +297,7 @@
     "topic": "Asynchronous JavaScript (Promises, Async/Await)"
   },
   {
-    "id": 27,
+    "id": 22,
     "section": "JS",
     "type": "short_code",
     "q": "Write a destructuring assignment with a default value of 'Guest' for `username` from an object `{}`.",
@@ -383,7 +307,7 @@
     "topic": "Objects & Object Methods"
   },
   {
-    "id": 28,
+    "id": 23,
     "section": "JS",
     "type": "short_code",
     "q": "Write a `setTimeout` function that prints 'Done' after 2000 milliseconds.",
@@ -393,7 +317,7 @@
     "topic": "Asynchronous JavaScript (Promises, Async/Await)"
   },
   {
-    "id": 29,
+    "id": 24,
     "section": "JS",
     "type": "drag_drop",
     "q": "Match each JavaScript keyword scope definition correctly.",
@@ -419,7 +343,7 @@
     "topic": "Variables (let, const, var & Scope)"
   },
   {
-    "id": 30,
+    "id": 25,
     "section": "JS",
     "type": "quiz",
     "q": "What is the purpose of `JSON.stringify()`?",
@@ -434,7 +358,7 @@
     "topic": "Objects & Object Methods"
   },
   {
-    "id": 31,
+    "id": 26,
     "section": "JS",
     "type": "quiz",
     "q": "What is the output of: console.log(true && false);",
@@ -449,7 +373,7 @@
     "topic": "Logical Operators & Ternary Operators"
   },
   {
-    "id": 32,
+    "id": 27,
     "section": "JS",
     "type": "quiz",
     "q": "What is the output of: console.log(true || false);",
@@ -464,7 +388,7 @@
     "topic": "Logical Operators & Ternary Operators"
   },
   {
-    "id": 33,
+    "id": 28,
     "section": "JS",
     "type": "quiz",
     "q": "What is the output of the following ternary operation?\n\nlet age = 20;\nlet type = age >= 18 ? \"Adult\" : \"Child\";\nconsole.log(type);",
@@ -479,7 +403,7 @@
     "topic": "Logical Operators & Ternary Operators"
   },
   {
-    "id": 34,
+    "id": 29,
     "section": "JS",
     "type": "quiz",
     "q": "What does the logical NOT (!) operator do to `true`?",
@@ -494,7 +418,7 @@
     "topic": "Logical Operators & Ternary Operators"
   },
   {
-    "id": 35,
+    "id": 30,
     "section": "JS",
     "type": "quiz",
     "q": "Which of the following values is considered *falsy* in JavaScript?",
@@ -509,7 +433,7 @@
     "topic": "Primitive Data Types & Type Conversion"
   },
   {
-    "id": 36,
+    "id": 31,
     "section": "JS",
     "type": "quiz",
     "q": "What will be printed by this if-else statement?\n\nlet score = 40;\nif (score >= 50) {\n  console.log(\"Pass\");\n} else {\n  console.log(\"Fail\");\n}",
@@ -524,7 +448,7 @@
     "topic": "Conditional Statements (if-else, switch)"
   },
   {
-    "id": 37,
+    "id": 32,
     "section": "JS",
     "type": "quiz",
     "q": "What is the result of: console.log(!false);",
@@ -539,7 +463,7 @@
     "topic": "Logical Operators & Ternary Operators"
   },
   {
-    "id": 38,
+    "id": 33,
     "section": "JS",
     "type": "quiz",
     "q": "In a ternary operator (condition ? trueVal : falseVal), what symbol separates the true and false options?",
@@ -554,7 +478,7 @@
     "topic": "Logical Operators & Ternary Operators"
   },
   {
-    "id": 39,
+    "id": 34,
     "section": "JS",
     "type": "quiz",
     "q": "Which logical operator checks if BOTH conditions are true?",
@@ -569,7 +493,7 @@
     "topic": "Logical Operators & Ternary Operators"
   },
   {
-    "id": 40,
+    "id": 35,
     "section": "JS",
     "type": "quiz",
     "q": "What happens if the main `if` condition is false and there is no `else` block?",
@@ -584,7 +508,7 @@
     "topic": "Conditional Statements (if-else, switch)"
   },
   {
-    "id": 41,
+    "id": 36,
     "section": "JS",
     "type": "short_code",
     "q": "Complete the ternary statement to assign 'Adult' if `age >= 18`, otherwise 'Minor'.",
@@ -594,7 +518,7 @@
     "topic": "Logical Operators & Ternary Operators"
   },
   {
-    "id": 42,
+    "id": 37,
     "section": "JS",
     "type": "short_code",
     "q": "Fill in the missing condition so that the if statement checks if `score` is greater than 50.",
@@ -604,7 +528,7 @@
     "topic": "Conditional Statements (if-else, switch)"
   },
   {
-    "id": 43,
+    "id": 38,
     "section": "JS",
     "type": "short_code",
     "q": "Complete the logical expression using AND (&&) to check if both `isLoggedIn` and `isAdmin` are true.",
@@ -614,7 +538,7 @@
     "topic": "Logical Operators & Ternary Operators"
   },
   {
-    "id": 44,
+    "id": 39,
     "section": "JS",
     "type": "short_code",
     "q": "Complete the `else` block code to print 'Odd' if a number is not even.",
@@ -624,7 +548,7 @@
     "topic": "Conditional Statements (if-else, switch)"
   },
   {
-    "id": 45,
+    "id": 40,
     "section": "JS",
     "type": "short_code",
     "q": "Use the logical NOT operator (!) to invert the value of `isOpen` inside the log statement.",
@@ -634,7 +558,7 @@
     "topic": "Logical Operators & Ternary Operators"
   },
   {
-    "id": 46,
+    "id": 41,
     "section": "JS",
     "type": "short_code",
     "q": "Complete the `else if` condition to check if `marks` is greater than or equal to 70.",
@@ -644,7 +568,7 @@
     "topic": "Conditional Statements (if-else, switch)"
   },
   {
-    "id": 47,
+    "id": 42,
     "section": "JS",
     "type": "short_code",
     "q": "Complete the logical OR (||) expression to check if `day` is 'Saturday' or 'Sunday'.",
@@ -654,7 +578,7 @@
     "topic": "Logical Operators & Ternary Operators"
   },
   {
-    "id": 48,
+    "id": 43,
     "section": "JS",
     "type": "short_code",
     "q": "Fill in the question mark (?) for this simple ternary shorthand check.",
@@ -664,7 +588,7 @@
     "topic": "Logical Operators & Ternary Operators"
   },
   {
-    "id": 49,
+    "id": 44,
     "section": "JS",
     "type": "short_code",
     "q": "Write the condition for an if statement to check if `temperature` is less than 0.",
@@ -674,7 +598,7 @@
     "topic": "Conditional Statements (if-else, switch)"
   },
   {
-    "id": 50,
+    "id": 45,
     "section": "JS",
     "type": "short_code",
     "q": "Complete the code to print 'Welcome' if `hasTicket` is true.",
@@ -684,7 +608,7 @@
     "topic": "Conditional Statements (if-else, switch)"
   },
   {
-    "id": 51,
+    "id": 46,
     "section": "JS",
     "type": "drag_drop",
     "q": "Match each logical or conditional symbol with its correct name.",
@@ -710,7 +634,7 @@
     "topic": "Logical Operators & Ternary Operators"
   },
   {
-    "id": 52,
+    "id": 47,
     "section": "JS",
     "type": "drag_drop",
     "q": "Match each control flow keyword with its correct description.",
@@ -736,7 +660,7 @@
     "topic": "Conditional Statements (if-else, switch)"
   },
   {
-    "id": 53,
+    "id": 48,
     "section": "JS",
     "type": "drag_drop",
     "q": "Match these simple expressions with their correct boolean outcome.",
@@ -762,7 +686,7 @@
     "topic": "Assignment Operators & Comparison Operators"
   },
   {
-    "id": 54,
+    "id": 49,
     "section": "JS",
     "type": "quiz",
     "q": "What is the output of the following code?\n\nlet num = 10;\nif (num > 15) {\n  console.log(\"A\");\n} else if (num > 5) {\n  console.log(\n  \"B\");\n} else {\n  console.log(\"C\");\n}",
@@ -777,7 +701,7 @@
     "topic": "Conditional Statements (if-else, switch)"
   },
   {
-    "id": 55,
+    "id": 50,
     "section": "JS",
     "type": "quiz",
     "q": "What will be stored in `result`?\n\nlet val = 8;\nlet result = val > 5 ? \"Big\" : \"Small\";",
@@ -792,7 +716,7 @@
     "topic": "Logical Operators & Ternary Operators"
   },
   {
-    "id": 56,
+    "id": 51,
     "section": "JS",
     "type": "short_code",
     "q": "Complete the ternary statement to return 'Even' or 'Odd' based on a number check.",
@@ -802,7 +726,7 @@
     "topic": "Logical Operators & Ternary Operators"
   },
   {
-    "id": 57,
+    "id": 52,
     "section": "JS",
     "type": "short_code",
     "q": "Use logical OR (||) to provide a fallback value 'DefaultUser' if `username` is empty/falsy.",
@@ -812,7 +736,7 @@
     "topic": "Logical Operators & Ternary Operators"
   },
   {
-    "id": 58,
+    "id": 53,
     "section": "JS",
     "type": "drag_drop",
     "q": "Match each JavaScript value with its correct Truthy/Falsy type.",
@@ -838,7 +762,7 @@
     "topic": "Primitive Data Types & Type Conversion"
   },
   {
-    "id": 59,
+    "id": 54,
     "section": "JS",
     "type": "short_code",
     "q": "Write a basic if statement that checks if `isReady` is true and logs 'Ready!'.",
@@ -848,7 +772,7 @@
     "topic": "Conditional Statements (if-else, switch)"
   },
   {
-    "id": 60,
+    "id": 55,
     "section": "JS",
     "type": "quiz",
     "q": "What is the output of: console.log(5 > 3 || 10 > 20);",
@@ -863,7 +787,7 @@
     "topic": "Logical Operators & Ternary Operators"
   },
   {
-    "id": 61,
+    "id": 56,
     "section": "JS",
     "topic": "Operators & Arithmetic Operators",
     "type": "quiz",
@@ -878,7 +802,7 @@
     "explanation": "The modulus operator (%) returns the remainder of integer division: 14 divided by 4 is 3 with a remainder of 2."
   },
   {
-    "id": 62,
+    "id": 57,
     "section": "JS",
     "topic": "Operators & Arithmetic Operators",
     "type": "quiz",
@@ -893,7 +817,7 @@
     "explanation": "The ** operator calculates base raised to the exponent power: 2 ** 4 = 2 * 2 * 2 * 2 = 16."
   },
   {
-    "id": 63,
+    "id": 58,
     "section": "JS",
     "topic": "Operators & Arithmetic Operators",
     "type": "quiz",
@@ -908,7 +832,7 @@
     "explanation": "Multiplication (*) has higher precedence than addition (+), so 5 * 2 = 10 is evaluated first, then 10 + 10 = 20."
   },
   {
-    "id": 64,
+    "id": 59,
     "section": "JS",
     "topic": "Operators & Arithmetic Operators",
     "type": "quiz",
@@ -923,7 +847,7 @@
     "explanation": "Postfix increment (a++) returns the current value before incrementing, so b gets 3, and then a becomes 4."
   },
   {
-    "id": 65,
+    "id": 60,
     "section": "JS",
     "topic": "Operators & Arithmetic Operators",
     "type": "short_code",
@@ -933,7 +857,7 @@
     "explanation": "The modulus operator (%) finds the remainder after division."
   },
   {
-    "id": 66,
+    "id": 61,
     "section": "JS",
     "topic": "Operators & Arithmetic Operators",
     "type": "drag_drop",
@@ -959,7 +883,7 @@
     "explanation": "% is modulus, ** is exponentiation, * is multiplication, and / is division."
   },
   {
-    "id": 67,
+    "id": 62,
     "section": "JS",
     "topic": "Assignment Operators & Comparison Operators",
     "type": "quiz",
@@ -974,7 +898,7 @@
     "explanation": "The addition assignment operator (+=) adds the right operand to the variable: score = score + 15 = 35."
   },
   {
-    "id": 68,
+    "id": 63,
     "section": "JS",
     "topic": "Assignment Operators & Comparison Operators",
     "type": "quiz",
@@ -989,7 +913,7 @@
     "explanation": "Strict inequality (!==) checks both value and type. Because number 10 is a different type from string '10', it is strictly not equal (true)."
   },
   {
-    "id": 69,
+    "id": 64,
     "section": "JS",
     "topic": "Assignment Operators & Comparison Operators",
     "type": "short_code",
@@ -999,7 +923,7 @@
     "explanation": "points *= 2 is shorthand for points = points * 2."
   },
   {
-    "id": 70,
+    "id": 65,
     "section": "JS",
     "topic": "Assignment Operators & Comparison Operators",
     "type": "quiz",
@@ -1014,7 +938,7 @@
     "explanation": "In JavaScript, objects are compared by reference in memory, not by value. Two separate object literals occupy different memory addresses."
   },
   {
-    "id": 71,
+    "id": 66,
     "section": "JS",
     "topic": "Assignment Operators & Comparison Operators",
     "type": "short_code",
@@ -1024,7 +948,7 @@
     "explanation": "The greater than or equal operator is written as >=."
   },
   {
-    "id": 72,
+    "id": 67,
     "section": "JS",
     "topic": "Variables (let, const, var & Scope)",
     "type": "quiz",
@@ -1039,7 +963,7 @@
     "explanation": "The Temporal Dead Zone is the period from the start of the block until a let or const variable is declared. Accessing it within this zone triggers a ReferenceError."
   },
   {
-    "id": 73,
+    "id": 68,
     "section": "JS",
     "topic": "Variables (let, const, var & Scope)",
     "type": "quiz",
@@ -1054,7 +978,7 @@
     "explanation": "var declarations are hoisted and initialized with undefined before the code executes, so logging x prints undefined."
   },
   {
-    "id": 74,
+    "id": 69,
     "section": "JS",
     "topic": "Variables (let, const, var & Scope)",
     "type": "quiz",
@@ -1069,7 +993,7 @@
     "explanation": "const creates a read-only reference. Attempting to reassign a const variable produces a TypeError."
   },
   {
-    "id": 75,
+    "id": 70,
     "section": "JS",
     "topic": "Loops (for, while, do-while, for...of, for...in)",
     "type": "quiz",
@@ -1084,7 +1008,7 @@
     "explanation": "The loop runs for i = 0, 1, 2, 3, which is exactly 4 iterations."
   },
   {
-    "id": 76,
+    "id": 71,
     "section": "JS",
     "topic": "Loops (for, while, do-while, for...of, for...in)",
     "type": "quiz",
@@ -1099,22 +1023,7 @@
     "explanation": "A do...while loop tests the condition at the end of the loop, ensuring the code block runs at least once even if the condition is false initially."
   },
   {
-    "id": 77,
-    "section": "JS",
-    "topic": "Loops (for, while, do-while, for...of, for...in)",
-    "type": "quiz",
-    "q": "What is the difference between `for...of` and `for...in` in modern JavaScript?",
-    "options": {
-      "A": "for...of iterates over values of iterable objects (like arrays), whereas for...in iterates over enumerable property keys of objects",
-      "B": "for...in is used only for arrays, for...of is used only for objects",
-      "C": "for...of creates an infinite loop",
-      "D": "for...in is deprecated in ES6"
-    },
-    "answer": "A",
-    "explanation": "for...of iterates through the values of an iterable collection (e.g. Array, Set, Map). for...in iterates over the enumerable string property keys of an object."
-  },
-  {
-    "id": 78,
+    "id": 72,
     "section": "JS",
     "topic": "Loops (for, while, do-while, for...of, for...in)",
     "type": "quiz",
@@ -1129,7 +1038,7 @@
     "explanation": "continue terminates execution of the statements in the current iteration of the current loop, and continues execution of the loop with the next iteration."
   },
   {
-    "id": 79,
+    "id": 73,
     "section": "JS",
     "topic": "Loops (for, while, do-while, for...of, for...in)",
     "type": "short_code",
@@ -1139,7 +1048,7 @@
     "explanation": "Standard for loop header uses initialization, condition, and increment separated by semicolons."
   },
   {
-    "id": 80,
+    "id": 74,
     "section": "JS",
     "topic": "Loops (for, while, do-while, for...of, for...in)",
     "type": "drag_drop",
@@ -1165,7 +1074,7 @@
     "explanation": "for...of gets values, for...in gets keys, do...while guarantees 1 execution, and break terminates the loop."
   },
   {
-    "id": 81,
+    "id": 75,
     "section": "JS",
     "topic": "Template Literals & String Concatenation",
     "type": "quiz",
@@ -1180,7 +1089,7 @@
     "explanation": "Template literals are enclosed by backtick characters (`) instead of double or single quotes."
   },
   {
-    "id": 82,
+    "id": 76,
     "section": "JS",
     "topic": "Template Literals & String Concatenation",
     "type": "quiz",
@@ -1195,7 +1104,7 @@
     "explanation": "Expressions inside ${...} in template literals are evaluated at runtime, so a + b evaluates to 15."
   },
   {
-    "id": 83,
+    "id": 77,
     "section": "JS",
     "topic": "Template Literals & String Concatenation",
     "type": "quiz",
@@ -1210,7 +1119,7 @@
     "explanation": "When either operand of the + operator is a string, JavaScript converts the other operand to a string and concatenates them."
   },
   {
-    "id": 84,
+    "id": 78,
     "section": "JS",
     "topic": "Template Literals & String Concatenation",
     "type": "short_code",
@@ -1220,7 +1129,7 @@
     "explanation": "Variables and expressions are inserted into template strings using ${variableName}."
   },
   {
-    "id": 85,
+    "id": 79,
     "section": "JS",
     "topic": "Template Literals & String Concatenation",
     "type": "quiz",
@@ -1235,7 +1144,7 @@
     "explanation": "Any newline characters inserted in the source code are part of the template literal, making multiline strings natural and clean."
   },
   {
-    "id": 86,
+    "id": 80,
     "section": "JS",
     "topic": "Basic Functions & Arrow Functions",
     "type": "quiz",
@@ -1250,7 +1159,7 @@
     "explanation": "Arrow functions do not have their own this; they capture the this value of the enclosing lexical context."
   },
   {
-    "id": 87,
+    "id": 81,
     "section": "JS",
     "topic": "Basic Functions & Arrow Functions",
     "type": "quiz",
@@ -1265,7 +1174,7 @@
     "explanation": "In JavaScript, any function that finishes execution without a return statement implicitly returns undefined."
   },
   {
-    "id": 88,
+    "id": 82,
     "section": "JS",
     "topic": "Basic Functions & Arrow Functions",
     "type": "short_code",
@@ -1275,7 +1184,7 @@
     "explanation": "Arrow functions with a single expression automatically return the result of that expression without needing curly braces or return keyword."
   },
   {
-    "id": 89,
+    "id": 83,
     "section": "JS",
     "topic": "Basic Functions & Arrow Functions",
     "type": "quiz",
@@ -1290,37 +1199,7 @@
     "explanation": "The rest parameter syntax (...args) captures indefinite arguments into a true JavaScript array."
   },
   {
-    "id": 90,
-    "section": "JS",
-    "topic": "Arrays & Array Methods (map, filter, reduce, indexOf)",
-    "type": "quiz",
-    "q": "What does `array.indexOf(item)` return if the requested item is NOT present in the array?",
-    "options": {
-      "A": "null",
-      "B": "undefined",
-      "C": "false",
-      "D": "-1"
-    },
-    "answer": "D",
-    "explanation": "indexOf() returns the first index at which a given element can be found in the array, or -1 if it is not present."
-  },
-  {
-    "id": 91,
-    "section": "JS",
-    "topic": "Arrays & Array Methods (map, filter, reduce, indexOf)",
-    "type": "quiz",
-    "q": "Which array method creates a NEW array populated with the results of calling a provided callback function on every element?",
-    "options": {
-      "A": "forEach()",
-      "B": "map()",
-      "C": "filter()",
-      "D": "some()"
-    },
-    "answer": "B",
-    "explanation": "map() transforms each element of an array and returns a brand new array with the mapped values, leaving original array unchanged."
-  },
-  {
-    "id": 92,
+    "id": 84,
     "section": "JS",
     "topic": "Objects & Object Methods",
     "type": "quiz",
@@ -1335,7 +1214,7 @@
     "explanation": "Object.keys() returns an array containing strings of all own enumerable property names of the passed object."
   },
   {
-    "id": 93,
+    "id": 85,
     "section": "JS",
     "topic": "DOM Selection & Manipulation",
     "type": "quiz",
@@ -1350,7 +1229,7 @@
     "explanation": "innerHTML renders HTML tags and can introduce XSS vulnerabilities if untrusted input is used. textContent treats all input as plain text."
   },
   {
-    "id": 94,
+    "id": 86,
     "section": "JS",
     "topic": "DOM Selection & Manipulation",
     "type": "quiz",
@@ -1365,7 +1244,7 @@
     "explanation": "document.querySelector() returns the first Element that matches the specified selector or group of selectors, or null if none match."
   },
   {
-    "id": 95,
+    "id": 87,
     "section": "JS",
     "topic": "DOM Selection & Manipulation",
     "type": "short_code",
@@ -1375,7 +1254,7 @@
     "explanation": "CSS properties with hyphens like background-color are written in camelCase (backgroundColor) on the style object."
   },
   {
-    "id": 96,
+    "id": 88,
     "section": "JS",
     "topic": "DOM Selection & Manipulation",
     "type": "quiz",
@@ -1390,7 +1269,7 @@
     "explanation": "document.createElement(tagName) creates the HTML element specified by tagName, which can then be appended to the DOM."
   },
   {
-    "id": 97,
+    "id": 89,
     "section": "JS",
     "topic": "DOM Event Handling & Listeners",
     "type": "quiz",
@@ -1405,7 +1284,7 @@
     "explanation": "addEventListener() registers the specified listener on the EventTarget it's called on."
   },
   {
-    "id": 98,
+    "id": 90,
     "section": "JS",
     "topic": "DOM Event Handling & Listeners",
     "type": "quiz",
@@ -1420,7 +1299,7 @@
     "explanation": "event.preventDefault() prevents the browser from executing the default behavior associated with that event."
   },
   {
-    "id": 99,
+    "id": 91,
     "section": "JS",
     "topic": "DOM Event Handling & Listeners",
     "type": "short_code",
@@ -1430,7 +1309,7 @@
     "explanation": "addEventListener takes the event name as its first parameter and the callback handler as its second."
   },
   {
-    "id": 100,
+    "id": 92,
     "section": "JS",
     "topic": "DOM Event Handling & Listeners",
     "type": "quiz",
@@ -1445,7 +1324,7 @@
     "explanation": "Events bubble up from the target element to the document root by default in modern browsers."
   },
   {
-    "id": 101,
+    "id": 93,
     "section": "JS",
     "topic": "Asynchronous JavaScript (Promises, Async/Await)",
     "type": "quiz",
@@ -1460,7 +1339,7 @@
     "explanation": "A Promise is always in one of three states: pending (initial), fulfilled (succeeded), or rejected (failed)."
   },
   {
-    "id": 102,
+    "id": 94,
     "section": "JS",
     "topic": "Closures & Advanced Scope",
     "type": "quiz",
@@ -1475,7 +1354,7 @@
     "explanation": "A closure gives a function access to its outer scope from an inner function, even after the outer function has returned."
   },
   {
-    "id": 103,
+    "id": 95,
     "section": "JS",
     "topic": "Closures & Advanced Scope",
     "type": "quiz",
@@ -1490,7 +1369,7 @@
     "explanation": "The inner arrow function forms a closure over 'count'. The first call counter() increments count to 1. The second call increments it to 2 and returns 2."
   },
   {
-    "id": 104,
+    "id": 96,
     "section": "JS",
     "topic": "Closures & Advanced Scope",
     "type": "quiz",
@@ -1505,7 +1384,7 @@
     "explanation": "As long as the inner function is reachable, the JS garbage collector retains its outer lexical scope environment in heap memory."
   },
   {
-    "id": 105,
+    "id": 97,
     "section": "JS",
     "topic": "Closures & Advanced Scope",
     "type": "short_code",
@@ -1515,7 +1394,7 @@
     "explanation": "The returned function forms a closure over 'factor' and multiplies x by it."
   },
   {
-    "id": 106,
+    "id": 98,
     "section": "JS",
     "topic": "Conditional Statements (if-else, switch)",
     "type": "quiz",
@@ -1530,7 +1409,7 @@
     "explanation": "The break statement exits the switch statement. Without it, execution falls through to the next case regardless of whether its condition matches."
   },
   {
-    "id": 107,
+    "id": 99,
     "section": "JS",
     "topic": "Primitive Data Types & Type Conversion",
     "type": "short_code",
@@ -1540,7 +1419,7 @@
     "explanation": "typeof isActive evaluates to the string \"boolean\"."
   },
   {
-    "id": 108,
+    "id": 100,
     "section": "JS",
     "topic": "Primitive Data Types & Type Conversion",
     "type": "short_code",
@@ -1550,7 +1429,7 @@
     "explanation": "parseInt(strVal) converts a numeric string into a primitive integer."
   },
   {
-    "id": 109,
+    "id": 101,
     "section": "JS",
     "topic": "Variables (let, const, var & Scope)",
     "type": "short_code",
@@ -1560,7 +1439,7 @@
     "explanation": "const is used to declare block-scoped constants that cannot be reassigned."
   },
   {
-    "id": 110,
+    "id": 102,
     "section": "JS",
     "topic": "Closures & Advanced Scope",
     "type": "drag_drop",
@@ -1586,7 +1465,7 @@
     "explanation": "Core closure principles."
   },
   {
-    "id": 111,
+    "id": 103,
     "section": "JS",
     "topic": "Basic Functions & Arrow Functions",
     "type": "drag_drop",
@@ -1612,7 +1491,7 @@
     "explanation": "Function terminology definitions."
   },
   {
-    "id": 112,
+    "id": 104,
     "section": "JS",
     "topic": "Objects & Object Methods",
     "type": "drag_drop",
@@ -1638,7 +1517,7 @@
     "explanation": "Static Object methods."
   },
   {
-    "id": 113,
+    "id": 105,
     "section": "JS",
     "topic": "DOM Selection & Manipulation",
     "type": "drag_drop",
@@ -1664,14 +1543,14 @@
     "explanation": "Common DOM selection and modification APIs."
   },
   {
-    "id": 114,
+    "id": 106,
     "section": "JS",
     "topic": "DOM Event Handling & Listeners",
     "type": "drag_drop",
     "q": "Match each Event property or method with its action.",
     "dragItems": [
       "The element on which the event occurred",
-      "Stops the default browser action from happening",
+      "Respective event listeners check",
       "Prevents further event propagation in DOM tree",
       "Registers an event callback on target"
     ],
@@ -1683,14 +1562,14 @@
     ],
     "answer": {
       "0": "The element on which the event occurred",
-      "1": "Stops the default browser action from happening",
+      "1": "Respective event listeners check",
       "2": "Prevents further event propagation in DOM tree",
       "3": "Registers an event callback on target"
     },
     "explanation": "Event handling mechanisms."
   },
   {
-    "id": 115,
+    "id": 107,
     "section": "JS",
     "topic": "Template Literals & String Concatenation",
     "type": "drag_drop",
@@ -1714,5 +1593,118 @@
       "3": "Built-in method to join strings"
     },
     "explanation": "Syntax markers for template literals and string concatenation."
+  },
+  {
+    "topic": "Arrays & Array Methods (push, pop, shift, unshift)",
+    "type": "quiz",
+    "q": "Which array method removes the LAST element from an array and returns that element?",
+    "options": {
+      "A": "pop()",
+      "B": "push()",
+      "C": "shift()",
+      "D": "slice()"
+    },
+    "answer": "A",
+    "explanation": "pop() removes the last element of an array and modifies the original array in place.",
+    "id": 108
+  },
+  {
+    "topic": "Arrays & Array Methods (push, pop, shift, unshift)",
+    "type": "quiz",
+    "q": "Which array method removes the FIRST element from an array and shifts all other elements down?",
+    "options": {
+      "A": "unshift()",
+      "B": "shift()",
+      "C": "pop()",
+      "D": "splice()"
+    },
+    "answer": "B",
+    "explanation": "shift() removes the first element from an array and returns it.",
+    "id": 109
+  },
+  {
+    "topic": "Arrays & Array Methods (push, pop, shift, unshift)",
+    "type": "short_code",
+    "q": "Use the `push()` method to add the string 'Apple' to the end of an array named `fruits`.",
+    "starterCode": "const fruits = ['Banana', 'Orange'];\n",
+    "answer": "fruits.push('Apple');",
+    "explanation": "push() appends one or more elements to the end of an array.",
+    "id": 110
+  },
+  {
+    "topic": "Arrays & Array Methods (push, pop, shift, unshift)",
+    "type": "short_code",
+    "q": "Use the `unshift()` method to add 'Mango' to the beginning of an array named `items`.",
+    "starterCode": "const items = ['Apple', 'Banana'];\n",
+    "answer": "items.unshift('Mango');",
+    "explanation": "unshift() adds elements to the start of an array.",
+    "id": 111
+  },
+  {
+    "topic": "Arrays & Array Methods (push, pop, shift, unshift)",
+    "type": "quiz",
+    "q": "What property is used to find the total number of elements in an array?",
+    "options": {
+      "A": "size",
+      "B": "length",
+      "C": "count",
+      "D": "index"
+    },
+    "answer": "B",
+    "explanation": "The .length property returns the number of elements in an array.",
+    "id": 112
+  },
+  {
+    "topic": "Arrays & Array Methods (push, pop, shift, unshift)",
+    "type": "quiz",
+    "q": "What will `console.log([10, 20, 30].indexOf(20))` output?",
+    "options": {
+      "A": "0",
+      "B": "1",
+      "C": "2",
+      "D": "-1"
+    },
+    "answer": "B",
+    "explanation": "indexOf() returns the index of the first occurrence of the specified element, which is index 1 for 20.",
+    "id": 113
+  },
+  {
+    "topic": "Arrays & Array Methods (push, pop, shift, unshift)",
+    "type": "drag_drop",
+    "q": "Match each basic array operation with its behavior.",
+    "dragItems": [
+      "Adds element to the end",
+      "Removes element from the end",
+      "Adds element to the start",
+      "Removes element from the start"
+    ],
+    "dropZones": [
+      "push()",
+      "pop()",
+      "unshift()",
+      "shift()"
+    ],
+    "answer": {
+      "0": "Adds element to the end",
+      "1": "Removes element from the end",
+      "2": "Adds element to the start",
+      "3": "Removes element from the start"
+    },
+    "explanation": "Basic array mutation methods.",
+    "id": 114
+  },
+  {
+    "topic": "Arrays & Array Methods (push, pop, shift, unshift)",
+    "type": "quiz",
+    "q": "Which array method removes the LAST element from an array and returns that element?",
+    "options": {
+      "A": "pop()",
+      "B": "push()",
+      "C": "shift()",
+      "D": "slice()"
+    },
+    "answer": "A",
+    "explanation": "pop() removes the last element of an array and modifies the original array in place.",
+    "id": 115
   }
 ]
