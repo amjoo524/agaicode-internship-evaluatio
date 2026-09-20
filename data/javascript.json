@@ -3098,10 +3098,10 @@
     "section": "JS",
     "topic": "Template Literals & String Concatenation",
     "type": "short_code",
-    "q": "Write code to replace ALL occurrences of `'cat'` with `'dog'` in the string `'I have a cat. My cat is cute.'` using `replaceAll()`, then `console.log` the result.",
-    "starterCode": "const str = 'I have a cat. My cat is cute.';\n// use replaceAll\nconsole.log( );",
-    "answer": "const str = 'I have a cat. My cat is cute.';\nconsole.log(str.replaceAll('cat', 'dog'));",
-    "explanation": "replaceAll() replaces every occurrence. Output: 'I have a dog. My dog is cute.'",
+    "q": "Use `replace()` to change `'World'` to `'Pakistan'` in the string `'Hello World'`.\nStore the result in `newStr` and `console.log` it.",
+    "starterCode": "const str = 'Hello World';\nconst newStr = str.replace(/* fill here */);\nconsole.log(newStr);",
+    "answer": "const str = 'Hello World';\nconst newStr = str.replace('World', 'Pakistan');\nconsole.log(newStr);",
+    "explanation": "replace('World', 'Pakistan') swaps the first match. Result: 'Hello Pakistan'.",
     "id": 210
   },
   {

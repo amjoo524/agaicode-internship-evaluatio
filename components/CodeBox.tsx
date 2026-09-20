@@ -140,31 +140,87 @@ export const CodeBox: React.FC<CodeBoxProps> = ({
   );
 };
 
+/** Renders inline backtick spans: `code` → styled badge */
+function renderInlineCode(segment: string): React.ReactNode[] {
+  const parts = segment.split(/(`[^`]+`)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith('`') && part.endsWith('`') && part.length > 2) {
+      return (
+        <code
+          key={i}
+          className="inline-block px-1.5 py-0.5 rounded-md bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 font-mono text-[0.82em] font-semibold mx-0.5 align-middle"
+        >
+          {part.slice(1, -1)}
+        </code>
+      );
+    }
+    return <React.Fragment key={i}>{part}</React.Fragment>;
+  });
+}
+
 export function QuestionTextRenderer({ text }: { text: string }) {
   if (!text) return null;
 
-  // Check if text has code block embedded via \n\n or code patterns
-  const doubleNewlineIdx = text.indexOf('\n\n');
-  const hasCodeKeywords = /let\s+|const\s+|var\s+|console\.log|function\s+|if\s*\(|return\s+/i.test(text);
+  // ── Parse markdown code fences  ```js ... ``` ──────────────────────────────
+  const fenceRegex = /```(?:js|javascript)?\n?([\s\S]*?)```/g;
+  const segments: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
 
-  if (doubleNewlineIdx !== -1 && hasCodeKeywords) {
-    const prompt = text.slice(0, doubleNewlineIdx).trim();
-    const code = text.slice(doubleNewlineIdx + 2).trim();
-
-    return (
-      <div className="space-y-2">
-        <p className="text-sm lg:text-base font-bold text-white leading-relaxed">
-          {prompt}
+  while ((match = fenceRegex.exec(text)) !== null) {
+    // Text before the code block
+    const before = text.slice(lastIndex, match.index).trim();
+    if (before) {
+      // Split by newlines so each line can have inline code rendered
+      const lines = before.split('\n');
+      segments.push(
+        <p key={`txt-${lastIndex}`} className="text-sm lg:text-base font-semibold text-white leading-relaxed whitespace-pre-wrap mb-2">
+          {lines.map((line, li) => (
+            <React.Fragment key={li}>
+              {renderInlineCode(line)}
+              {li < lines.length - 1 && <br />}
+            </React.Fragment>
+          ))}
         </p>
-        <CodeBox code={code} showLineNumbers={true} />
-      </div>
+      );
+    }
+    // The code block itself
+    segments.push(
+      <CodeBox key={`code-${match.index}`} code={match[1].trim()} showLineNumbers={true} />
+    );
+    lastIndex = fenceRegex.lastIndex;
+  }
+
+  // Remaining text after last code block
+  const remaining = text.slice(lastIndex).trim();
+  if (remaining) {
+    const lines = remaining.split('\n');
+    segments.push(
+      <p key={`txt-end`} className="text-sm lg:text-base font-semibold text-white leading-relaxed whitespace-pre-wrap mt-2">
+        {lines.map((line, li) => (
+          <React.Fragment key={li}>
+            {renderInlineCode(line)}
+            {li < lines.length - 1 && <br />}
+          </React.Fragment>
+        ))}
+      </p>
     );
   }
 
-  // Standalone text question
-  return (
-    <p className="text-sm lg:text-base font-bold text-white leading-relaxed whitespace-pre-wrap font-mono">
-      {text}
-    </p>
-  );
+  // If no fences found, render as plain text with inline code highlighting
+  if (segments.length === 0) {
+    const lines = text.split('\n');
+    return (
+      <p className="text-sm lg:text-base font-semibold text-white leading-relaxed whitespace-pre-wrap">
+        {lines.map((line, li) => (
+          <React.Fragment key={li}>
+            {renderInlineCode(line)}
+            {li < lines.length - 1 && <br />}
+          </React.Fragment>
+        ))}
+      </p>
+    );
+  }
+
+  return <div className="space-y-1">{segments}</div>;
 }
