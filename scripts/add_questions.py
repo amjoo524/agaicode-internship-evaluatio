@@ -378,7 +378,7 @@ next_id += 1
 
 # --- 6 CODE WRITING ---
 new_questions.append(mk_code(next_id, STRINGS,
-    "Given `const firstName = 'Ali'` and `const age = 22`, use a **template literal** to print:\n`My name is Ali and I am 22 years old.`",
+    "Given `const firstName = 'Ali'` and `const age = 22`, use a **template literal** to print:\n`My name is Sameen and I am 20 years old.`",
     "const firstName = 'Ali';\nconst age = 22;\nconsole.log(/* use template literal */);",
     "const firstName = 'Ali';\nconst age = 22;\nconsole.log(`My name is ${firstName} and I am ${age} years old.`);",
     "Template literals use backticks and ${} for expressions. String concatenation using + also works."
